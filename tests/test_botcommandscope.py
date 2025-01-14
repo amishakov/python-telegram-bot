@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -31,9 +31,11 @@ from telegram import (
     BotCommandScopeDefault,
     Dice,
 )
+from telegram.constants import BotCommandScopeType
+from tests.auxil.slots import mro_slots
 
 
-@pytest.fixture(scope="class", params=["str", "int"])
+@pytest.fixture(scope="module", params=["str", "int"])
 def chat_id(request):
     if request.param == "str":
         return "@supergroupusername"
@@ -57,7 +59,7 @@ def scope_type(request):
 
 
 @pytest.fixture(
-    scope="class",
+    scope="module",
     params=[
         BotCommandScopeDefault,
         BotCommandScopeAllPrivateChats,
@@ -82,7 +84,7 @@ def scope_class(request):
 
 
 @pytest.fixture(
-    scope="class",
+    scope="module",
     params=[
         (BotCommandScopeDefault, BotCommandScope.DEFAULT),
         (BotCommandScopeAllPrivateChats, BotCommandScope.ALL_PRIVATE_CHATS),
@@ -106,28 +108,32 @@ def scope_class_and_type(request):
     return request.param
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="module")
 def bot_command_scope(scope_class_and_type, chat_id):
-    return scope_class_and_type[0](type=scope_class_and_type[1], chat_id=chat_id, user_id=42)
+    # we use de_json here so that we don't have to worry about which class needs which arguments
+    return scope_class_and_type[0].de_json(
+        {"type": scope_class_and_type[1], "chat_id": chat_id, "user_id": 42}, bot=None
+    )
 
 
 # All the scope types are very similar, so we test everything via parametrization
-class TestBotCommandScope:
-    def test_slot_behaviour(self, bot_command_scope, mro_slots):
+class TestBotCommandScopeWithoutRequest:
+    def test_slot_behaviour(self, bot_command_scope):
         for attr in bot_command_scope.__slots__:
             assert getattr(bot_command_scope, attr, "err") != "err", f"got extra slot '{attr}'"
         assert len(mro_slots(bot_command_scope)) == len(
             set(mro_slots(bot_command_scope))
         ), "duplicate slot"
 
-    def test_de_json(self, bot, scope_class_and_type, chat_id):
+    def test_de_json(self, offline_bot, scope_class_and_type, chat_id):
         cls = scope_class_and_type[0]
         type_ = scope_class_and_type[1]
 
-        assert cls.de_json({}, bot) is None
-
         json_dict = {"type": type_, "chat_id": chat_id, "user_id": 42}
-        bot_command_scope = BotCommandScope.de_json(json_dict, bot)
+        bot_command_scope = BotCommandScope.de_json(json_dict, offline_bot)
+        assert set(bot_command_scope.api_kwargs.keys()) == {"chat_id", "user_id"} - set(
+            cls.__slots__
+        )
 
         assert isinstance(bot_command_scope, BotCommandScope)
         assert isinstance(bot_command_scope, cls)
@@ -137,18 +143,18 @@ class TestBotCommandScope:
         if "user_id" in cls.__slots__:
             assert bot_command_scope.user_id == 42
 
-    def test_de_json_invalid_type(self, bot):
+    def test_de_json_invalid_type(self, offline_bot):
         json_dict = {"type": "invalid", "chat_id": chat_id, "user_id": 42}
-        bot_command_scope = BotCommandScope.de_json(json_dict, bot)
+        bot_command_scope = BotCommandScope.de_json(json_dict, offline_bot)
 
         assert type(bot_command_scope) is BotCommandScope
         assert bot_command_scope.type == "invalid"
 
-    def test_de_json_subclass(self, scope_class, bot, chat_id):
+    def test_de_json_subclass(self, scope_class, offline_bot, chat_id):
         """This makes sure that e.g. BotCommandScopeDefault(data) never returns a
         BotCommandScopeChat instance."""
         json_dict = {"type": "invalid", "chat_id": chat_id, "user_id": 42}
-        assert type(scope_class.de_json(json_dict, bot)) is scope_class
+        assert type(scope_class.de_json(json_dict, offline_bot)) is scope_class
 
     def test_to_dict(self, bot_command_scope):
         bot_command_scope_dict = bot_command_scope.to_dict()
@@ -160,7 +166,11 @@ class TestBotCommandScope:
         if hasattr(bot_command_scope, "user_id"):
             assert bot_command_scope["user_id"] == bot_command_scope.user_id
 
-    def test_equality(self, bot_command_scope, bot):
+    def test_type_enum_conversion(self):
+        assert type(BotCommandScope("default").type) is BotCommandScopeType
+        assert BotCommandScope("unknown").type == "unknown"
+
+    def test_equality(self, bot_command_scope, offline_bot):
         a = BotCommandScope("base_type")
         b = BotCommandScope("base_type")
         c = bot_command_scope
@@ -188,7 +198,7 @@ class TestBotCommandScope:
         if hasattr(c, "chat_id"):
             json_dict = c.to_dict()
             json_dict["chat_id"] = 0
-            f = c.__class__.de_json(json_dict, bot)
+            f = c.__class__.de_json(json_dict, offline_bot)
 
             assert c != f
             assert hash(c) != hash(f)
@@ -196,7 +206,7 @@ class TestBotCommandScope:
         if hasattr(c, "user_id"):
             json_dict = c.to_dict()
             json_dict["user_id"] = 0
-            g = c.__class__.de_json(json_dict, bot)
+            g = c.__class__.de_json(json_dict, offline_bot)
 
             assert c != g
             assert hash(c) != hash(g)

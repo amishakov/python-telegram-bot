@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -25,6 +25,7 @@ from telegram.error import (
     BadRequest,
     ChatMigrated,
     Conflict,
+    EndPointNotFound,
     Forbidden,
     InvalidToken,
     NetworkError,
@@ -34,6 +35,7 @@ from telegram.error import (
     TimedOut,
 )
 from telegram.ext import InvalidCallbackData
+from tests.auxil.slots import mro_slots
 
 
 class TestErrors:
@@ -86,15 +88,12 @@ class TestErrors:
             raise TimedOut
 
     def test_chat_migrated(self):
-        with pytest.raises(ChatMigrated, match="Group migrated to supergroup. New chat id: 1234"):
+        with pytest.raises(ChatMigrated, match="New chat id: 1234") as e:
             raise ChatMigrated(1234)
-        try:
-            raise ChatMigrated(1234)
-        except ChatMigrated as e:
-            assert e.new_chat_id == 1234
+        assert e.value.new_chat_id == 1234
 
     def test_retry_after(self):
-        with pytest.raises(RetryAfter, match="Flood control exceeded. Retry in 12.0 seconds"):
+        with pytest.raises(RetryAfter, match="Flood control exceeded. Retry in 12 seconds"):
             raise RetryAfter(12)
 
     def test_conflict(self):
@@ -102,7 +101,7 @@ class TestErrors:
             raise Conflict("Something something.")
 
     @pytest.mark.parametrize(
-        "exception, attributes",
+        ("exception", "attributes"),
         [
             (TelegramError("test message"), ["message"]),
             (Forbidden("test message"), ["message"]),
@@ -115,6 +114,7 @@ class TestErrors:
             (Conflict("test message"), ["message"]),
             (PassportDecryptionError("test message"), ["message"]),
             (InvalidCallbackData("test data"), ["callback_data"]),
+            (EndPointNotFound("endPoint"), ["message"]),
         ],
     )
     def test_errors_pickling(self, exception, attributes):
@@ -140,9 +140,10 @@ class TestErrors:
             (Conflict("test message")),
             (PassportDecryptionError("test message")),
             (InvalidCallbackData("test data")),
+            (EndPointNotFound("test message")),
         ],
     )
-    def test_slot_behaviour(self, inst, mro_slots):
+    def test_slot_behaviour(self, inst):
         for attr in inst.__slots__:
             assert getattr(inst, attr, "err") != "err", f"got extra slot '{attr}'"
         assert len(mro_slots(inst)) == len(set(mro_slots(inst))), "duplicate slot"
@@ -172,6 +173,7 @@ class TestErrors:
                     Conflict,
                     PassportDecryptionError,
                     InvalidCallbackData,
+                    EndPointNotFound,
                 },
                 NetworkError: {BadRequest, TimedOut},
             }
@@ -186,8 +188,8 @@ class TestErrors:
         assert str(e) == "This is a message"
 
         e = RetryAfter(42)
-        assert repr(e) == "RetryAfter('Flood control exceeded. Retry in 42.0 seconds')"
-        assert str(e) == "Flood control exceeded. Retry in 42.0 seconds"
+        assert repr(e) == "RetryAfter('Flood control exceeded. Retry in 42 seconds')"
+        assert str(e) == "Flood control exceeded. Retry in 42 seconds"
 
         e = BadRequest("This is a message")
         assert repr(e) == "BadRequest('This is a message')"

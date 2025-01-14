@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,12 +17,13 @@
 # along with this program.  If not, see [http://www.gnu.org/licenses/].
 
 from telegram import MessageAutoDeleteTimerChanged, VideoChatEnded
+from tests.auxil.slots import mro_slots
 
 
-class TestMessageAutoDeleteTimerChanged:
+class TestMessageAutoDeleteTimerChangedWithoutRequest:
     message_auto_delete_time = 100
 
-    def test_slot_behaviour(self, mro_slots):
+    def test_slot_behaviour(self):
         action = MessageAutoDeleteTimerChanged(self.message_auto_delete_time)
         for attr in action.__slots__:
             assert getattr(action, attr, "err") != "err", f"got extra slot '{attr}'"
@@ -31,6 +32,7 @@ class TestMessageAutoDeleteTimerChanged:
     def test_de_json(self):
         json_dict = {"message_auto_delete_time": self.message_auto_delete_time}
         madtc = MessageAutoDeleteTimerChanged.de_json(json_dict, None)
+        assert madtc.api_kwargs == {}
 
         assert madtc.message_auto_delete_time == self.message_auto_delete_time
 

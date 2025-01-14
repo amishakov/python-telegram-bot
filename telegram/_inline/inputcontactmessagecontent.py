@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,10 +17,10 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with this program.  If not, see [http://www.gnu.org/licenses/].
 """This module contains the classes that represent Telegram InputContactMessageContent."""
-
-from typing import Any
+from typing import Optional
 
 from telegram._inline.inputmessagecontent import InputMessageContent
+from telegram._utils.types import JSONDict
 
 
 class InputContactMessageContent(InputMessageContent):
@@ -34,33 +34,35 @@ class InputContactMessageContent(InputMessageContent):
         first_name (:obj:`str`): Contact's first name.
         last_name (:obj:`str`, optional): Contact's last name.
         vcard (:obj:`str`, optional): Additional data about the contact in the form of a vCard,
-            0-2048 bytes.
-        **kwargs (:obj:`dict`): Arbitrary keyword arguments.
+            0-:tg-const:`telegram.constants.ContactLimit.VCARD` bytes.
 
     Attributes:
         phone_number (:obj:`str`): Contact's phone number.
         first_name (:obj:`str`): Contact's first name.
         last_name (:obj:`str`): Optional. Contact's last name.
         vcard (:obj:`str`): Optional. Additional data about the contact in the form of a vCard,
-            0-2048 bytes.
+            0-:tg-const:`telegram.constants.ContactLimit.VCARD` bytes.
 
     """
 
-    __slots__ = ("vcard", "first_name", "last_name", "phone_number")
+    __slots__ = ("first_name", "last_name", "phone_number", "vcard")
 
     def __init__(
         self,
         phone_number: str,
         first_name: str,
-        last_name: str = None,
-        vcard: str = None,
-        **_kwargs: Any,
+        last_name: Optional[str] = None,
+        vcard: Optional[str] = None,
+        *,
+        api_kwargs: Optional[JSONDict] = None,
     ):
-        # Required
-        self.phone_number = phone_number
-        self.first_name = first_name
-        # Optionals
-        self.last_name = last_name
-        self.vcard = vcard
+        super().__init__(api_kwargs=api_kwargs)
+        with self._unfrozen():
+            # Required
+            self.phone_number: str = phone_number
+            self.first_name: str = first_name
+            # Optionals
+            self.last_name: Optional[str] = last_name
+            self.vcard: Optional[str] = vcard
 
-        self._id_attrs = (self.phone_number,)
+            self._id_attrs = (self.phone_number,)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -18,18 +18,18 @@
 # along with this program.  If not, see [http://www.gnu.org/licenses/].
 """This module contains an abstract class to make POST and GET requests."""
 import abc
+import json
 from contextlib import AbstractAsyncContextManager
 from http import HTTPStatus
 from types import TracebackType
-from typing import ClassVar, Optional, Tuple, Type, TypeVar, Union
-
-try:
-    import ujson as json
-except ImportError:
-    import json  # type: ignore[no-redef]
+from typing import Final, Optional, TypeVar, Union, final
 
 from telegram._utils.defaultvalue import DEFAULT_NONE as _DEFAULT_NONE
+from telegram._utils.defaultvalue import DefaultValue
+from telegram._utils.logging import get_logger
+from telegram._utils.strings import TextEncoding
 from telegram._utils.types import JSONDict, ODVInput
+from telegram._utils.warnings import warn
 from telegram._version import __version__ as ptb_ver
 from telegram.error import (
     BadRequest,
@@ -42,12 +42,15 @@ from telegram.error import (
     TelegramError,
 )
 from telegram.request._requestdata import RequestData
+from telegram.warnings import PTBDeprecationWarning
 
 RT = TypeVar("RT", bound="BaseRequest")
 
+_LOGGER = get_logger(__name__, class_name="BaseRequest")
+
 
 class BaseRequest(
-    AbstractAsyncContextManager,
+    AbstractAsyncContextManager["BaseRequest"],
     abc.ABC,
 ):
     """Abstract interface class that allows python-telegram-bot to make requests to the Bot API.
@@ -71,15 +74,25 @@ class BaseRequest(
         finally:
             await request_object.shutdown()
 
+    .. seealso:: :meth:`__aenter__` and :meth:`__aexit__`.
+
+    Tip:
+        JSON encoding and decoding is done with the standard library's :mod:`json` by default.
+        To use a custom library for this, you can override :meth:`parse_json_payload` and implement
+        custom logic to encode the keys of :attr:`telegram.request.RequestData.parameters`.
+
+    .. seealso:: :wiki:`Architecture Overview <Architecture>`,
+        :wiki:`Builder Pattern <Builder-Pattern>`
+
     .. versionadded:: 20.0
     """
 
     __slots__ = ()
 
-    USER_AGENT: ClassVar[str] = f"python-telegram-bot v{ptb_ver} (https://python-telegram-bot.org)"
+    USER_AGENT: Final[str] = f"python-telegram-bot v{ptb_ver} (https://python-telegram-bot.org)"
     """:obj:`str`: A description that can be used as user agent for requests made to the Bot API.
     """
-    DEFAULT_NONE: ClassVar = _DEFAULT_NONE
+    DEFAULT_NONE: Final[DefaultValue[None]] = _DEFAULT_NONE
     """:class:`object`: A special object that indicates that an argument of a function was not
     explicitly passed. Used for the timeout parameters of :meth:`post` and :meth:`do_request`.
 
@@ -92,22 +105,50 @@ class BaseRequest(
     """
 
     async def __aenter__(self: RT) -> RT:
+        """|async_context_manager| :meth:`initializes <initialize>` the Request.
+
+        Returns:
+            The initialized Request instance.
+
+        Raises:
+            :exc:`Exception`: If an exception is raised during initialization, :meth:`shutdown`
+                is called in this case.
+        """
         try:
             await self.initialize()
-            return self
-        except Exception as exc:
+        except Exception:
             await self.shutdown()
-            raise exc
+            raise
+        return self
 
     async def __aexit__(
         self,
-        exc_type: Optional[Type[BaseException]],
+        exc_type: Optional[type[BaseException]],
         exc_val: Optional[BaseException],
         exc_tb: Optional[TracebackType],
     ) -> None:
+        """|async_context_manager| :meth:`shuts down <shutdown>` the Request."""
         # Make sure not to return `True` so that exceptions are not suppressed
         # https://docs.python.org/3/reference/datamodel.html?#object.__aexit__
         await self.shutdown()
+
+    @property
+    def read_timeout(self) -> Optional[float]:
+        """This property must return the default read timeout in seconds used by this class.
+        More precisely, the returned value should be the one used when
+        :paramref:`post.read_timeout` of :meth:post` is not passed/equal to :attr:`DEFAULT_NONE`.
+
+        .. versionadded:: 20.7
+
+        Warning:
+            For now this property does not need to be implemented by subclasses and will raise
+            :exc:`NotImplementedError` if accessed without being overridden. However, in future
+            versions, this property will be abstract and must be implemented by subclasses.
+
+        Returns:
+            :obj:`float` | :obj:`None`: The read timeout in seconds.
+        """
+        raise NotImplementedError
 
     @abc.abstractmethod
     async def initialize(self) -> None:
@@ -117,15 +158,16 @@ class BaseRequest(
     async def shutdown(self) -> None:
         """Stop & clear resources used by this class. Must be implemented by a subclass."""
 
+    @final
     async def post(
         self,
         url: str,
-        request_data: RequestData = None,
+        request_data: Optional[RequestData] = None,
         read_timeout: ODVInput[float] = DEFAULT_NONE,
         write_timeout: ODVInput[float] = DEFAULT_NONE,
         connect_timeout: ODVInput[float] = DEFAULT_NONE,
         pool_timeout: ODVInput[float] = DEFAULT_NONE,
-    ) -> Union[JSONDict, bool]:
+    ) -> Union[JSONDict, list[JSONDict], bool]:
         """Makes a request to the Bot API handles the return code and parses the answer.
 
         Warning:
@@ -154,7 +196,7 @@ class BaseRequest(
                 :attr:`DEFAULT_NONE`.
 
         Returns:
-          Dict[:obj:`str`, ...]: The JSON response of the Bot API.
+          The JSON response of the Bot API.
 
         """
         result = await self._request_wrapper(
@@ -166,11 +208,12 @@ class BaseRequest(
             connect_timeout=connect_timeout,
             pool_timeout=pool_timeout,
         )
-        json_data = self._parse_json_response(result)
+        json_data = self.parse_json_payload(result)
         # For successful requests, the results are in the 'result' entry
         # see https://core.telegram.org/bots/api#making-requests
         return json_data["result"]
 
+    @final
     async def retrieve(
         self,
         url: str,
@@ -221,7 +264,7 @@ class BaseRequest(
         self,
         url: str,
         method: str,
-        request_data: RequestData = None,
+        request_data: Optional[RequestData] = None,
         read_timeout: ODVInput[float] = DEFAULT_NONE,
         write_timeout: ODVInput[float] = DEFAULT_NONE,
         connect_timeout: ODVInput[float] = DEFAULT_NONE,
@@ -262,8 +305,30 @@ class BaseRequest(
             TelegramError
 
         """
-        # TGs response also has the fields 'ok' and 'error_code'.
-        # However, we rather rely on the HTTP status code for now.
+        # Import needs to be here since HTTPXRequest is a subclass of BaseRequest
+        from telegram.request import HTTPXRequest  # pylint: disable=import-outside-toplevel
+
+        # 20 is the documented default value for all the media related bot methods and custom
+        # implementations of BaseRequest may explicitly rely on that. Hence, we follow the
+        # standard deprecation policy and deprecate starting with version 20.7.
+        # For our own implementation HTTPXRequest, we can handle that ourselves, so we skip the
+        # warning in that case.
+        has_files = request_data and request_data.multipart_data
+        if (
+            has_files
+            and not isinstance(self, HTTPXRequest)
+            and isinstance(write_timeout, DefaultValue)
+        ):
+            warn(
+                PTBDeprecationWarning(
+                    "20.7",
+                    f"The `write_timeout` parameter passed to {self.__class__.__name__}.do_request"
+                    " will default to `BaseRequest.DEFAULT_NONE` instead of 20 in future versions "
+                    "for *all* methods of the `Bot` class, including methods sending media.",
+                ),
+                stacklevel=3,
+            )
+            write_timeout = 20
 
         try:
             code, payload = await self.do_request(
@@ -275,26 +340,25 @@ class BaseRequest(
                 connect_timeout=connect_timeout,
                 pool_timeout=pool_timeout,
             )
-        except TelegramError as exc:
-            raise exc
+        except TelegramError:
+            raise
         except Exception as exc:
-            raise NetworkError(f"Unknown error in HTTP implementation: {repr(exc)}") from exc
+            raise NetworkError(f"Unknown error in HTTP implementation: {exc!r}") from exc
 
         if HTTPStatus.OK <= code <= 299:
             # 200-299 range are HTTP success statuses
             return payload
 
-        response_data = self._parse_json_response(payload)
+        response_data = self.parse_json_payload(payload)
 
         description = response_data.get("description")
-        if description:
-            message = description
-        else:
-            message = "Unknown HTTPError"
+        message = description if description else "Unknown HTTPError"
 
         # In some special cases, we can raise more informative exceptions:
         # see https://core.telegram.org/bots/api#responseparameters and
         # https://core.telegram.org/bots/api#making-requests
+        # TGs response also has the fields 'ok' and 'error_code'.
+        # However, we rather rely on the HTTP status code for now.
         parameters = response_data.get("parameters")
         if parameters:
             migrate_to_chat_id = parameters.get("migrate_to_chat_id")
@@ -306,37 +370,46 @@ class BaseRequest(
 
             message += f"\nThe server response contained unknown parameters: {parameters}"
 
-        if code == HTTPStatus.FORBIDDEN:
+        if code == HTTPStatus.FORBIDDEN:  # 403
             raise Forbidden(message)
-        if code in (HTTPStatus.NOT_FOUND, HTTPStatus.UNAUTHORIZED):
+        if code in (HTTPStatus.NOT_FOUND, HTTPStatus.UNAUTHORIZED):  # 404 and 401
             # TG returns 404 Not found for
             #   1) malformed tokens
             #   2) correct tokens but non-existing method, e.g. api.tg.org/botTOKEN/unkonwnMethod
-            # We can basically rule out 2) since we don't let users make requests manually
+            # 2) is relevant only for Bot.do_api_request, where we have special handing for it.
             # TG returns 401 Unauthorized for correctly formatted tokens that are not valid
             raise InvalidToken(message)
-        if code == HTTPStatus.BAD_REQUEST:
+        if code == HTTPStatus.BAD_REQUEST:  # 400
             raise BadRequest(message)
-        if code == HTTPStatus.CONFLICT:
+        if code == HTTPStatus.CONFLICT:  # 409
             raise Conflict(message)
-        if code == HTTPStatus.BAD_GATEWAY:
+        if code == HTTPStatus.BAD_GATEWAY:  # 502
             raise NetworkError(description or "Bad Gateway")
         raise NetworkError(f"{message} ({code})")
 
     @staticmethod
-    def _parse_json_response(json_payload: bytes) -> JSONDict:
-        """Try and parse the JSON returned from Telegram.
+    def parse_json_payload(payload: bytes) -> JSONDict:
+        """Parse the JSON returned from Telegram.
+
+        Tip:
+            By default, this method uses the standard library's :func:`json.loads` and
+            ``errors="replace"`` in :meth:`bytes.decode`.
+            You can override it to customize either of these behaviors.
+
+        Args:
+            payload (:obj:`bytes`): The UTF-8 encoded JSON payload as returned by Telegram.
 
         Returns:
             dict: A JSON parsed as Python dict with results.
 
         Raises:
-            TelegramError: If the data could not be json_loaded
+            TelegramError: If loading the JSON data failed
         """
-        decoded_s = json_payload.decode("utf-8", "replace")
+        decoded_s = payload.decode(TextEncoding.UTF_8, "replace")
         try:
             return json.loads(decoded_s)
         except ValueError as exc:
+            _LOGGER.exception('Can not load invalid JSON data: "%s"', decoded_s)
             raise TelegramError("Invalid server response") from exc
 
     @abc.abstractmethod
@@ -344,12 +417,12 @@ class BaseRequest(
         self,
         url: str,
         method: str,
-        request_data: RequestData = None,
+        request_data: Optional[RequestData] = None,
         read_timeout: ODVInput[float] = DEFAULT_NONE,
         write_timeout: ODVInput[float] = DEFAULT_NONE,
         connect_timeout: ODVInput[float] = DEFAULT_NONE,
         pool_timeout: ODVInput[float] = DEFAULT_NONE,
-    ) -> Tuple[int, bytes]:
+    ) -> tuple[int, bytes]:
         """Makes a request to the Bot API. Must be implemented by a subclass.
 
         Warning:
@@ -379,6 +452,6 @@ class BaseRequest(
                 :attr:`DEFAULT_NONE`.
 
         Returns:
-            Tuple[:obj:`int`, :obj:`bytes`]: The HTTP return code & the payload part of the server
+            tuple[:obj:`int`, :obj:`bytes`]: The HTTP return code & the payload part of the server
             response.
         """

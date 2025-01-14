@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -18,9 +18,11 @@
 # along with this program.  If not, see [http://www.gnu.org/licenses/].
 """This module contains an object that represents a Telegram Invoice."""
 
-from typing import Any
+from typing import Final, Optional
 
+from telegram import constants
 from telegram._telegramobject import TelegramObject
+from telegram._utils.types import JSONDict
 
 
 class Invoice(TelegramObject):
@@ -35,29 +37,36 @@ class Invoice(TelegramObject):
         description (:obj:`str`): Product description.
         start_parameter (:obj:`str`): Unique bot deep-linking parameter that can be used to
             generate this invoice.
-        currency (:obj:`str`): Three-letter ISO 4217 currency code.
-        total_amount (:obj:`int`): Total price in the smallest units of the currency (integer, not
-            float/double). For example, for a price of US$ 1.45 pass ``amount = 145``. See the
-            ``exp`` parameter in
+        currency (:obj:`str`): Three-letter ISO 4217 currency code, or ``XTR`` for payments in
+            |tg_stars|.
+        total_amount (:obj:`int`): Total price in the smallest units of the currency (integer,
+            **not** float/double). For example, for a price of ``US$ 1.45`` pass ``amount = 145``.
+            See the ``exp`` parameter in
             `currencies.json <https://core.telegram.org/bots/payments/currencies.json>`_,
             it shows the number of digits past the decimal point for each currency
             (2 for the majority of currencies).
-        **kwargs (:obj:`dict`): Arbitrary keyword arguments.
 
     Attributes:
         title (:obj:`str`): Product name.
         description (:obj:`str`): Product description.
-        start_parameter (:obj:`str`): Unique bot deep-linking parameter.
-        currency (:obj:`str`): Three-letter ISO 4217 currency code.
-        total_amount (:obj:`int`): Total price in the smallest units of the currency.
+        start_parameter (:obj:`str`): Unique bot deep-linking parameter that can be used to
+            generate this invoice.
+        currency (:obj:`str`): Three-letter ISO 4217 currency code, or ``XTR`` for payments in
+            |tg_stars|.
+        total_amount (:obj:`int`): Total price in the smallest units of the currency (integer,
+            **not** float/double). For example, for a price of ``US$ 1.45`` pass ``amount = 145``.
+            See the ``exp`` parameter in
+            `currencies.json <https://core.telegram.org/bots/payments/currencies.json>`_,
+            it shows the number of digits past the decimal point for each currency
+            (2 for the majority of currencies).
 
     """
 
     __slots__ = (
         "currency",
+        "description",
         "start_parameter",
         "title",
-        "description",
         "total_amount",
     )
 
@@ -68,13 +77,15 @@ class Invoice(TelegramObject):
         start_parameter: str,
         currency: str,
         total_amount: int,
-        **_kwargs: Any,
+        *,
+        api_kwargs: Optional[JSONDict] = None,
     ):
-        self.title = title
-        self.description = description
-        self.start_parameter = start_parameter
-        self.currency = currency
-        self.total_amount = total_amount
+        super().__init__(api_kwargs=api_kwargs)
+        self.title: str = title
+        self.description: str = description
+        self.start_parameter: str = start_parameter
+        self.currency: str = currency
+        self.total_amount: int = total_amount
 
         self._id_attrs = (
             self.title,
@@ -83,3 +94,41 @@ class Invoice(TelegramObject):
             self.currency,
             self.total_amount,
         )
+
+        self._freeze()
+
+    MIN_TITLE_LENGTH: Final[int] = constants.InvoiceLimit.MIN_TITLE_LENGTH
+    """:const:`telegram.constants.InvoiceLimit.MIN_TITLE_LENGTH`
+
+    .. versionadded:: 20.0
+    """
+    MAX_TITLE_LENGTH: Final[int] = constants.InvoiceLimit.MAX_TITLE_LENGTH
+    """:const:`telegram.constants.InvoiceLimit.MAX_TITLE_LENGTH`
+
+    .. versionadded:: 20.0
+    """
+    MIN_DESCRIPTION_LENGTH: Final[int] = constants.InvoiceLimit.MIN_DESCRIPTION_LENGTH
+    """:const:`telegram.constants.InvoiceLimit.MIN_DESCRIPTION_LENGTH`
+
+    .. versionadded:: 20.0
+    """
+    MAX_DESCRIPTION_LENGTH: Final[int] = constants.InvoiceLimit.MAX_DESCRIPTION_LENGTH
+    """:const:`telegram.constants.InvoiceLimit.MAX_DESCRIPTION_LENGTH`
+
+    .. versionadded:: 20.0
+    """
+    MIN_PAYLOAD_LENGTH: Final[int] = constants.InvoiceLimit.MIN_PAYLOAD_LENGTH
+    """:const:`telegram.constants.InvoiceLimit.MIN_PAYLOAD_LENGTH`
+
+    .. versionadded:: 20.0
+    """
+    MAX_PAYLOAD_LENGTH: Final[int] = constants.InvoiceLimit.MAX_PAYLOAD_LENGTH
+    """:const:`telegram.constants.InvoiceLimit.MAX_PAYLOAD_LENGTH`
+
+    .. versionadded:: 20.0
+    """
+    MAX_TIP_AMOUNTS: Final[int] = constants.InvoiceLimit.MAX_TIP_AMOUNTS
+    """:const:`telegram.constants.InvoiceLimit.MAX_TIP_AMOUNTS`
+
+    .. versionadded:: 20.0
+    """

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -20,17 +20,20 @@
 import pytest
 
 from telegram import WebAppInfo
+from tests.auxil.slots import mro_slots
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="module")
 def web_app_info():
-    return WebAppInfo(url=TestWebAppInfo.url)
+    return WebAppInfo(url=WebAppInfoTestBase.url)
 
 
-class TestWebAppInfo:
+class WebAppInfoTestBase:
     url = "https://www.example.com"
 
-    def test_slot_behaviour(self, web_app_info, mro_slots):
+
+class TestWebAppInfoWithoutRequest(WebAppInfoTestBase):
+    def test_slot_behaviour(self, web_app_info):
         for attr in web_app_info.__slots__:
             assert getattr(web_app_info, attr, "err") != "err", f"got extra slot '{attr}'"
         assert len(mro_slots(web_app_info)) == len(set(mro_slots(web_app_info))), "duplicate slot"
@@ -41,9 +44,10 @@ class TestWebAppInfo:
         assert isinstance(web_app_info_dict, dict)
         assert web_app_info_dict["url"] == self.url
 
-    def test_de_json(self, bot):
+    def test_de_json(self, offline_bot):
         json_dict = {"url": self.url}
-        web_app_info = WebAppInfo.de_json(json_dict, bot)
+        web_app_info = WebAppInfo.de_json(json_dict, offline_bot)
+        assert web_app_info.api_kwargs == {}
 
         assert web_app_info.url == self.url
 

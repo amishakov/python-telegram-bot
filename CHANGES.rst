@@ -1,6 +1,1209 @@
+.. _ptb-changelog:
+
 =========
 Changelog
 =========
+
+Version 21.10
+=============
+
+*Released 2025-01-03*
+
+This is the technical changelog for version 21.10. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`_.
+
+Major Changes
+-------------
+
+- Full Support for Bot API 8.2 (:pr:`4633`)
+- Bump ``apscheduler`` & Deprecate ``pytz`` Support (:pr:`4582`)
+
+New Features
+------------
+- Add Parameter ``pattern`` to ``JobQueue.jobs()`` (:pr:`4613` closes :issue:`4544`)
+- Allow Input of Type ``Sticker`` for Several Methods (:pr:`4616` closes :issue:`4580`)
+
+Bug Fixes
+---------
+- Ensure Forward Compatibility of ``Gift`` and ``Gifts`` (:pr:`4634` closes :issue:`4637`)
+
+
+Documentation Improvements & Internal Changes
+---------------------------------------------
+
+- Use Custom Labels for ``dependabot`` PRs (:pr:`4621`)
+- Remove Redundant ``pylint`` Suppressions (:pr:`4628`)
+- Update Copyright to 2025 (:pr:`4631`)
+- Refactor Module Structure and Tests for Star Payments Classes (:pr:`4615` closes :issue:`4593`)
+- Unify ``datetime`` Imports (:pr:`4605` by `cuevasrja <https://github.com/cuevasrja>`_ closes :issue:`4577`)
+- Add Static Security Analysis of GitHub Actions Workflows (:pr:`4606`)
+
+Dependency Updates
+------------------
+
+- Bump ``astral-sh/setup-uv`` from 4.2.0 to 5.1.0 (:pr:`4625`)
+- Bump ``codecov/codecov-action`` from 5.1.1 to 5.1.2 (:pr:`4622`)
+- Bump ``actions/upload-artifact`` from 4.4.3 to 4.5.0 (:pr:`4623`)
+- Bump ``github/codeql-action`` from 3.27.9 to 3.28.0 (:pr:`4624`)
+
+Version 21.9
+============
+
+*Released 2024-12-07*
+
+This is the technical changelog for version 21.9. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`_.
+
+Major Changes
+-------------
+
+- Full Support for Bot API 8.1 (:pr:`4594` closes :issue:`4592`)
+
+Minor Changes
+-------------
+
+- Use ``MessageLimit.DEEP_LINK_LENGTH`` in ``helpers.create_deep_linked_url`` (:pr:`4597` by `nemacysts <https://github.com/nemacysts>`_)
+- Allow ``Sequence`` Input for ``allowed_updates`` in ``Application`` and ``Updater`` Methods (:pr:`4589` by `nemacysts <https://github.com/nemacysts>`_)
+
+Dependency Updates
+------------------
+
+- Update ``aiolimiter`` requirement from ~=1.1.0 to >=1.1,<1.3 (:pr:`4595`)
+- Bump ``pytest`` from 8.3.3 to 8.3.4 (:pr:`4596`)
+- Bump ``codecov/codecov-action`` from 4 to 5 (:pr:`4585`)
+- Bump ``pylint`` to v3.3.2 to Improve Python 3.13 Support (:pr:`4590` by `nemacysts <https://github.com/nemacysts>`_)
+- Bump ``srvaroa/labeler`` from 1.11.1 to 1.12.0 (:pr:`4586`)
+
+Version 21.8
+============
+*Released 2024-12-01*
+
+This is the technical changelog for version 21.8. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`_.
+
+Major Changes
+-------------
+
+- Full Support for Bot API 8.0 (:pr:`4568`, :pr:`4566` closes :issue:`4567`, :pr:`4572`, :pr:`4571`, :pr:`4570`, :pr:`4576`, :pr:`4574`)
+
+Documentation Improvements
+--------------------------
+
+- Documentation Improvements (:pr:`4565` by `Snehashish06 <https://github.com/Snehashish06>`_, :pr:`4573`)
+
+Version 21.7
+============
+*Released 2024-11-04*
+
+This is the technical changelog for version 21.7. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`_.
+
+Major Changes
+-------------
+
+- Full Support for Bot API 7.11 (:pr:`4546` closes :issue:`4543`)
+- Add ``Message.reply_paid_media`` (:pr:`4551`)
+- Drop Support for Python 3.8 (:pr:`4398` by `elpekenin <https://github.com/elpekenin>`_)
+
+Minor Changes
+-------------
+
+- Allow ``Sequence`` in ``Application.add_handlers`` (:pr:`4531` by `roast-lord <https://github.com/roast-lord>`_ closes :issue:`4530`)
+- Improve Exception Handling in ``File.download_*`` (:pr:`4542`)
+- Use Stable Python 3.13 Release in Test Suite (:pr:`4535`)
+
+Documentation Improvements
+--------------------------
+
+- Documentation Improvements (:pr:`4536` by `Ecode2 <https://github.com/Ecode2>`_, :pr:`4556`)
+- Fix Linkcheck Workflow (:pr:`4545`)
+- Use ``sphinx-build-compatibility`` to Keep Sphinx Compatibility (:pr:`4492`)
+
+Internal Changes
+----------------
+
+- Improve Test Instability Caused by ``Message`` Fixtures (:pr:`4507`)
+- Stabilize Some Flaky Tests (:pr:`4500`)
+- Reduce Creation of HTTP Clients in Tests (:pr:`4493`)
+- Update ``pytest-xdist`` Usage (:pr:`4491`)
+- Fix Failing Tests by Making Them Independent (:pr:`4494`)
+- Introduce Codecov's Test Analysis (:pr:`4487`)
+- Maintenance Work on ``Bot`` Tests (:pr:`4489`)
+- Introduce ``conftest.py`` for File Related Tests (:pr:`4488`)
+- Update Issue Templates to Use Issue Types (:pr:`4553`)
+- Update Automation to Label Changes (:pr:`4552`)
+
+Dependency Updates
+------------------
+
+- Bump ``srvaroa/labeler`` from 1.11.0 to 1.11.1 (:pr:`4549`)
+- Bump ``sphinx`` from 8.0.2 to 8.1.3 (:pr:`4532`)
+- Bump ``sphinxcontrib-mermaid`` from 0.9.2 to 1.0.0 (:pr:`4529`)
+- Bump ``srvaroa/labeler`` from 1.10.1 to 1.11.0 (:pr:`4509`)
+- Bump ``Bibo-Joshi/pyright-type-completeness`` from 1.0.0 to 1.0.1 (:pr:`4510`)
+
+Version 21.6
+============
+
+*Released 2024-09-19*
+
+This is the technical changelog for version 21.6. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`_.
+
+New Features
+------------
+
+- Full Support for Bot API 7.10 (:pr:`4461` closes :issue:`4459`, :pr:`4460`, :pr:`4463` by `aelkheir <https://github.com/aelkheir>`_, :pr:`4464`)
+- Add Parameter ``httpx_kwargs`` to ``HTTPXRequest`` (:pr:`4451` closes :issue:`4424`)
+
+Minor Changes
+-------------
+
+- Improve Type Completeness (:pr:`4466`)
+
+Internal Changes
+----------------
+
+- Update Python 3.13 Test Suite to RC2 (:pr:`4471`)
+- Enforce the ``offline_bot`` Fixture in ``Test*WithoutRequest`` (:pr:`4465`)
+- Make Tests for ``telegram.ext`` Independent of Networking (:pr:`4454`)
+- Rename Testing Base Classes (:pr:`4453`)
+
+Dependency Updates
+------------------
+
+- Bump ``pytest`` from 8.3.2 to 8.3.3 (:pr:`4475`)
+
+Version 21.5
+============
+
+*Released 2024-09-01*
+
+This is the technical changelog for version 21.5. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`_.
+
+Major Changes
+-------------
+
+- Full Support for Bot API 7.9 (:pr:`4429`)
+- Full Support for Bot API 7.8 (:pr:`4408`)
+
+New Features
+------------
+
+- Add ``MessageEntity.shift_entities`` and ``MessageEntity.concatenate`` (:pr:`4376` closes :issue:`4372`)
+- Add Parameter ``game_pattern`` to ``CallbackQueryHandler`` (:pr:`4353` by `jainamoswal <https://github.com/jainamoswal>`_ closes :issue:`4269`)
+- Add Parameter ``read_file_handle`` to ``InputFile`` (:pr:`4388` closes :issue:`4339`)
+
+Documentation Improvements
+--------------------------
+
+- Bugfix for "Available In" Admonitions (:pr:`4413`)
+- Documentation Improvements (:pr:`4400` closes :issue:`4446`, :pr:`4448` by `Palaptin <https://github.com/Palaptin>`_)
+- Document Return Types of ``RequestData`` Members (:pr:`4396`)
+- Add Introductory Paragraphs to Telegram Types Subsections (:pr:`4389` by `mohdyusuf2312 <https://github.com/mohdyusuf2312>`_ closes :issue:`4380`)
+- Start Adapting to RTD Addons (:pr:`4386`)
+
+Minor and Internal Changes
+---------------------------
+
+- Remove Surplus Logging from ``Updater`` Network Loop (:pr:`4432` by `MartinHjelmare <https://github.com/MartinHjelmare>`_)
+- Add Internal Constants for Encodings (:pr:`4378` by `elpekenin <https://github.com/elpekenin>`_)
+- Improve PyPI Automation (:pr:`4375` closes :issue:`4373`)
+- Update Test Suite to New Test Channel Setup (:pr:`4435`)
+- Improve Fixture Usage in ``test_message.py`` (:pr:`4431` by `Palaptin <https://github.com/Palaptin>`_)
+- Update Python 3.13 Test Suite to RC1 (:pr:`4415`)
+- Bump ``ruff`` and Add New Rules (:pr:`4416`)
+
+Dependency Updates
+------------------
+
+- Update ``cachetools`` requirement from <5.5.0,>=5.3.3 to >=5.3.3,<5.6.0 (:pr:`4437`)
+- Bump ``sphinx`` from 7.4.7 to 8.0.2 and ``furo`` from 2024.7.18 to 2024.8.6 (:pr:`4412`)
+- Bump ``test-summary/action`` from 2.3 to 2.4 (:pr:`4410`)
+- Bump ``pytest`` from 8.2.2 to 8.3.2 (:pr:`4403`)
+- Bump ``dependabot/fetch-metadata`` from 2.1.0 to 2.2.0 (:pr:`4411`)
+- Update ``cachetools`` requirement from ~=5.3.3 to >=5.3.3,<5.5.0 (:pr:`4390`)
+- Bump ``sphinx`` from 7.3.7 to 7.4.7 (:pr:`4395`)
+- Bump ``furo`` from 2024.5.6 to 2024.7.18 (:pr:`4392`)
+
+Version 21.4
+============
+
+*Released 2024-07-12*
+
+This is the technical changelog for version 21.4. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`_.
+
+Major Changes
+-------------
+
+- Full Support for Bot API 7.5 (:pr:`4328`, :pr:`4316`, :pr:`4315`, :pr:`4312` closes :issue:`4310`, :pr:`4311`)
+- Full Support for Bot API 7.6 (:pr:`4333` closes :issue:`4331`, :pr:`4344`, :pr:`4341`, :pr:`4334`, :pr:`4335`, :pr:`4351`, :pr:`4342`, :pr:`4348`)
+- Full Support for Bot API 7.7 (:pr:`4356` closes :issue:`4355`)
+- Drop ``python-telegram-bot-raw`` And Switch to ``pyproject.toml`` Based Packaging (:pr:`4288` closes :issue:`4129` and :issue:`4296`)
+- Deprecate Inclusion of ``successful_payment`` in ``Message.effective_attachment`` (:pr:`4365` closes :issue:`4350`)
+
+New Features
+------------
+
+- Add Support for Python 3.13 Beta (:pr:`4253`)
+- Add ``filters.PAID_MEDIA`` (:pr:`4357`)
+- Log Received Data on Deserialization Errors (:pr:`4304`)
+- Add ``MessageEntity.adjust_message_entities_to_utf_16`` Utility Function (:pr:`4323` by `Antares0982 <https://github.com/Antares0982>`_ closes :issue:`4319`)
+- Make Argument ``bot`` of ``TelegramObject.de_json`` Optional (:pr:`4320`)
+
+Documentation Improvements
+--------------------------
+
+- Documentation Improvements (:pr:`4303` closes :issue:`4301`)
+- Restructure Readme (:pr:`4362`)
+- Fix Link-Check Workflow (:pr:`4332`)
+
+Internal Changes
+----------------
+
+- Automate PyPI Releases (:pr:`4364` closes :issue:`4318`)
+- Add ``mise-en-place`` to ``.gitignore`` (:pr:`4300`)
+- Use a Composite Action for Testing Type Completeness (:pr:`4367`)
+- Stabilize Some Concurrency Usages in Test Suite (:pr:`4360`)
+- Add a Test Case for ``MenuButton`` (:pr:`4363`)
+- Extend ``SuccessfulPayment`` Test (:pr:`4349`)
+- Small Fixes for ``test_stars.py`` (:pr:`4347`)
+- Use Python 3.13 Beta 3 in Test Suite (:pr:`4336`)
+
+Dependency Updates
+------------------
+
+- Bump ``ruff`` and Add New Rules (:pr:`4329`)
+- Bump ``pre-commit`` Hooks to Latest Versions (:pr:`4337`)
+- Add Lower Bound for ``flaky`` Dependency (:pr:`4322` by `Palaptin <https://github.com/Palaptin>`_)
+- Bump ``pytest`` from 8.2.1 to 8.2.2 (:pr:`4294`)
+
+Version 21.3
+============
+*Released 2024-06-07*
+
+This is the technical changelog for version 21.3. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`_.
+
+Major Changes
+-------------
+
+- Full Support for Bot API 7.4 (:pr:`4286`, :pr:`4276` closes :issue:`4275`, :pr:`4285`, :pr:`4283`, :pr:`4280`, :pr:`4278`, :pr:`4279`)
+- Deprecate ``python-telegram-bot-raw`` (:pr:`4270`)
+- Remove Functionality Deprecated in Bot API 7.3 (:pr:`4266` closes :issue:`4244`)
+
+New Features
+------------
+
+- Add Parameter ``chat_id`` to ``ChatMemberHandler`` (:pr:`4290` by `uniquetrij <https://github.com/uniquetrij>`_ closes :issue:`4287`)
+
+Documentation Improvements
+--------------------------
+
+- Documentation Improvements (:pr:`4264` closes :issue:`4240`)
+
+Internal Changes
+----------------
+
+- Add ``setuptools`` to ``requirements-dev.txt`` (:pr:`4282`)
+- Update Settings for pre-commit.ci (:pr:`4265`)
+
+Dependency Updates
+------------------
+
+- Bump ``pytest`` from 8.2.0 to 8.2.1 (:pr:`4272`)
+
+Version 21.2
+============
+
+*Released 2024-05-20*
+
+This is the technical changelog for version 21.2. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`_.
+
+Major Changes
+-------------
+
+- Full Support for Bot API 7.3 (:pr:`4246`, :pr:`4260`, :pr:`4243`, :pr:`4248`, :pr:`4242` closes :issue:`4236`, :pr:`4247` by `aelkheir <https://github.com/aelkheir>`_)
+- Remove Functionality Deprecated by Bot API 7.2 (:pr:`4245`)
+
+New Features
+------------
+
+- Add Version to ``PTBDeprecationWarning`` (:pr:`4262` closes :issue:`4261`)
+- Handle Exceptions in building ``CallbackContext`` (:pr:`4222`)
+
+Bug Fixes
+---------
+
+- Call ``Application.post_stop`` Only if ``Application.stop`` was called (:pr:`4211` closes :issue:`4210`)
+- Handle ``SystemExit`` raised in Handlers (:pr:`4157` closes :issue:`4155` and :issue:`4156`)
+- Make ``Birthdate.to_date`` Return a ``datetime.date`` Object (:pr:`4251`)
+
+Documentation Improvements
+--------------------------
+
+- Documentation Improvements (:pr:`4217`)
+
+Internal Changes
+----------------
+
+- Add New Rules to ``ruff`` Config (:pr:`4250`)
+- Adapt Test Suite to Changes in Error Messages (:pr:`4238`)
+
+Dependency Updates
+------------------
+
+- Bump ``furo`` from 2024.4.27 to 2024.5.6 (:pr:`4252`)
+- ``pre-commit`` autoupdate (:pr:`4239`)
+- Bump ``pytest`` from 8.1.1 to 8.2.0 (:pr:`4231`)
+- Bump ``dependabot/fetch-metadata`` from 2.0.0 to 2.1.0 (:pr:`4228`)
+- Bump ``pytest-asyncio`` from 0.21.1 to 0.21.2 (:pr:`4232`)
+- Bump ``pytest-xdist`` from 3.6.0 to 3.6.1 (:pr:`4233`)
+- Bump ``furo`` from 2024.1.29 to 2024.4.27 (:pr:`4230`)
+- Bump ``srvaroa/labeler`` from 1.10.0 to 1.10.1 (:pr:`4227`)
+- Bump ``pytest`` from 7.4.4 to 8.1.1 (:pr:`4218`)
+- Bump ``sphinx`` from 7.2.6 to 7.3.7 (:pr:`4215`)
+- Bump ``pytest-xdist`` from 3.5.0 to 3.6.0 (:pr:`4215`)
+
+Version 21.1.1
+==============
+
+*Released 2024-04-15*
+
+This is the technical changelog for version 21.1.1. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`__.
+
+Bug Fixes
+---------
+
+-  Fix Bug With Parameter ``message_thread_id`` of ``Message.reply_*`` (:pr:`4207` closes :issue:`4205`)
+
+Minor Changes
+-------------
+
+-  Remove Deprecation Warning in ``JobQueue.run_daily`` (:pr:`4206` by `@Konano <https://github.com/Konano>`__)
+-  Fix Annotation of ``EncryptedCredentials.decrypted_secret`` (:pr:`4199` by `@marinelay <https://github.com/marinelay>`__ closes :issue:`4198`)
+
+
+Version 21.1
+==============
+
+*Released 2024-04-12*
+
+This is the technical changelog for version 21.1. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`__.
+
+Major Changes
+-------------
+
+-  API 7.2 (:pr:`4180` closes :issue:`4179` and :issue:`4181`, :issue:`4181`)
+-  Make ``ChatAdministratorRights/ChatMemberAdministrator.can_*_stories`` Required (API 7.1) (:pr:`4192`)
+
+Minor Changes
+-------------
+
+-  Refactor Debug logging in ``Bot`` to Improve Type Hinting (:pr:`4151` closes :issue:`4010`)
+
+New Features
+------------
+
+-  Make ``Message.reply_*`` Reply in the Same Topic by Default (:pr:`4170` by `@aelkheir <https://github.com/aelkheir>`__ closes :issue:`4139`)
+-  Accept Socket Objects for Webhooks (:pr:`4161` closes :issue:`4078`)
+-  Add ``Update.effective_sender`` (:pr:`4168` by `@aelkheir <https://github.com/aelkheir>`__ closes :issue:`4085`)
+
+Documentation Improvements
+--------------------------
+
+-  Documentation Improvements (:pr:`4171`, :pr:`4158` by `@teslaedison <https://github.com/teslaedison>`__)
+
+Internal Changes
+----------------
+
+-  Temporarily Mark Tests with ``get_sticker_set`` as XFAIL due to API 7.2 Update (:pr:`4190`)
+
+Dependency Updates
+------------------
+
+-  ``pre-commit`` autoupdate (:pr:`4184`)
+-  Bump ``dependabot/fetch-metadata`` from 1.6.0 to 2.0.0 (:pr:`4185`)
+
+
+Version 21.0.1
+==============
+
+*Released 2024-03-06*
+
+This is the technical changelog for version 21.0.1. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`__.
+
+Bug Fixes
+---------
+
+-  Remove ``docs`` from Package (:pr:`4150`)
+
+
+Version 21.0
+============
+
+*Released 2024-03-06*
+
+This is the technical changelog for version 21.0. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`__.
+
+Major Changes
+-------------
+
+-  Remove Functionality Deprecated in API 7.0 (:pr:`4114` closes :issue:`4099`)
+-  API 7.1 (:pr:`4118`)
+
+New Features
+------------
+
+-  Add Parameter ``media_write_timeout`` to ``HTTPXRequest`` and Method ``ApplicationBuilder.media_write_timeout`` (:pr:`4120` closes :issue:`3864`)
+-  Handle Properties in ``TelegramObject.__setstate__`` (:pr:`4134` closes :issue:`4111`)
+
+Bug Fixes
+---------
+
+-  Add Missing Slot to ``Updater`` (:pr:`4130` closes :issue:`4127`)
+
+Documentation Improvements
+--------------------------
+
+-  Improve HTML Download of Documentation (:pr:`4146` closes :issue:`4050`)
+-  Documentation Improvements (:pr:`4109`, :issue:`4116`)
+-  Update Copyright to 2024 (:pr:`4121` by `@aelkheir <https://github.com/aelkheir>`__ closes :issue:`4041`)
+
+Internal Changes
+----------------
+
+-  Apply ``pre-commit`` Checks More Widely (:pr:`4135`)
+-  Refactor and Overhaul ``test_official`` (:pr:`4087` closes :issue:`3874`)
+-  Run Unit Tests in PRs on Requirements Changes (:pr:`4144`)
+-  Make ``Updater.stop`` Independent of ``CancelledError`` (:pr:`4126`)
+
+Dependency Updates
+------------------
+
+-  Relax Upper Bound for ``httpx`` Dependency (:pr:`4148`)
+-  Bump ``test-summary/action`` from 2.2 to 2.3 (:pr:`4142`)
+-  Update ``cachetools`` requirement from ~=5.3.2 to ~=5.3.3 (:pr:`4141`)
+-  Update ``httpx`` requirement from ~=0.26.0 to ~=0.27.0 (:pr:`4131`)
+
+
+Version 20.8
+============
+
+*Released 2024-02-08*
+
+This is the technical changelog for version 20.8. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`__.
+
+Major Changes
+-------------
+
+-  API 7.0 (:pr:`4034` closes :issue:`4033`, :pr:`4038` by `@aelkheir <https://github.com/aelkheir>`__)
+
+Minor Changes
+-------------
+
+-  Fix Type Hint for ``filters`` Parameter of ``MessageHandler`` (:pr:`4039` by `@Palaptin <https://github.com/Palaptin>`__)
+-  Deprecate ``filters.CHAT`` (:pr:`4083` closes :issue:`4062`)
+-  Improve Error Handling in Built-In Webhook Handler (:pr:`3987` closes :issue:`3979`)
+
+New Features
+------------
+
+-  Add Parameter ``pattern`` to ``PreCheckoutQueryHandler`` and ``filters.SuccessfulPayment`` (:pr:`4005` by `@aelkheir <https://github.com/aelkheir>`__ closes :issue:`3752`)
+-  Add Missing Conversions of ``type`` to Corresponding Enum from ``telegram.constants`` (:pr:`4067`)
+-  Add Support for Unix Sockets to ``Updater.start_webhook`` (:pr:`3986` closes :issue:`3978`)
+-  Add ``Bot.do_api_request`` (:pr:`4084` closes :issue:`4053`)
+-  Add ``AsyncContextManager`` as Parent Class to ``BaseUpdateProcessor`` (:pr:`4001`)
+
+Documentation Improvements
+--------------------------
+
+-  Documentation Improvements (:pr:`3919`)
+-  Add Docstring to Dunder Methods (:pr:`3929` closes :issue:`3926`)
+-  Documentation Improvements (:pr:`4002`, :pr:`4079` by `@kenjitagawa <https://github.com/kenjitagawa>`__, :pr:`4104` by `@xTudoS <https://github.com/xTudoS>`__)
+
+Internal Changes
+----------------
+
+-  Drop Usage of DeepSource (:pr:`4100`)
+-  Improve Type Completeness & Corresponding Workflow (:pr:`4035`)
+-  Bump ``ruff`` and Remove ``sort-all`` (:pr:`4075`)
+-  Move Handler Files to ``_handlers`` Subdirectory (:pr:`4064` by `@lucasmolinari <https://github.com/lucasmolinari>`__ closes :issue:`4060`)
+-  Introduce ``sort-all`` Hook for ``pre-commit`` (:pr:`4052`)
+-  Use Recommended ``pre-commit`` Mirror for ``black`` (:pr:`4051`)
+-  Remove Unused ``DEFAULT_20`` (:pr:`3997`)
+-  Migrate From ``setup.cfg`` to ``pyproject.toml`` Where Possible (:pr:`4088`)
+
+Dependency Updates
+------------------
+
+-  Bump ``black`` and ``ruff`` (:pr:`4089`)
+-  Bump ``srvaroa/labeler`` from 1.8.0 to 1.10.0 (:pr:`4048`)
+-  Update ``tornado`` requirement from ~=6.3.3 to ~=6.4 (:pr:`3992`)
+-  Bump ``actions/stale`` from 8 to 9 (:pr:`4046`)
+-  Bump ``actions/setup-python`` from 4 to 5 (:pr:`4047`)
+-  ``pre-commit`` autoupdate (:pr:`4101`)
+-  Bump ``actions/upload-artifact`` from 3 to 4 (:pr:`4045`)
+-  ``pre-commit`` autoupdate (:pr:`3996`)
+-  Bump ``furo`` from 2023.9.10 to 2024.1.29 (:pr:`4094`)
+-  ``pre-commit`` autoupdate (:pr:`4043`)
+-  Bump ``codecov/codecov-action`` from 3 to 4 (:pr:`4091`)
+-  Bump ``EndBug/add-and-commit`` from 9.1.3 to 9.1.4 (:pr:`4090`)
+-  Update ``httpx`` requirement from ~=0.25.2 to ~=0.26.0 (:pr:`4024`)
+-  Bump ``pytest`` from 7.4.3 to 7.4.4 (:pr:`4056`)
+-  Bump ``srvaroa/labeler`` from 1.7.0 to 1.8.0 (:pr:`3993`)
+-  Bump ``test-summary/action`` from 2.1 to 2.2 (:pr:`4044`)
+-  Bump ``dessant/lock-threads`` from 4.0.1 to 5.0.1 (:pr:`3994`)
+
+
+Version 20.7
+============
+
+*Released 2023-11-27*
+
+This is the technical changelog for version 20.7. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`__.
+
+New Features
+------------
+
+-  Add ``JobQueue.scheduler_configuration`` and Corresponding Warnings (:pr:`3913` closes :issue:`3837`)
+-  Add Parameter ``socket_options`` to ``HTTPXRequest`` (:pr:`3935` closes :issue:`2965`)
+-  Add ``ApplicationBuilder.(get_updates_)socket_options`` (:pr:`3943`)
+-  Improve ``write_timeout`` Handling for Media Methods (:pr:`3952`)
+-  Add ``filters.Mention`` (:pr:`3941` closes :issue:`3799`)
+-  Rename ``proxy_url`` to ``proxy`` and Allow ``httpx.{Proxy, URL}`` as Input (:pr:`3939` closes :issue:`3844`)
+
+Bug Fixes & Changes
+-------------------
+
+-  Adjust ``read_timeout`` Behavior for ``Bot.get_updates`` (:pr:`3963` closes :issue:`3893`)
+-  Improve ``BaseHandler.__repr__`` for Callbacks without ``__qualname__`` (:pr:`3934`)
+-  Fix Persistency Issue with Ended Non-Blocking Conversations (:pr:`3962`)
+-  Improve Type Hinting for Arguments with Default Values in ``Bot`` (:pr:`3942`)
+
+Documentation Improvements
+--------------------------
+
+-  Add Documentation for ``__aenter__`` and ``__aexit__`` Methods (:pr:`3907` closes :issue:`3886`)
+-  Improve Insertion of Kwargs into ``Bot`` Methods (:pr:`3965`)
+
+Internal Changes
+----------------
+
+-  Adjust Tests to New Error Messages (:pr:`3970`)
+
+Dependency Updates
+------------------
+
+-  Bump ``pytest-xdist`` from 3.3.1 to 3.4.0 (:pr:`3975`)
+-  ``pre-commit`` autoupdate (:pr:`3967`)
+-  Update ``httpx`` requirement from ~=0.25.1 to ~=0.25.2 (:pr:`3983`)
+-  Bump ``pytest-xdist`` from 3.4.0 to 3.5.0 (:pr:`3982`)
+-  Update ``httpx`` requirement from ~=0.25.0 to ~=0.25.1 (:pr:`3961`)
+-  Bump ``srvaroa/labeler`` from 1.6.1 to 1.7.0 (:pr:`3958`)
+-  Update ``cachetools`` requirement from ~=5.3.1 to ~=5.3.2 (:pr:`3954`)
+-  Bump ``pytest`` from 7.4.2 to 7.4.3 (:pr:`3953`)
+
+
+Version 20.6
+============
+
+*Released 2023-10-03*
+
+This is the technical changelog for version 20.6. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`__.
+
+Major Changes
+-------------
+
+-  Drop Backward Compatibility Layer Introduced in :pr:`3853` (API 6.8) (:pr:`3873`)
+-  Full Support for Bot API 6.9 (:pr:`3898`)
+
+New Features
+------------
+
+-  Add Rich Equality Comparison to ``WriteAccessAllowed`` (:pr:`3911` closes :issue:`3909`)
+-  Add ``__repr__`` Methods Added in :pr:`3826` closes :issue:`3770` to Sphinx Documentation (:pr:`3901` closes :issue:`3889`)
+-  Add String Representation for Selected Classes (:pr:`3826` closes :issue:`3770`)
+
+Minor Changes
+-------------
+
+-  Add Support Python 3.12 (:pr:`3915`)
+-  Documentation Improvements (:pr:`3910`)
+
+Internal Changes
+----------------
+
+-  Verify Type Hints for Bot Method & Telegram Class Parameters (:pr:`3868`)
+-  Move Bot API Tests to Separate Workflow File (:pr:`3912`)
+-  Fix Failing ``file_size`` Tests (:pr:`3906`)
+-  Set Threshold for DeepSource’s PY-R1000 to High (:pr:`3888`)
+-  One-Time Code Formatting Improvement via ``--preview`` Flag of ``black`` (:pr:`3882`)
+-  Move Dunder Methods to the Top of Class Bodies (:pr:`3883`)
+-  Remove Superfluous ``Defaults.__ne__`` (:pr:`3884`)
+
+Dependency Updates
+------------------
+
+-  ``pre-commit`` autoupdate (:pr:`3876`)
+-  Update ``pre-commit`` Dependencies (:pr:`3916`)
+-  Bump ``actions/checkout`` from 3 to 4 (:pr:`3914`)
+-  Update ``httpx`` requirement from ~=0.24.1 to ~=0.25.0 (:pr:`3891`)
+-  Bump ``furo`` from 2023.8.19 to 2023.9.10 (:pr:`3890`)
+-  Bump ``sphinx`` from 7.2.5 to 7.2.6 (:pr:`3892`)
+-  Update ``tornado`` requirement from ~=6.2 to ~=6.3.3 (:pr:`3675`)
+-  Bump ``pytest`` from 7.4.0 to 7.4.2 (:pr:`3881`)
+
+
+Version 20.5
+============
+*Released 2023-09-03*
+
+This is the technical changelog for version 20.5. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`__.
+
+Major Changes
+-------------
+
+-  API 6.8 (:pr:`3853`)
+-  Remove Functionality Deprecated Since Bot API 6.5, 6.6 or 6.7 (:pr:`3858`)
+
+New Features
+------------
+
+-  Extend Allowed Values for HTTP Version (:pr:`3823` closes :issue:`3821`)
+-  Add ``has_args`` Parameter to ``CommandHandler`` (:pr:`3854` by `@thatguylah <https://github.com/thatguylah>`__ closes :issue:`3798`)
+-  Add ``Application.stop_running()`` and Improve Marking Updates as Read on ``Updater.stop()`` (:pr:`3804`)
+
+Minor Changes
+-------------
+
+-  Type Hinting Fixes for ``WebhookInfo`` (:pr:`3871`)
+-  Test and Document ``Exception.__cause__`` on ``NetworkError`` (:pr:`3792` closes :issue:`3778`)
+-  Add Support for Python 3.12 RC (:pr:`3847`)
+
+Documentation Improvements
+--------------------------
+
+-  Remove Version Check from Examples (:pr:`3846`)
+-  Documentation Improvements (:pr:`3803`, :pr:`3797`, :pr:`3816` by `@trim21 <https://github.com/trim21>`__, :pr:`3829` by `@aelkheir <https://github.com/aelkheir>`__)
+-  Provide Versions of ``customwebhookbot.py`` with Different Frameworks (:pr:`3820` closes :issue:`3717`)
+
+Dependency Updates
+------------------
+
+-  ``pre-commit`` autoupdate (:pr:`3824`)
+-  Bump ``srvaroa/labeler`` from 1.6.0 to 1.6.1 (:pr:`3870`)
+-  Bump ``sphinx`` from 7.0.1 to 7.1.1 (:pr:`3818`)
+-  Bump ``sphinx`` from 7.2.3 to 7.2.5 (:pr:`3869`)
+-  Bump ``furo`` from 2023.5.20 to 2023.7.26 (:pr:`3817`)
+-  Update ``apscheduler`` requirement from ~=3.10.3 to ~=3.10.4 (:pr:`3862`)
+-  Bump ``sphinx`` from 7.2.2 to 7.2.3 (:pr:`3861`)
+-  Bump ``pytest-asyncio`` from 0.21.0 to 0.21.1 (:pr:`3801`)
+-  Bump ``sphinx-paramlinks`` from 0.5.4 to 0.6.0 (:pr:`3840`)
+-  Update ``apscheduler`` requirement from ~=3.10.1 to ~=3.10.3 (:pr:`3851`)
+-  Bump ``furo`` from 2023.7.26 to 2023.8.19 (:pr:`3850`)
+-  Bump ``sphinx`` from 7.1.2 to 7.2.2 (:pr:`3852`)
+-  Bump ``sphinx`` from 7.1.1 to 7.1.2 (:pr:`3827`)
+
+
+Version 20.4
+============
+
+*Released 2023-07-09*
+
+This is the technical changelog for version 20.4. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`__.
+
+Major Changes
+-------------
+
+-  Drop Support for Python 3.7 (:pr:`3728`, :pr:`3742` by `@Trifase <https://github.com/Trifase>`__, :pr:`3749` by `@thefunkycat <https://github.com/thefunkycat>`__, :pr:`3740` closes :issue:`3732`, :pr:`3754` closes :issue:`3731`, :pr:`3753`, :pr:`3764`, :pr:`3762`, :pr:`3759` closes :issue:`3733`)
+
+New Features
+------------
+
+-  Make Integration of ``APScheduler`` into ``JobQueue`` More Explicit (:pr:`3695`)
+-  Introduce ``BaseUpdateProcessor`` for Customized Concurrent Handling of Updates (:pr:`3654` closes :issue:`3509`)
+
+Minor Changes
+-------------
+
+-  Fix Inconsistent Type Hints for ``timeout`` Parameter of ``Bot.get_updates`` (:pr:`3709` by `@revolter <https://github.com/revolter>`__)
+-  Use Explicit Optionals (:pr:`3692` by `@MiguelX413 <https://github.com/MiguelX413>`__)
+
+Bug Fixes
+---------
+
+-  Fix Wrong Warning Text in ``KeyboardButton.__eq__`` (:pr:`3768`)
+
+Documentation Improvements
+--------------------------
+
+-  Explicitly set ``allowed_updates`` in Examples (:pr:`3741` by `@Trifase <https://github.com/Trifase>`__ closes :issue:`3726`)
+-  Bump ``furo`` and ``sphinx`` (:pr:`3719`)
+-  Documentation Improvements (:pr:`3698`, :pr:`3708` by `@revolter <https://github.com/revolter>`__, :pr:`3767`)
+-  Add Quotes for Installation Instructions With Optional Dependencies (:pr:`3780`)
+-  Exclude Type Hints from Stability Policy (:pr:`3712`)
+-  Set ``httpx`` Logging Level to Warning in Examples (:pr:`3746` closes :issue:`3743`)
+
+Internal Changes
+----------------
+
+-  Drop a Legacy ``pre-commit.ci`` Configuration (:pr:`3697`)
+-  Add Python 3.12 Beta to the Test Matrix (:pr:`3751`)
+-  Use Temporary Files for Testing File Downloads (:pr:`3777`)
+-  Auto-Update Changed Version in Other Files After Dependabot PRs (:pr:`3716`)
+-  Add More ``ruff`` Rules (:pr:`3763`)
+-  Rename ``_handler.py`` to ``_basehandler.py`` (:pr:`3761`)
+-  Automatically Label ``pre-commit-ci`` PRs (:pr:`3713`)
+-  Rework ``pytest`` Integration into GitHub Actions (:pr:`3776`)
+-  Fix Two Bugs in GitHub Actions Workflows (:pr:`3739`)
+
+Dependency Updates
+------------------
+
+-  Update ``cachetools`` requirement from ~=5.3.0 to ~=5.3.1 (:pr:`3738`)
+-  Update ``aiolimiter`` requirement from ~=1.0.0 to ~=1.1.0 (:pr:`3707`)
+-  ``pre-commit`` autoupdate (:pr:`3791`)
+-  Bump ``sphinxcontrib-mermaid`` from 0.8.1 to 0.9.2 (:pr:`3737`)
+-  Bump ``pytest-xdist`` from 3.2.1 to 3.3.0 (:pr:`3705`)
+-  Bump ``srvaroa/labeler`` from 1.5.0 to 1.6.0 (:pr:`3786`)
+-  Bump ``dependabot/fetch-metadata`` from 1.5.1 to 1.6.0 (:pr:`3787`)
+-  Bump ``dessant/lock-threads`` from 4.0.0 to 4.0.1 (:pr:`3785`)
+-  Bump ``pytest`` from 7.3.2 to 7.4.0 (:pr:`3774`)
+-  Update ``httpx`` requirement from ~=0.24.0 to ~=0.24.1 (:pr:`3715`)
+-  Bump ``pytest-xdist`` from 3.3.0 to 3.3.1 (:pr:`3714`)
+-  Bump ``pytest`` from 7.3.1 to 7.3.2 (:pr:`3758`)
+-  ``pre-commit`` autoupdate (:pr:`3747`)
+
+
+Version 20.3
+============
+*Released 2023-05-07*
+
+This is the technical changelog for version 20.3. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`_.
+
+Major Changes
+-------------
+
+- Full support for API 6.7 (:pr:`3673`)
+- Add a Stability Policy (:pr:`3622`)
+
+New Features
+------------
+
+- Add ``Application.mark_data_for_update_persistence`` (:pr:`3607`)
+- Make ``Message.link`` Point to Thread View Where Possible (:pr:`3640`)
+- Localize Received ``datetime`` Objects According to ``Defaults.tzinfo`` (:pr:`3632`)
+
+Minor Changes, Documentation Improvements and CI
+------------------------------------------------
+
+- Empower ``ruff`` (:pr:`3594`)
+- Drop Usage of ``sys.maxunicode`` (:pr:`3630`)
+- Add String Representation for ``RequestParameter`` (:pr:`3634`)
+- Stabilize CI by Rerunning Failed Tests (:pr:`3631`)
+- Give Loggers Better Names (:pr:`3623`)
+- Add Logging for Invalid JSON Data in ``BasePersistence.parse_json_payload`` (:pr:`3668`)
+- Improve Warning Categories & Stacklevels (:pr:`3674`)
+- Stabilize ``test_delete_sticker_set`` (:pr:`3685`)
+- Shield Update Fetcher Task in ``Application.start`` (:pr:`3657`)
+- Recover 100% Type Completeness (:pr:`3676`)
+- Documentation Improvements (:pr:`3628`, :pr:`3636`, :pr:`3694`)
+
+Dependencies
+------------
+
+- Bump ``actions/stale`` from 7 to 8 (:pr:`3644`)
+- Bump ``furo`` from 2023.3.23 to 2023.3.27 (:pr:`3643`)
+- ``pre-commit`` autoupdate (:pr:`3646`, :pr:`3688`)
+- Remove Deprecated ``codecov`` Package from CI (:pr:`3664`)
+- Bump ``sphinx-copybutton`` from 0.5.1 to 0.5.2 (:pr:`3662`)
+- Update ``httpx`` requirement from ~=0.23.3 to ~=0.24.0 (:pr:`3660`)
+- Bump ``pytest`` from 7.2.2 to 7.3.1 (:pr:`3661`)
+
+Version 20.2
+============
+*Released 2023-03-25*
+
+This is the technical changelog for version 20.2. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`_.
+
+Major Changes
+-------------
+- Full Support for API 6.6 (:pr:`3584`)
+- Revert to HTTP/1.1 as Default and make HTTP/2 an Optional Dependency (:pr:`3576`)
+
+Minor Changes, Documentation Improvements and CI
+------------------------------------------------
+- Documentation Improvements (:pr:`3565`, :pr:`3600`)
+- Handle Symbolic Links in ``was_called_by`` (:pr:`3552`)
+- Tidy Up Tests Directory (:pr:`3553`)
+- Enhance ``Application.create_task`` (:pr:`3543`)
+- Make Type Completeness Workflow Usable for ``PRs`` from Forks (:pr:`3551`)
+- Refactor and Overhaul the Test Suite (:pr:`3426`)
+
+Dependencies
+------------
+- Bump ``pytest-asyncio`` from 0.20.3 to 0.21.0 (:pr:`3624`)
+- Bump ``furo`` from 2022.12.7 to 2023.3.23 (:pr:`3625`)
+- Bump ``pytest-xdist`` from 3.2.0 to 3.2.1 (:pr:`3606`)
+- ``pre-commit`` autoupdate (:pr:`3577`)
+- Update ``apscheduler`` requirement from ~=3.10.0 to ~=3.10.1 (:pr:`3572`)
+- Bump ``pytest`` from 7.2.1 to 7.2.2 (:pr:`3573`)
+- Bump ``pytest-xdist`` from 3.1.0 to 3.2.0 (:pr:`3550`)
+- Bump ``sphinxcontrib-mermaid`` from 0.7.1 to 0.8 (:pr:`3549`)
+
+Version 20.1
+============
+*Released 2023-02-09*
+
+This is the technical changelog for version 20.1. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`_.
+
+Major Changes
+-------------
+
+- Full Support for Bot API 6.5 (:pr:`3530`)
+
+New Features
+------------
+
+- Add ``Application(Builder).post_stop`` (:pr:`3466`)
+- Add ``Chat.effective_name`` Convenience Property (:pr:`3485`)
+- Allow to Adjust HTTP Version and Use HTTP/2 by Default (:pr:`3506`)
+
+Documentation Improvements
+--------------------------
+
+- Enhance ``chatmemberbot`` Example (:pr:`3500`)
+- Automatically Generate Cross-Reference Links (:pr:`3501`, :pr:`3529`, :pr:`3523`)
+- Add Some Graphic Elements to Docs (:pr:`3535`)
+- Various Smaller Improvements (:pr:`3464`, :pr:`3483`, :pr:`3484`, :pr:`3497`, :pr:`3512`, :pr:`3515`,  :pr:`3498`)
+
+Minor Changes, Documentation Improvements and CI
+------------------------------------------------
+
+- Update Copyright to 2023 (:pr:`3459`)
+- Stabilize Tests on Closing and Hiding the General Forum Topic (:pr:`3460`)
+- Fix Dependency Warning Typo (:pr:`3474`)
+- Cache Dependencies on ``GitHub`` Actions (:pr:`3469`)
+- Store Documentation Builts as ``GitHub`` Actions Artifacts (:pr:`3468`)
+- Add ``ruff`` to ``pre-commit`` Hooks (:pr:`3488`)
+- Improve Warning for ``days`` Parameter of  ``JobQueue.run_daily`` (:pr:`3503`)
+- Improve Error Message for ``NetworkError`` (:pr:`3505`)
+- Lock Inactive Threads Only Once Each Day (:pr:`3510`)
+- Bump ``pytest`` from 7.2.0 to 7.2.1 (:pr:`3513`)
+- Check for 3D Arrays in ``check_keyboard_type`` (:pr:`3514`)
+- Explicit Type Annotations (:pr:`3508`)
+- Increase Verbosity of Type Completeness CI Job (:pr:`3531`)
+- Fix CI on Python 3.11 + Windows (:pr:`3547`)
+
+Dependencies
+------------
+
+- Bump ``actions/stale`` from 6 to 7 (:pr:`3461`)
+- Bump ``dessant/lock-threads`` from 3.0.0 to 4.0.0 (:pr:`3462`)
+- ``pre-commit`` autoupdate (:pr:`3470`)
+- Update ``httpx`` requirement from ~=0.23.1 to ~=0.23.3 (:pr:`3489`)
+- Update ``cachetools`` requirement from ~=5.2.0 to ~=5.2.1 (:pr:`3502`)
+- Improve Config for ``ruff`` and Bump to ``v0.0.222`` (:pr:`3507`)
+- Update ``cachetools`` requirement from ~=5.2.1 to ~=5.3.0 (:pr:`3520`)
+- Bump ``isort`` to 5.12.0 (:pr:`3525`)
+- Update ``apscheduler`` requirement from ~=3.9.1 to ~=3.10.0 (:pr:`3532`)
+- ``pre-commit`` autoupdate (:pr:`3537`)
+- Update ``cryptography`` requirement to >=39.0.1 to address Vulnerability (:pr:`3539`)
+
+Version 20.0
+============
+*Released 2023-01-01*
+
+This is the technical changelog for version 20.0. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`_.
+
+Major Changes
+-------------
+
+- Full Support For Bot API 6.4 (:pr:`3449`)
+
+Minor Changes, Documentation Improvements and CI
+------------------------------------------------
+
+- Documentation Improvements (:pr:`3428`, :pr:`3423`, :pr:`3429`, :pr:`3441`, :pr:`3404`, :pr:`3443`)
+- Allow ``Sequence`` Input for Bot Methods (:pr:`3412`)
+- Update Link-Check CI and Replace a Dead Link (:pr:`3456`)
+- Freeze Classes Without Arguments (:pr:`3453`)
+- Add New Constants (:pr:`3444`)
+- Override ``Bot.__deepcopy__`` to Raise ``TypeError`` (:pr:`3446`)
+- Add Log Decorator to ``Bot.get_webhook_info`` (:pr:`3442`)
+- Add Documentation On Verifying Releases (:pr:`3436`)
+- Drop Undocumented ``Job.__lt__`` (:pr:`3432`)
+
+Dependencies
+------------
+
+- Downgrade ``sphinx`` to 5.3.0 to Fix Search (:pr:`3457`)
+- Bump ``sphinx`` from 5.3.0 to 6.0.0 (:pr:`3450`)
+
+Version 20.0b0
+==============
+*Released 2022-12-15*
+
+This is the technical changelog for version 20.0b0. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`_.
+
+Major Changes
+-------------
+
+- Make ``TelegramObject`` Immutable (:pr:`3249`)
+
+Minor Changes, Documentation Improvements and CI
+------------------------------------------------
+
+- Reduce Code Duplication in Testing ``Defaults`` (:pr:`3419`)
+- Add Notes and Warnings About Optional Dependencies (:pr:`3393`)
+- Simplify Internals of ``Bot`` Methods (:pr:`3396`)
+- Reduce Code Duplication in Several ``Bot`` Methods (:pr:`3385`)
+- Documentation Improvements (:pr:`3386`, :pr:`3395`, :pr:`3398`, :pr:`3403`)
+
+Dependencies
+------------
+
+- Bump ``pytest-xdist`` from 3.0.2 to 3.1.0 (:pr:`3415`)
+- Bump ``pytest-asyncio`` from 0.20.2 to 0.20.3 (:pr:`3417`)
+- ``pre-commit`` autoupdate (:pr:`3409`)
+
+Version 20.0a6
+==============
+*Released 2022-11-24*
+
+This is the technical changelog for version 20.0a6. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`_.
+
+Bug Fixes
+---------
+
+- Only Persist Arbitrary ``callback_data`` if ``ExtBot.callback_data_cache`` is Present (:pr:`3384`)
+- Improve Backwards Compatibility of ``TelegramObjects`` Pickle Behavior (:pr:`3382`)
+- Fix Naming and Keyword Arguments of ``File.download_*`` Methods (:pr:`3380`)
+- Fix Return Value Annotation of ``Chat.create_forum_topic`` (:pr:`3381`)
+
+Version 20.0a5
+==============
+*Released 2022-11-22*
+
+This is the technical changelog for version 20.0a5. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`_.
+
+Major Changes
+-------------
+
+- API 6.3 (:pr:`3346`, :pr:`3343`, :pr:`3342`, :pr:`3360`)
+- Explicit ``local_mode`` Setting (:pr:`3154`)
+- Make Almost All 3rd Party Dependencies Optional (:pr:`3267`)
+- Split ``File.download`` Into ``File.download_to_drive`` And ``File.download_to_memory`` (:pr:`3223`)
+
+New Features
+------------
+
+- Add Properties for API Settings of ``Bot`` (:pr:`3247`)
+- Add ``chat_id`` and ``username`` Parameters to ``ChatJoinRequestHandler`` (:pr:`3261`)
+- Introduce ``TelegramObject.api_kwargs`` (:pr:`3233`)
+- Add Two Constants Related to Local Bot API Servers (:pr:`3296`)
+- Add ``recursive`` Parameter to ``TelegramObject.to_dict()`` (:pr:`3276`)
+- Overhaul String Representation of ``TelegramObject`` (:pr:`3234`)
+- Add Methods ``Chat.mention_{html, markdown, markdown_v2}`` (:pr:`3308`)
+- Add ``constants.MessageLimit.DEEP_LINK_LENGTH`` (:pr:`3315`)
+- Add Shortcut Parameters ``caption``, ``parse_mode`` and ``caption_entities`` to ``Bot.send_media_group`` (:pr:`3295`)
+- Add Several New Enums To Constants (:pr:`3351`)
+
+Bug Fixes
+---------
+
+- Fix ``CallbackQueryHandler`` Not Handling Non-String Data Correctly With Regex Patterns (:pr:`3252`)
+- Fix Defaults Handling in ``Bot.answer_web_app_query`` (:pr:`3362`)
+
+Documentation Improvements
+--------------------------
+
+- Update PR Template (:pr:`3361`)
+- Document Dunder Methods of ``TelegramObject`` (:pr:`3319`)
+- Add Several References to Wiki pages (:pr:`3306`)
+- Overhaul Search bar (:pr:`3218`)
+- Unify Documentation of Arguments and Attributes of Telegram Classes (:pr:`3217`, :pr:`3292`, :pr:`3303`, :pr:`3312`, :pr:`3314`)
+- Several Smaller Improvements (:pr:`3214`, :pr:`3271`, :pr:`3289`, :pr:`3326`, :pr:`3370`, :pr:`3376`, :pr:`3366`)
+
+Minor Changes, Documentation Improvements and CI
+------------------------------------------------
+
+- Improve Warning About Unknown ``ConversationHandler`` States (:pr:`3242`)
+- Switch from Stale Bot to ``GitHub`` Actions (:pr:`3243`)
+- Bump Python 3.11 to RC2 in Test Matrix (:pr:`3246`)
+- Make ``Job.job`` a Property and Make ``Jobs`` Hashable (:pr:`3250`)
+- Skip ``JobQueue`` Tests on Windows Again (:pr:`3280`)
+- Read-Only ``CallbackDataCache`` (:pr:`3266`)
+- Type Hinting Fix for ``Message.effective_attachment`` (:pr:`3294`)
+- Run Unit Tests in Parallel (:pr:`3283`)
+- Update Test Matrix to Use Stable Python 3.11 (:pr:`3313`)
+- Don't Edit Objects In-Place When Inserting ``ext.Defaults`` (:pr:`3311`)
+- Add a Test for ``MessageAttachmentType`` (:pr:`3335`)
+- Add Three New Test Bots (:pr:`3347`)
+- Improve Unit Tests Regarding ``ChatMemberUpdated.difference`` (:pr:`3352`)
+- Flaky Unit Tests: Use ``pytest`` Marker (:pr:`3354`)
+- Fix ``DeepSource`` Issues (:pr:`3357`)
+- Handle Lists and Tuples and Datetimes Directly in ``TelegramObject.to_dict`` (:pr:`3353`)
+- Update Meta Config (:pr:`3365`)
+- Merge ``ChatDescriptionLimit`` Enum Into ``ChatLimit`` (:pr:`3377`)
+
+Dependencies
+------------
+
+- Bump ``pytest`` from 7.1.2 to 7.1.3 (:pr:`3228`)
+- ``pre-commit`` Updates (:pr:`3221`)
+- Bump ``sphinx`` from 5.1.1 to 5.2.3 (:pr:`3269`)
+- Bump ``furo`` from 2022.6.21 to 2022.9.29 (:pr:`3268`)
+- Bump ``actions/stale`` from 5 to 6 (:pr:`3277`)
+- ``pre-commit`` autoupdate (:pr:`3282`)
+- Bump ``sphinx`` from 5.2.3 to 5.3.0 (:pr:`3300`)
+- Bump ``pytest-asyncio`` from 0.19.0 to 0.20.1 (:pr:`3299`)
+- Bump ``pytest`` from 7.1.3 to 7.2.0 (:pr:`3318`)
+- Bump ``pytest-xdist`` from 2.5.0 to 3.0.2 (:pr:`3317`)
+- ``pre-commit`` autoupdate (:pr:`3325`)
+- Bump ``pytest-asyncio`` from 0.20.1 to 0.20.2 (:pr:`3359`)
+- Update ``httpx`` requirement from ~=0.23.0 to ~=0.23.1 (:pr:`3373`)
+
+Version 20.0a4
+==============
+*Released 2022-08-27*
+
+This is the technical changelog for version 20.0a4. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`_.
+
+Hot Fixes
+---------
+
+* Fix a Bug in ``setup.py`` Regarding Optional Dependencies (:pr:`3209`)
+
+Version 20.0a3
+==============
+*Released 2022-08-27*
+
+This is the technical changelog for version 20.0a3. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`_.
+
+Major Changes
+-------------
+
+- Full Support for API 6.2 (:pr:`3195`)
+
+New Features
+------------
+
+- New Rate Limiting Mechanism (:pr:`3148`)
+- Make ``chat/user_data`` Available in Error Handler for Errors in Jobs (:pr:`3152`)
+- Add ``Application.post_shutdown`` (:pr:`3126`)
+
+Bug Fixes
+---------
+
+- Fix ``helpers.mention_markdown`` for Markdown V1 and Improve Related Unit Tests (:pr:`3155`)
+- Add ``api_kwargs`` Parameter to ``Bot.log_out`` and Improve Related Unit Tests (:pr:`3147`)
+- Make ``Bot.delete_my_commands`` a Coroutine Function (:pr:`3136`)
+- Fix ``ConversationHandler.check_update`` not respecting ``per_user`` (:pr:`3128`)
+
+Minor Changes, Documentation Improvements and CI
+------------------------------------------------
+
+- Add Python 3.11 to Test Suite & Adapt Enum Behaviour (:pr:`3168`)
+- Drop Manual Token Validation (:pr:`3167`)
+- Simplify Unit Tests for ``Bot.send_chat_action`` (:pr:`3151`)
+- Drop ``pre-commit`` Dependencies from ``requirements-dev.txt`` (:pr:`3120`)
+- Change Default Values for ``concurrent_updates`` and ``connection_pool_size`` (:pr:`3127`)
+- Documentation Improvements (:pr:`3139`, :pr:`3153`, :pr:`3135`)
+- Type Hinting Fixes (:pr:`3202`)
+
+Dependencies
+------------
+
+- Bump ``sphinx`` from 5.0.2 to 5.1.1 (:pr:`3177`)
+- Update ``pre-commit`` Dependencies (:pr:`3085`)
+- Bump ``pytest-asyncio`` from 0.18.3 to 0.19.0 (:pr:`3158`)
+- Update ``tornado`` requirement from ~=6.1 to ~=6.2 (:pr:`3149`)
+- Bump ``black`` from 22.3.0 to 22.6.0 (:pr:`3132`)
+- Bump ``actions/setup-python`` from 3 to 4 (:pr:`3131`)
+
+Version 20.0a2
+==============
+*Released 2022-06-27*
+
+This is the technical changelog for version 20.0a2. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`_.
+
+Major Changes
+-------------
+
+- Full Support for API 6.1 (:pr:`3112`)
+
+New Features
+------------
+
+- Add Additional Shortcut Methods to ``Chat`` (:pr:`3115`)
+- Mermaid-based Example State Diagrams (:pr:`3090`)
+
+Minor Changes, Documentation Improvements and CI
+------------------------------------------------
+
+- Documentation Improvements (:pr:`3103`, :pr:`3121`, :pr:`3098`)
+- Stabilize CI (:pr:`3119`)
+- Bump ``pyupgrade`` from 2.32.1 to 2.34.0 (:pr:`3096`)
+- Bump ``furo`` from 2022.6.4 to 2022.6.4.1 (:pr:`3095`)
+- Bump ``mypy`` from 0.960 to 0.961 (:pr:`3093`)
+
+Version 20.0a1
+==============
+*Released 2022-06-09*
+
+This is the technical changelog for version 20.0a1. More elaborate release notes can be found in the news channel `@pythontelegrambotchannel <https://t.me/pythontelegrambotchannel>`_.
+
+Major Changes:
+--------------
+
+- Drop Support for ``ujson`` and instead ``BaseRequest.parse_json_payload`` (:pr:`3037`, :pr:`3072`)
+- Drop ``InputFile.is_image`` (:pr:`3053`)
+- Drop Explicit Type conversions in ``__init__`` s (:pr:`3056`)
+- Handle List-Valued Attributes More Consistently (:pr:`3057`)
+- Split ``{Command, Prefix}Handler`` And Make Attributes Immutable (:pr:`3045`)
+- Align Behavior Of ``JobQueue.run_daily`` With ``cron`` (:pr:`3046`)
+- Make PTB Specific  Keyword-Only Arguments for PTB Specific in Bot methods (:pr:`3035`)
+- Adjust Equality Comparisons to Fit Bot API 6.0 (:pr:`3033`)
+- Add Tuple Based Version Info (:pr:`3030`)
+- Improve Type Annotations for ``CallbackContext`` and Move Default Type Alias to ``ContextTypes.DEFAULT_TYPE`` (:pr:`3017`, :pr:`3023`)
+- Rename ``Job.context`` to ``Job.data`` (:pr:`3028`)
+- Rename ``Handler`` to ``BaseHandler`` (:pr:`3019`)
+
+New Features:
+-------------
+
+- Add ``Application.post_init`` (:pr:`3078`)
+- Add Arguments ``chat/user_id`` to ``CallbackContext`` And Example On Custom Webhook Setups (:pr:`3059`)
+- Add Convenience Property ``Message.id`` (:pr:`3077`)
+- Add Example for ``WebApp`` (:pr:`3052`)
+- Rename ``telegram.bot_api_version`` to ``telegram.__bot_api_version__`` (:pr:`3030`)
+
+Bug Fixes:
+----------
+
+- Fix Non-Blocking Entry Point in ``ConversationHandler`` (:pr:`3068`)
+- Escape Backslashes in ``escape_markdown``  (:pr:`3055`)
+
+Dependencies:
+-------------
+
+- Update ``httpx`` requirement from ~=0.22.0 to ~=0.23.0 (:pr:`3069`)
+- Update ``cachetools`` requirement from ~=5.0.0 to ~=5.2.0 (:pr:`3058`, :pr:`3080`)
+
+Minor Changes, Documentation Improvements and CI:
+-------------------------------------------------
+
+- Move Examples To Documentation (:pr:`3089`)
+- Documentation Improvements and Update Dependencies (:pr:`3010`, :pr:`3007`, :pr:`3012`, :pr:`3067`, :pr:`3081`, :pr:`3082`)
+- Improve Some Unit Tests (:pr:`3026`)
+- Update Code Quality dependencies (:pr:`3070`, :pr:`3032`,:pr:`2998`, :pr:`2999`)
+- Don't Set Signal Handlers On Windows By Default (:pr:`3065`)
+- Split ``{Command, Prefix}Handler`` And Make Attributes Immutable (:pr:`3045`)
+- Apply ``isort`` and Update ``pre-commit.ci`` Configuration (:pr:`3049`)
+- Adjust ``pre-commit`` Settings for ``isort`` (:pr:`3043`)
+- Add Version Check to Examples (:pr:`3036`)
+- Use ``Collection`` Instead of ``List`` and ``Tuple`` (:pr:`3025`)
+- Remove Client-Side Parameter Validation (:pr:`3024`)
+- Don't Pass Default Values of Optional Parameters to Telegram (:pr:`2978`)
+- Stabilize ``Application.run_*`` on Python 3.7 (:pr:`3009`)
+- Ignore Code Style Commits in ``git blame`` (:pr:`3003`)
+- Adjust Tests to Changed API Behavior (:pr:`3002`)
 
 Version 20.0a0
 ==============
@@ -12,190 +1215,190 @@ Major Changes:
 --------------
 
 -  Refactor Initialization of Persistence Classes
-   (`#2604 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2604>`__)
+   (:pr:`2604`)
 -  Drop Non-``CallbackContext`` API
-   (`#2617 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2617>`__)
+   (:pr:`2617`)
 -  Remove ``__dict__`` from ``__slots__`` and drop Python 3.6
-   (`#2619 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2619>`__,
-   `#2636 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2636>`__)
+   (:pr:`2619`,
+   :pr:`2636`)
 -  Move and Rename ``TelegramDecryptionError`` to
    ``telegram.error.PassportDecryptionError``
-   (`#2621 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2621>`__)
+   (:pr:`2621`)
 -  Make ``BasePersistence`` Methods Abstract
-   (`#2624 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2624>`__)
+   (:pr:`2624`)
 -  Remove ``day_is_strict`` argument of ``JobQueue.run_monthly``
-   (`#2634 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2634>`__
+   (:pr:`2634`
    by `iota-008 <https://github.com/iota-008>`__)
 -  Move ``Defaults`` to ``telegram.ext``
-   (`#2648 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2648>`__)
+   (:pr:`2648`)
 -  Remove Deprecated Functionality
-   (`#2644 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2644>`__,
-   `#2740 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2740>`__,
-   `#2745 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2745>`__)
+   (:pr:`2644`,
+   :pr:`2740`,
+   :pr:`2745`)
 -  Overhaul of Filters
-   (`#2759 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2759>`__,
-   `#2922 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2922>`__)
+   (:pr:`2759`,
+   :pr:`2922`)
 -  Switch to ``asyncio`` and Refactor PTBs Architecture
-   (`#2731 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2731>`__)
+   (:pr:`2731`)
 -  Improve ``Job.__getattr__``
-   (`#2832 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2832>`__)
+   (:pr:`2832`)
 -  Remove ``telegram.ReplyMarkup``
-   (`#2870 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2870>`__)
+   (:pr:`2870`)
 -  Persistence of ``Bots``: Refactor Automatic Replacement and
    Integration with ``TelegramObject``
-   (`#2893 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2893>`__)
+   (:pr:`2893`)
 
 New Features:
 -------------
 
 -  Introduce Builder Pattern
-   (`#2646 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2646>`__)
+   (:pr:`2646`)
 -  Add ``Filters.update.edited``
-   (`#2705 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2705>`__
+   (:pr:`2705`
    by `PhilippFr <https://github.com/PhilippFr>`__)
 -  Introduce ``Enums`` for ``telegram.constants``
-   (`#2708 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2708>`__)
+   (:pr:`2708`)
 -  Accept File Paths for ``private_key``
-   (`#2724 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2724>`__)
+   (:pr:`2724`)
 -  Associate ``Jobs`` with ``chat/user_id``
-   (`#2731 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2731>`__)
+   (:pr:`2731`)
 -  Convenience Functionality for ``ChatInviteLinks``
-   (`#2782 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2782>`__)
+   (:pr:`2782`)
 -  Add ``Dispatcher.add_handlers``
-   (`#2823 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2823>`__)
+   (:pr:`2823`)
 -  Improve Error Messages in ``CommandHandler.__init__``
-   (`#2837 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2837>`__)
+   (:pr:`2837`)
 -  ``Defaults.protect_content``
-   (`#2840 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2840>`__)
+   (:pr:`2840`)
 -  Add ``Dispatcher.migrate_chat_data``
-   (`#2848 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2848>`__
+   (:pr:`2848`
    by `DonalDuck004 <https://github.com/DonalDuck004>`__)
 -  Add Method ``drop_chat/user_data`` to ``Dispatcher`` and Persistence
-   (`#2852 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2852>`__)
--  Add methods ``ChatPermissions.{all, no}_permissions`` ([#2948]
+   (:pr:`2852`)
+-  Add methods ``ChatPermissions.{all, no}_permissions`` (:pr:`2948`)
 -  Full Support for API 6.0
-   (`#2956 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2956>`__)(https://github.com/python-telegram-bot/python-telegram-bot/pull/2948))
+   (:pr:`2956`)
 -  Add Python 3.10 to Test Suite
-   (`#2968 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2968>`__)
+   (:pr:`2968`)
 
 Bug Fixes & Minor Changes:
 --------------------------
 
 -  Improve Type Hinting for ``CallbackContext``
-   (`#2587 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2587>`__
+   (:pr:`2587`
    by `revolter <https://github.com/revolter>`__)
 -  Fix Signatures and Improve ``test_official``
-   (`#2643 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2643>`__)
+   (:pr:`2643`)
 -  Refine ``Dispatcher.dispatch_error``
-   (`#2660 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2660>`__)
+   (:pr:`2660`)
 -  Make ``InlineQuery.answer`` Raise ``ValueError``
-   (`#2675 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2675>`__)
+   (:pr:`2675`)
 -  Improve Signature Inspection for Bot Methods
-   (`#2686 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2686>`__)
+   (:pr:`2686`)
 -  Introduce ``TelegramObject.set/get_bot``
-   (`#2712 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2712>`__
+   (:pr:`2712`
    by `zpavloudis <https://github.com/zpavloudis>`__)
 -  Improve Subscription of ``TelegramObject``
-   (`#2719 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2719>`__
+   (:pr:`2719`
    by `SimonDamberg <https://github.com/SimonDamberg>`__)
 -  Use Enums for Dynamic Types & Rename Two Attributes in ``ChatMember``
-   (`#2817 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2817>`__)
+   (:pr:`2817`)
 -  Return Plain Dicts from ``BasePersistence.get_*_data``
-   (`#2873 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2873>`__)
+   (:pr:`2873`)
 -  Fix a Bug in ``ChatMemberUpdated.difference``
-   (`#2947 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2947>`__)
+   (:pr:`2947`)
 -  Update Dependency Policy
-   (`#2958 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2958>`__)
+   (:pr:`2958`)
 
 Internal Restructurings & Improvements:
 ---------------------------------------
 
 -  Add User Friendly Type Check For Init Of
    ``{Inline, Reply}KeyboardMarkup``
-   (`#2657 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2657>`__)
+   (:pr:`2657`)
 -  Warnings Overhaul
-   (`#2662 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2662>`__)
+   (:pr:`2662`)
 -  Clear Up Import Policy
-   (`#2671 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2671>`__)
+   (:pr:`2671`)
 -  Mark Internal Modules As Private
-   (`#2687 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2687>`__
+   (:pr:`2687`
    by `kencx <https://github.com/kencx>`__)
 -  Handle Filepaths via the ``pathlib`` Module
-   (`#2688 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2688>`__
+   (:pr:`2688`
    by `eldbud <https://github.com/eldbud>`__)
 -  Refactor MRO of ``InputMedia*`` and Some File-Like Classes
-   (`#2717 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2717>`__
+   (:pr:`2717`
    by `eldbud <https://github.com/eldbud>`__)
 -  Update Exceptions for Immutable Attributes
-   (`#2749 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2749>`__)
+   (:pr:`2749`)
 -  Refactor Warnings in ``ConversationHandler``
-   (`#2755 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2755>`__,
-   `#2784 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2784>`__)
+   (:pr:`2755`,
+   :pr:`2784`)
 -  Use ``__all__`` Consistently
-   (`#2805 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2805>`__)
+   (:pr:`2805`)
 
 CI, Code Quality & Test Suite Improvements:
 -------------------------------------------
 
 -  Add Custom ``pytest`` Marker to Ease Development
-   (`#2628 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2628>`__)
+   (:pr:`2628`)
 -  Pass Failing Jobs to Error Handlers
-   (`#2692 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2692>`__)
+   (:pr:`2692`)
 -  Update Notification Workflows
-   (`#2695 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2695>`__)
+   (:pr:`2695`)
 -  Use Error Messages for ``pylint`` Instead of Codes
-   (`#2700 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2700>`__
+   (:pr:`2700`
    by `Piraty <https://github.com/Piraty>`__)
 -  Make Tests Agnostic of the CWD
-   (`#2727 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2727>`__
+   (:pr:`2727`
    by `eldbud <https://github.com/eldbud>`__)
 -  Update Code Quality Dependencies
-   (`#2748 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2748>`__)
+   (:pr:`2748`)
 -  Improve Code Quality
-   (`#2783 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2783>`__)
+   (:pr:`2783`)
 -  Update ``pre-commit`` Settings & Improve a Test
-   (`#2796 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2796>`__)
+   (:pr:`2796`)
 -  Improve Code Quality & Test Suite
-   (`#2843 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2843>`__)
+   (:pr:`2843`)
 -  Fix failing animation tests
-   (`#2865 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2865>`__)
+   (:pr:`2865`)
 -  Update and Expand Tests & pre-commit Settings and Improve Code
    Quality
-   (`#2925 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2925>`__)
+   (:pr:`2925`)
 -  Extend Code Formatting With Black
-   (`#2972 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2972>`__)
+   (:pr:`2972`)
 -  Update Workflow Permissions
-   (`#2984 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2984>`__)
+   (:pr:`2984`)
 -  Adapt Tests to Changed ``Bot.get_file`` Behavior
-   (`#2995 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2995>`__)
+   (:pr:`2995`)
 
 Documentation Improvements:
 ---------------------------
 
 -  Doc Fixes
-   (`#2597 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2597>`__)
+   (:pr:`2597`)
 -  Add Code Comment Guidelines to Contribution Guide
-   (`#2612 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2612>`__)
+   (:pr:`2612`)
 -  Add Cross-References to External Libraries & Other Documentation
    Improvements
-   (`#2693 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2693>`__,
-   `#2691 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2691>`__
+   (:pr:`2693`,
+   :pr:`2691`
    by `joesinghh <https://github.com/joesinghh>`__,
-   `#2739 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2739>`__
+   :pr:`2739`
    by `eldbud <https://github.com/eldbud>`__)
 -  Use Furo Theme, Make Parameters Referenceable, Add Documentation
    Building to CI, Improve Links to Source Code & Other Improvements
-   (`#2856 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2856>`__,
-   `#2798 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2798>`__,
-   `#2854 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2854>`__,
-   `#2841 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2841>`__)
+   (:pr:`2856`,
+   :pr:`2798`,
+   :pr:`2854`,
+   :pr:`2841`)
 -  Documentation Fixes & Improvements
-   (`#2822 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2822>`__)
+   (:pr:`2822`)
 -  Replace ``git.io`` Links
-   (`#2872 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2872>`__
+   (:pr:`2872`
    by `murugu-21 <https://github.com/murugu-21>`__)
 -  Overhaul Readmes, Update RTD Startpage & Other Improvements
-   (`#2969 <https://github.com/python-telegram-bot/python-telegram-bot/pull/2969>`__)
+   (:pr:`2969`)
 
 Version 13.11
 =============
@@ -205,9 +1408,7 @@ This is the technical changelog for version 13.11. More elaborate release notes 
 
 **Major Changes:**
 
-- Full Support for Bot API 5.7 (`#2881`_)
-
-.. _`#2881`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2881
+- Full Support for Bot API 5.7 (:pr:`2881`)
 
 Version 13.10
 =============
@@ -217,16 +1418,12 @@ This is the technical changelog for version 13.10. More elaborate release notes 
 
 **Major Changes:**
 
-- Full Support for API 5.6 (`#2835`_)
+- Full Support for API 5.6 (:pr:`2835`)
 
 **Minor Changes & Doc fixes:**
 
-- Update Copyright to 2022 (`#2836`_)
-- Update Documentation of ``BotCommand`` (`#2820`_)
-
-.. _`#2835`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2835
-.. _`#2836`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2836
-.. _`#2820`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2820
+- Update Copyright to 2022 (:pr:`2836`)
+- Update Documentation of ``BotCommand`` (:pr:`2820`)
 
 Version 13.9
 ============
@@ -236,14 +1433,11 @@ This is the technical changelog for version 13.9. More elaborate release notes c
 
 **Major Changes:**
 
-- Full Support for Api 5.5 (`#2809`_)
+- Full Support for Api 5.5 (:pr:`2809`)
 
 **Minor Changes**
 
-- Adjust Automated Locking of Inactive Issues (`#2775`_)
-
-.. _`#2809`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2809
-.. _`#2775`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2775
+- Adjust Automated Locking of Inactive Issues (:pr:`2775`)
 
 Version 13.8.1
 ==============
@@ -253,9 +1447,7 @@ This is the technical changelog for version 13.8.1. More elaborate release notes
 
 **Doc fixes:**
 
-- Add ``ChatJoinRequest(Handler)`` to Docs (`#2771`_)
-
-.. _`#2771`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2771
+- Add ``ChatJoinRequest(Handler)`` to Docs (:pr:`2771`)
 
 Version 13.8
 ============
@@ -265,22 +1457,15 @@ This is the technical changelog for version 13.8. More elaborate release notes c
 
 **Major Changes:**
 
-- Full support for API 5.4 (`#2767`_)
+- Full support for API 5.4 (:pr:`2767`)
 
 **Minor changes, CI improvements, Doc fixes and Type hinting:**
 
-- Create Issue Template Forms (`#2689`_)
-- Fix ``camelCase`` Functions in ``ExtBot`` (`#2659`_)
-- Fix Empty Captions not Being Passed by ``Bot.copy_message`` (`#2651`_)
-- Fix Setting Thumbs When Uploading A Single File (`#2583`_)
-- Fix Bug in ``BasePersistence.insert``/``replace_bot`` for Objects with ``__dict__`` not in ``__slots__`` (`#2603`_)
-
-.. _`#2767`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2767
-.. _`#2689`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2689
-.. _`#2659`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2659
-.. _`#2651`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2651
-.. _`#2583`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2583
-.. _`#2603`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2603
+- Create Issue Template Forms (:pr:`2689`)
+- Fix ``camelCase`` Functions in ``ExtBot`` (:pr:`2659`)
+- Fix Empty Captions not Being Passed by ``Bot.copy_message`` (:pr:`2651`)
+- Fix Setting Thumbs When Uploading A Single File (:pr:`2583`)
+- Fix Bug in ``BasePersistence.insert``/``replace_bot`` for Objects with ``__dict__`` not in ``__slots__`` (:pr:`2603`)
 
 Version 13.7
 ============
@@ -290,33 +1475,22 @@ This is the technical changelog for version 13.7. More elaborate release notes c
 
 **Major Changes:**
 
-- Full support for Bot API 5.3 (`#2572`_)
+- Full support for Bot API 5.3 (:pr:`2572`)
 
 **Bug Fixes:**
 
-- Fix Bug in ``BasePersistence.insert/replace_bot`` for Objects with ``__dict__`` in their slots (`#2561`_)
-- Remove Incorrect Warning About ``Defaults`` and ``ExtBot`` (`#2553`_)
+- Fix Bug in ``BasePersistence.insert/replace_bot`` for Objects with ``__dict__`` in their slots (:pr:`2561`)
+- Remove Incorrect Warning About ``Defaults`` and ``ExtBot`` (:pr:`2553`)
 
 **Minor changes, CI improvements, Doc fixes and Type hinting:**
 
-- Type Hinting Fixes (`#2552`_)
-- Doc Fixes (`#2551`_)
-- Improve Deprecation Warning for ``__slots__`` (`#2574`_)
-- Stabilize CI (`#2575`_)
-- Fix Coverage Configuration (`#2571`_)
-- Better Exception-Handling for ``BasePersistence.replace/insert_bot`` (`#2564`_)
-- Remove Deprecated ``pass_args`` from Deeplinking Example (`#2550`_)
-
-.. _`#2572`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2572
-.. _`#2561`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2561
-.. _`#2553`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2553
-.. _`#2552`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2552
-.. _`#2551`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2551
-.. _`#2574`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2574
-.. _`#2575`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2575
-.. _`#2571`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2571
-.. _`#2564`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2564
-.. _`#2550`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2550
+- Type Hinting Fixes (:pr:`2552`)
+- Doc Fixes (:pr:`2551`)
+- Improve Deprecation Warning for ``__slots__`` (:pr:`2574`)
+- Stabilize CI (:pr:`2575`)
+- Fix Coverage Configuration (:pr:`2571`)
+- Better Exception-Handling for ``BasePersistence.replace/insert_bot`` (:pr:`2564`)
+- Remove Deprecated ``pass_args`` from Deeplinking Example (:pr:`2550`)
 
 Version 13.6
 ============
@@ -324,46 +1498,26 @@ Version 13.6
 
 New Features:
 
-- Arbitrary ``callback_data`` (`#1844`_)
-- Add ``ContextTypes`` & ``BasePersistence.refresh_user/chat/bot_data`` (`#2262`_)
-- Add ``Filters.attachment`` (`#2528`_)
-- Add ``pattern`` Argument to ``ChosenInlineResultHandler`` (`#2517`_)
+- Arbitrary ``callback_data`` (:pr:`1844`)
+- Add ``ContextTypes`` & ``BasePersistence.refresh_user/chat/bot_data`` (:pr:`2262`)
+- Add ``Filters.attachment`` (:pr:`2528`)
+- Add ``pattern`` Argument to ``ChosenInlineResultHandler`` (:pr:`2517`)
 
 Major Changes:
 
-- Add ``slots`` (`#2345`_)
+- Add ``slots`` (:pr:`2345`)
 
 Minor changes, CI improvements, Doc fixes and Type hinting:
 
-- Doc Fixes (`#2495`_, `#2510`_)
-- Add ``max_connections`` Parameter to ``Updater.start_webhook`` (`#2547`_)
-- Fix for ``Promise.done_callback`` (`#2544`_)
-- Improve Code Quality (`#2536`_, `#2454`_)
-- Increase Test Coverage of ``CallbackQueryHandler`` (`#2520`_)
-- Stabilize CI (`#2522`_, `#2537`_, `#2541`_)
-- Fix ``send_phone_number_to_provider`` argument for ``Bot.send_invoice`` (`#2527`_)
-- Handle Classes as Input for ``BasePersistence.replace/insert_bot`` (`#2523`_)
-- Bump Tornado Version and Remove Workaround from `#2067`_ (`#2494`_)
-
-.. _`#1844`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1844
-.. _`#2262`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2262
-.. _`#2528`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2528
-.. _`#2517`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2517
-.. _`#2345`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2345
-.. _`#2495`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2495
-.. _`#2547`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2547
-.. _`#2544`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2544
-.. _`#2536`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2536
-.. _`#2454`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2454
-.. _`#2520`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2520
-.. _`#2522`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2522
-.. _`#2537`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2537
-.. _`#2541`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2541
-.. _`#2527`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2527
-.. _`#2523`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2523
-.. _`#2067`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2067
-.. _`#2494`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2494
-.. _`#2510`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2510
+- Doc Fixes (:pr:`2495`, :pr:`2510`)
+- Add ``max_connections`` Parameter to ``Updater.start_webhook`` (:pr:`2547`)
+- Fix for ``Promise.done_callback`` (:pr:`2544`)
+- Improve Code Quality (:pr:`2536`, :pr:`2454`)
+- Increase Test Coverage of ``CallbackQueryHandler`` (:pr:`2520`)
+- Stabilize CI (:pr:`2522`, :pr:`2537`, :pr:`2541`)
+- Fix ``send_phone_number_to_provider`` argument for ``Bot.send_invoice`` (:pr:`2527`)
+- Handle Classes as Input for ``BasePersistence.replace/insert_bot`` (:pr:`2523`)
+- Bump Tornado Version and Remove Workaround from :pr:`2067` (:pr:`2494`)
 
 Version 13.5
 ============
@@ -371,43 +1525,29 @@ Version 13.5
 
 **Major Changes:**
 
-- Full support of Bot API 5.2 (`#2489`_).
+- Full support of Bot API 5.2 (:pr:`2489`).
 
   .. note::
      The ``start_parameter`` argument of ``Bot.send_invoice`` and the corresponding shortcuts is now optional, so the order of
      parameters had to be changed. Make sure to update your method calls accordingly.
 
-- Update ``ChatActions``, Deprecating ``ChatAction.RECORD_AUDIO`` and ``ChatAction.UPLOAD_AUDIO`` (`#2460`_)
+- Update ``ChatActions``, Deprecating ``ChatAction.RECORD_AUDIO`` and ``ChatAction.UPLOAD_AUDIO`` (:pr:`2460`)
 
 **New Features:**
 
-- Convenience Utilities & Example for Handling ``ChatMemberUpdated`` (`#2490`_)
-- ``Filters.forwarded_from`` (`#2446`_)
+- Convenience Utilities & Example for Handling ``ChatMemberUpdated`` (:pr:`2490`)
+- ``Filters.forwarded_from`` (:pr:`2446`)
 
 **Minor changes, CI improvements, Doc fixes and Type hinting:**
 
-- Improve Timeouts in ``ConversationHandler`` (`#2417`_)
-- Stabilize CI (`#2480`_)
-- Doc Fixes (`#2437`_)
-- Improve Type Hints of Data Filters (`#2456`_)
-- Add Two ``UserWarnings`` (`#2464`_)
-- Improve Code Quality (`#2450`_)
-- Update Fallback Test-Bots (`#2451`_)
-- Improve Examples (`#2441`_, `#2448`_)
-
-.. _`#2489`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2489
-.. _`#2460`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2460
-.. _`#2490`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2490
-.. _`#2446`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2446
-.. _`#2417`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2417
-.. _`#2480`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2480
-.. _`#2437`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2437
-.. _`#2456`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2456
-.. _`#2464`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2464
-.. _`#2450`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2450
-.. _`#2451`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2451
-.. _`#2441`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2441
-.. _`#2448`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2448
+- Improve Timeouts in ``ConversationHandler`` (:pr:`2417`)
+- Stabilize CI (:pr:`2480`)
+- Doc Fixes (:pr:`2437`)
+- Improve Type Hints of Data Filters (:pr:`2456`)
+- Add Two ``UserWarnings`` (:pr:`2464`)
+- Improve Code Quality (:pr:`2450`)
+- Update Fallback Test-Bots (:pr:`2451`)
+- Improve Examples (:pr:`2441`, :pr:`2448`)
 
 Version 13.4.1
 ==============
@@ -415,9 +1555,7 @@ Version 13.4.1
 
 **Hot fix release:**
 
-- Fixed a bug in ``setup.py`` (`#2431`_)
-
-.. _`#2431`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2431
+- Fixed a bug in ``setup.py`` (:pr:`2431`)
 
 Version 13.4
 ============
@@ -425,24 +1563,16 @@ Version 13.4
 
 **Major Changes:**
 
-- Full support of Bot API 5.1 (`#2424`_)
+- Full support of Bot API 5.1 (:pr:`2424`)
 
 **Minor changes, CI improvements, doc fixes and type hinting:**
 
-- Improve ``Updater.set_webhook`` (`#2419`_)
-- Doc Fixes (`#2404`_)
-- Type Hinting Fixes (`#2425`_)
-- Update ``pre-commit`` Settings (`#2415`_)
-- Fix Logging for Vendored ``urllib3`` (`#2427`_)
-- Stabilize Tests (`#2409`_)
-
-.. _`#2424`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2424
-.. _`#2419`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2419
-.. _`#2404`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2404
-.. _`#2425`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2425
-.. _`#2415`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2415
-.. _`#2427`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2427
-.. _`#2409`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2409
+- Improve ``Updater.set_webhook`` (:pr:`2419`)
+- Doc Fixes (:pr:`2404`)
+- Type Hinting Fixes (:pr:`2425`)
+- Update ``pre-commit`` Settings (:pr:`2415`)
+- Fix Logging for Vendored ``urllib3`` (:pr:`2427`)
+- Stabilize Tests (:pr:`2409`)
 
 Version 13.3
 ============
@@ -450,24 +1580,17 @@ Version 13.3
 
 **Major Changes:**
 
-- Make ``cryptography`` Dependency Optional & Refactor Some Tests (`#2386`_, `#2370`_)
-- Deprecate ``MessageQueue`` (`#2393`_)
+- Make ``cryptography`` Dependency Optional & Refactor Some Tests (:pr:`2386`, :pr:`2370`)
+- Deprecate ``MessageQueue`` (:pr:`2393`)
 
 **Bug Fixes:**
 
-- Refactor ``Defaults`` Integration (`#2363`_)
-- Add Missing ``telegram.SecureValue`` to init and Docs (`#2398`_)
+- Refactor ``Defaults`` Integration (:pr:`2363`)
+- Add Missing ``telegram.SecureValue`` to init and Docs (:pr:`2398`)
 
 **Minor changes:**
 
-- Doc Fixes (`#2359`_)
-
-.. _`#2386`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2386
-.. _`#2370`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2370
-.. _`#2393`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2393
-.. _`#2363`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2363
-.. _`#2398`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2398
-.. _`#2359`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2359
+- Doc Fixes (:pr:`2359`)
 
 Version 13.2
 ============
@@ -475,66 +1598,39 @@ Version 13.2
 
 **Major Changes:**
 
-- Introduce ``python-telegram-bot-raw`` (`#2324`_)
-- Explicit Signatures for Shortcuts (`#2240`_)
+- Introduce ``python-telegram-bot-raw`` (:pr:`2324`)
+- Explicit Signatures for Shortcuts (:pr:`2240`)
 
 **New Features:**
 
-- Add Missing Shortcuts to ``Message`` (`#2330`_)
-- Rich Comparison for ``Bot`` (`#2320`_)
-- Add ``run_async`` Parameter to ``ConversationHandler`` (`#2292`_)
-- Add New Shortcuts to ``Chat`` (`#2291`_)
-- Add New Constant ``MAX_ANSWER_CALLBACK_QUERY_TEXT_LENGTH`` (`#2282`_)
-- Allow Passing Custom Filename For All Media (`#2249`_)
-- Handle Bytes as File Input (`#2233`_)
+- Add Missing Shortcuts to ``Message`` (:pr:`2330`)
+- Rich Comparison for ``Bot`` (:pr:`2320`)
+- Add ``run_async`` Parameter to ``ConversationHandler`` (:pr:`2292`)
+- Add New Shortcuts to ``Chat`` (:pr:`2291`)
+- Add New Constant ``MAX_ANSWER_CALLBACK_QUERY_TEXT_LENGTH`` (:pr:`2282`)
+- Allow Passing Custom Filename For All Media (:pr:`2249`)
+- Handle Bytes as File Input (:pr:`2233`)
 
 **Bug Fixes:**
 
-- Fix Escaping in Nested Entities in ``Message`` Properties (`#2312`_)
-- Adjust Calling of ``Dispatcher.update_persistence`` (`#2285`_)
-- Add ``quote`` kwarg to ``Message.reply_copy`` (`#2232`_)
-- ``ConversationHandler``: Docs & ``edited_channel_post`` behavior (`#2339`_)
+- Fix Escaping in Nested Entities in ``Message`` Properties (:pr:`2312`)
+- Adjust Calling of ``Dispatcher.update_persistence`` (:pr:`2285`)
+- Add ``quote`` kwarg to ``Message.reply_copy`` (:pr:`2232`)
+- ``ConversationHandler``: Docs & ``edited_channel_post`` behavior (:pr:`2339`)
 
 **Minor changes, CI improvements, doc fixes and type hinting:**
 
-- Doc Fixes (`#2253`_, `#2225`_)
-- Reduce Usage of ``typing.Any`` (`#2321`_)
-- Extend Deeplinking Example (`#2335`_)
-- Add pyupgrade to pre-commit Hooks (`#2301`_)
-- Add PR Template (`#2299`_)
-- Drop Nightly Tests & Update Badges (`#2323`_)
-- Update Copyright (`#2289`_, `#2287`_)
-- Change Order of Class DocStrings (`#2256`_)
-- Add macOS to Test Matrix (`#2266`_)
-- Start Using Versioning Directives in Docs (`#2252`_)
-- Improve Annotations & Docs of Handlers (`#2243`_)
-
-.. _`#2324`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2324
-.. _`#2240`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2240
-.. _`#2330`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2330
-.. _`#2320`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2320
-.. _`#2292`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2292
-.. _`#2291`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2291
-.. _`#2282`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2282
-.. _`#2249`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2249
-.. _`#2233`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2233
-.. _`#2312`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2312
-.. _`#2285`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2285
-.. _`#2232`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2232
-.. _`#2339`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2339
-.. _`#2253`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2253
-.. _`#2225`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2225
-.. _`#2321`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2321
-.. _`#2335`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2335
-.. _`#2301`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2301
-.. _`#2299`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2299
-.. _`#2323`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2323
-.. _`#2289`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2289
-.. _`#2287`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2287
-.. _`#2256`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2256
-.. _`#2266`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2266
-.. _`#2252`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2252
-.. _`#2243`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2243
+- Doc Fixes (:pr:`2253`, :pr:`2225`)
+- Reduce Usage of ``typing.Any`` (:pr:`2321`)
+- Extend Deeplinking Example (:pr:`2335`)
+- Add pyupgrade to pre-commit Hooks (:pr:`2301`)
+- Add PR Template (:pr:`2299`)
+- Drop Nightly Tests & Update Badges (:pr:`2323`)
+- Update Copyright (:pr:`2289`, :pr:`2287`)
+- Change Order of Class DocStrings (:pr:`2256`)
+- Add macOS to Test Matrix (:pr:`2266`)
+- Start Using Versioning Directives in Docs (:pr:`2252`)
+- Improve Annotations & Docs of Handlers (:pr:`2243`)
 
 Version 13.1
 ============
@@ -542,84 +1638,38 @@ Version 13.1
 
 **Major Changes:**
 
-- Full support of Bot API 5.0 (`#2181`_, `#2186`_, `#2190`_, `#2189`_, `#2183`_, `#2184`_, `#2188`_, `#2185`_, `#2192`_, `#2196`_, `#2193`_, `#2223`_, `#2199`_, `#2187`_, `#2147`_, `#2205`_)
+- Full support of Bot API 5.0 (:pr:`2181`, :pr:`2186`, :pr:`2190`, :pr:`2189`, :pr:`2183`, :pr:`2184`, :pr:`2188`, :pr:`2185`, :pr:`2192`, :pr:`2196`, :pr:`2193`, :pr:`2223`, :pr:`2199`, :pr:`2187`, :pr:`2147`, :pr:`2205`)
 
 **New Features:**
 
-- Add ``Defaults.run_async`` (`#2210`_)
-- Improve and Expand ``CallbackQuery`` Shortcuts (`#2172`_)
-- Add XOR Filters and make ``Filters.name`` a Property (`#2179`_)
-- Add ``Filters.document.file_extension`` (`#2169`_)
-- Add ``Filters.caption_regex`` (`#2163`_)
-- Add ``Filters.chat_type`` (`#2128`_)
-- Handle Non-Binary File Input (`#2202`_)
+- Add ``Defaults.run_async`` (:pr:`2210`)
+- Improve and Expand ``CallbackQuery`` Shortcuts (:pr:`2172`)
+- Add XOR Filters and make ``Filters.name`` a Property (:pr:`2179`)
+- Add ``Filters.document.file_extension`` (:pr:`2169`)
+- Add ``Filters.caption_regex`` (:pr:`2163`)
+- Add ``Filters.chat_type`` (:pr:`2128`)
+- Handle Non-Binary File Input (:pr:`2202`)
 
 **Bug Fixes:**
 
-- Improve Handling of Custom Objects in ``BasePersistence.insert``/``replace_bot`` (`#2151`_)
-- Fix bugs in ``replace/insert_bot`` (`#2218`_)
+- Improve Handling of Custom Objects in ``BasePersistence.insert``/``replace_bot`` (:pr:`2151`)
+- Fix bugs in ``replace/insert_bot`` (:pr:`2218`)
 
 **Minor changes, CI improvements, doc fixes and type hinting:**
 
-- Improve Type hinting (`#2204`_, `#2118`_, `#2167`_, `#2136`_)
-- Doc Fixes & Extensions (`#2201`_, `#2161`_)
-- Use F-Strings Where Possible (`#2222`_)
-- Rename kwargs to _kwargs where possible (`#2182`_)
-- Comply with PEP561 (`#2168`_)
-- Improve Code Quality (`#2131`_)
-- Switch Code Formatting to Black (`#2122`_, `#2159`_, `#2158`_)
-- Update Wheel Settings (`#2142`_)
-- Update ``timerbot.py`` to ``v13.0`` (`#2149`_)
-- Overhaul Constants (`#2137`_)
-- Add Python 3.9 to Test Matrix (`#2132`_)
-- Switch Codecov to ``GitHub`` Action (`#2127`_)
-- Specify Required pytz Version (`#2121`_)
-
-
-.. _`#2181`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2181
-.. _`#2186`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2186
-.. _`#2190`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2190
-.. _`#2189`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2189
-.. _`#2183`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2183
-.. _`#2184`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2184
-.. _`#2188`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2188
-.. _`#2185`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2185
-.. _`#2192`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2192
-.. _`#2196`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2196
-.. _`#2193`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2193
-.. _`#2223`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2223
-.. _`#2199`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2199
-.. _`#2187`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2187
-.. _`#2147`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2147
-.. _`#2205`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2205
-.. _`#2210`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2210
-.. _`#2172`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2172
-.. _`#2179`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2179
-.. _`#2169`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2169
-.. _`#2163`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2163
-.. _`#2128`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2128
-.. _`#2202`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2202
-.. _`#2151`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2151
-.. _`#2218`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2218
-.. _`#2204`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2204
-.. _`#2118`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2118
-.. _`#2167`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2167
-.. _`#2136`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2136
-.. _`#2201`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2201
-.. _`#2161`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2161
-.. _`#2222`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2222
-.. _`#2182`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2182
-.. _`#2168`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2168
-.. _`#2131`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2131
-.. _`#2122`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2122
-.. _`#2159`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2159
-.. _`#2158`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2158
-.. _`#2142`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2142
-.. _`#2149`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2149
-.. _`#2137`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2137
-.. _`#2132`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2132
-.. _`#2127`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2127
-.. _`#2121`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2121
+- Improve Type hinting (:pr:`2204`, :pr:`2118`, :pr:`2167`, :pr:`2136`)
+- Doc Fixes & Extensions (:pr:`2201`, :pr:`2161`)
+- Use F-Strings Where Possible (:pr:`2222`)
+- Rename kwargs to _kwargs where possible (:pr:`2182`)
+- Comply with PEP561 (:pr:`2168`)
+- Improve Code Quality (:pr:`2131`)
+- Switch Code Formatting to Black (:pr:`2122`, :pr:`2159`, :pr:`2158`)
+- Update Wheel Settings (:pr:`2142`)
+- Update ``timerbot.py`` to ``v13.0`` (:pr:`2149`)
+- Overhaul Constants (:pr:`2137`)
+- Add Python 3.9 to Test Matrix (:pr:`2132`)
+- Switch Codecov to ``GitHub`` Action (:pr:`2127`)
+- Specify Required pytz Version (:pr:`2121`)
 
 Version 13.0
 ============
@@ -629,73 +1679,38 @@ Version 13.0
 
 **Major Changes:**
 
-- Deprecate old-style callbacks, i.e. set ``use_context=True`` by default (`#2050`_)
-- Refactor Handling of Message VS Update Filters (`#2032`_)
-- Deprecate ``Message.default_quote`` (`#1965`_)
-- Refactor persistence of Bot instances (`#1994`_)
-- Refactor ``JobQueue`` (`#1981`_)
-- Refactor handling of kwargs in Bot methods (`#1924`_)
-- Refactor ``Dispatcher.run_async``, deprecating the ``@run_async`` decorator (`#2051`_)
+- Deprecate old-style callbacks, i.e. set ``use_context=True`` by default (:pr:`2050`)
+- Refactor Handling of Message VS Update Filters (:pr:`2032`)
+- Deprecate ``Message.default_quote`` (:pr:`1965`)
+- Refactor persistence of Bot instances (:pr:`1994`)
+- Refactor ``JobQueue`` (:pr:`1981`)
+- Refactor handling of kwargs in Bot methods (:pr:`1924`)
+- Refactor ``Dispatcher.run_async``, deprecating the ``@run_async`` decorator (:pr:`2051`)
 
 **New Features:**
 
-- Type Hinting (`#1920`_)
-- Automatic Pagination for ``answer_inline_query`` (`#2072`_)
-- ``Defaults.tzinfo`` (`#2042`_)
-- Extend rich comparison of objects (`#1724`_)
-- Add ``Filters.via_bot`` (`#2009`_)
-- Add missing shortcuts (`#2043`_)
-- Allow ``DispatcherHandlerStop`` in ``ConversationHandler`` (`#2059`_)
-- Make Errors picklable (`#2106`_)
+- Type Hinting (:pr:`1920`)
+- Automatic Pagination for ``answer_inline_query`` (:pr:`2072`)
+- ``Defaults.tzinfo`` (:pr:`2042`)
+- Extend rich comparison of objects (:pr:`1724`)
+- Add ``Filters.via_bot`` (:pr:`2009`)
+- Add missing shortcuts (:pr:`2043`)
+- Allow ``DispatcherHandlerStop`` in ``ConversationHandler`` (:pr:`2059`)
+- Make Errors picklable (:pr:`2106`)
 
 **Minor changes, CI improvements, doc fixes or bug fixes:**
 
-- Fix Webhook not working on Windows with Python 3.8+ (`#2067`_)
-- Fix setting thumbs with ``send_media_group`` (`#2093`_)
-- Make ``MessageHandler`` filter for ``Filters.update`` first (`#2085`_)
-- Fix ``PicklePersistence.flush()`` with only ``bot_data`` (`#2017`_)
-- Add test for clean argument of ``Updater.start_polling/webhook`` (`#2002`_)
-- Doc fixes, refinements and additions (`#2005`_, `#2008`_, `#2089`_, `#2094`_, `#2090`_)
-- CI fixes (`#2018`_, `#2061`_)
-- Refine ``pollbot.py`` example (`#2047`_)
-- Refine Filters in examples (`#2027`_)
-- Rename ``echobot`` examples (`#2025`_)
-- Use Lock-Bot to lock old threads (`#2048`_, `#2052`_, `#2049`_, `#2053`_)
-
-.. _`#2050`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2050
-.. _`#2032`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2032
-.. _`#1965`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1965
-.. _`#1994`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1994
-.. _`#1981`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1981
-.. _`#1924`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1924
-.. _`#2051`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2051
-.. _`#1920`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1920
-.. _`#2072`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2072
-.. _`#2042`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2042
-.. _`#1724`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1724
-.. _`#2009`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2009
-.. _`#2043`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2043
-.. _`#2059`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2059
-.. _`#2106`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2106
-.. _`#2067`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2067
-.. _`#2093`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2093
-.. _`#2085`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2085
-.. _`#2017`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2017
-.. _`#2002`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2002
-.. _`#2005`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2005
-.. _`#2008`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2008
-.. _`#2089`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2089
-.. _`#2094`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2094
-.. _`#2090`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2090
-.. _`#2018`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2018
-.. _`#2061`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2061
-.. _`#2047`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2047
-.. _`#2027`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2027
-.. _`#2025`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2025
-.. _`#2048`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2048
-.. _`#2052`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2052
-.. _`#2049`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2049
-.. _`#2053`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2053
+- Fix Webhook not working on Windows with Python 3.8+ (:pr:`2067`)
+- Fix setting thumbs with ``send_media_group`` (:pr:`2093`)
+- Make ``MessageHandler`` filter for ``Filters.update`` first (:pr:`2085`)
+- Fix ``PicklePersistence.flush()`` with only ``bot_data`` (:pr:`2017`)
+- Add test for clean argument of ``Updater.start_polling/webhook`` (:pr:`2002`)
+- Doc fixes, refinements and additions (:pr:`2005`, :pr:`2008`, :pr:`2089`, :pr:`2094`, :pr:`2090`)
+- CI fixes (:pr:`2018`, :pr:`2061`)
+- Refine ``pollbot.py`` example (:pr:`2047`)
+- Refine Filters in examples (:pr:`2027`)
+- Rename ``echobot`` examples (:pr:`2025`)
+- Use Lock-Bot to lock old threads (:pr:`2048`, :pr:`2052`, :pr:`2049`, :pr:`2053`)
 
 Version 12.8
 ============
@@ -703,34 +1718,19 @@ Version 12.8
 
 **Major Changes:**
 
-- Remove Python 2 support (`#1715`_)
-- Bot API 4.9 support (`#1980`_)
-- IDs/Usernames of ``Filters.user`` and ``Filters.chat`` can now be updated (`#1757`_)
+- Remove Python 2 support (:pr:`1715`)
+- Bot API 4.9 support (:pr:`1980`)
+- IDs/Usernames of ``Filters.user`` and ``Filters.chat`` can now be updated (:pr:`1757`)
 
 **Minor changes, CI improvements, doc fixes or bug fixes:**
 
-- Update contribution guide and stale bot (`#1937`_)
-- Remove ``NullHandlers`` (`#1913`_)
-- Improve and expand examples (`#1943`_, `#1995`_, `#1983`_, `#1997`_)
-- Doc fixes (`#1940`_, `#1962`_)
-- Add ``User.send_poll()`` shortcut (`#1968`_)
-- Ignore private attributes en ``TelegramObject.to_dict()`` (`#1989`_)
-- Stabilize CI (`#2000`_)
-
-.. _`#1937`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1937
-.. _`#1913`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1913
-.. _`#1943`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1943
-.. _`#1757`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1757
-.. _`#1940`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1940
-.. _`#1962`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1962
-.. _`#1968`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1968
-.. _`#1989`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1989
-.. _`#1995`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1995
-.. _`#1983`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1983
-.. _`#1715`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1715
-.. _`#2000`: https://github.com/python-telegram-bot/python-telegram-bot/pull/2000
-.. _`#1997`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1997
-.. _`#1980`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1980
+- Update contribution guide and stale bot (:pr:`1937`)
+- Remove ``NullHandlers`` (:pr:`1913`)
+- Improve and expand examples (:pr:`1943`, :pr:`1995`, :pr:`1983`, :pr:`1997`)
+- Doc fixes (:pr:`1940`, :pr:`1962`)
+- Add ``User.send_poll()`` shortcut (:pr:`1968`)
+- Ignore private attributes en ``TelegramObject.to_dict()`` (:pr:`1989`)
+- Stabilize CI (:pr:`2000`)
 
 Version 12.7
 ============
@@ -738,30 +1738,19 @@ Version 12.7
 
 **Major Changes:**
 
-- Bot API 4.8 support. **Note:** The ``Dice`` object now has a second positional argument ``emoji``. This is relevant, if you instantiate ``Dice`` objects manually. (`#1917`_)
-- Added ``tzinfo`` argument to ``helpers.from_timestamp``. It now returns an timezone aware object. This is relevant for ``Message.{date,forward_date,edit_date}``, ``Poll.close_date`` and ``ChatMember.until_date`` (`#1621`_)
+- Bot API 4.8 support. **Note:** The ``Dice`` object now has a second positional argument ``emoji``. This is relevant, if you instantiate ``Dice`` objects manually. (:pr:`1917`)
+- Added ``tzinfo`` argument to ``helpers.from_timestamp``. It now returns an timezone aware object. This is relevant for ``Message.{date,forward_date,edit_date}``, ``Poll.close_date`` and ``ChatMember.until_date`` (:pr:`1621`)
 
 **New Features:**
 
-- New method ``run_monthly`` for the ``JobQueue`` (`#1705`_)
-- ``Job.next_t`` now gives the datetime of the jobs next execution (`#1685`_)
+- New method ``run_monthly`` for the ``JobQueue`` (:pr:`1705`)
+- ``Job.next_t`` now gives the datetime of the jobs next execution (:pr:`1685`)
 
 **Minor changes, CI improvements, doc fixes or bug fixes:**
 
-- Stabalize CI (`#1919`_, `#1931`_)
-- Use ABCs ``@abstractmethod`` instead of raising ``NotImplementedError`` for ``Handler``, ``BasePersistence`` and ``BaseFilter`` (`#1905`_)
-- Doc fixes (`#1914`_, `#1902`_, `#1910`_)
-
-.. _`#1902`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1902
-.. _`#1685`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1685
-.. _`#1910`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1910
-.. _`#1914`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1914
-.. _`#1931`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1931
-.. _`#1905`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1905
-.. _`#1919`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1919
-.. _`#1621`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1621
-.. _`#1705`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1705
-.. _`#1917`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1917
+- Stabalize CI (:pr:`1919`, :pr:`1931`)
+- Use ABCs ``@abstractmethod`` instead of raising ``NotImplementedError`` for ``Handler``, ``BasePersistence`` and ``BaseFilter`` (:pr:`1905`)
+- Doc fixes (:pr:`1914`, :pr:`1902`, :pr:`1910`)
 
 Version 12.6.1
 ==============
@@ -769,9 +1758,7 @@ Version 12.6.1
 
 **Bug fixes:**
 
-- Fix serialization of ``reply_markup`` in media messages (`#1889`_)
-
-.. _`#1889`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1889
+- Fix serialization of ``reply_markup`` in media messages (:pr:`1889`)
 
 Version 12.6
 ============
@@ -779,28 +1766,17 @@ Version 12.6
 
 **Major Changes:**
 
-- Bot API 4.7 support. **Note:** In ``Bot.create_new_sticker_set`` and ``Bot.add_sticker_to_set``, the order of the parameters had be changed, as the ``png_sticker`` parameter is now optional. (`#1858`_)
+- Bot API 4.7 support. **Note:** In ``Bot.create_new_sticker_set`` and ``Bot.add_sticker_to_set``, the order of the parameters had be changed, as the ``png_sticker`` parameter is now optional. (:pr:`1858`)
 
 **Minor changes, CI improvements or bug fixes:**
 
-- Add tests for ``swtich_inline_query(_current_chat)`` with empty string (`#1635`_)
-- Doc fixes (`#1854`_, `#1874`_, `#1884`_)
-- Update issue templates (`#1880`_)
-- Favor concrete types over "Iterable" (`#1882`_)
-- Pass last valid ``CallbackContext`` to ``TIMEOUT`` handlers of ``ConversationHandler`` (`#1826`_)
-- Tweak handling of persistence and update persistence after job calls (`#1827`_)
-- Use checkout@v2 for GitHub actions (`#1887`_)
-
-.. _`#1858`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1858
-.. _`#1635`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1635
-.. _`#1854`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1854
-.. _`#1874`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1874
-.. _`#1884`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1884
-.. _`#1880`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1880
-.. _`#1882`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1882
-.. _`#1826`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1826
-.. _`#1827`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1827
-.. _`#1887`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1887
+- Add tests for ``swtich_inline_query(_current_chat)`` with empty string (:pr:`1635`)
+- Doc fixes (:pr:`1854`, :pr:`1874`, :pr:`1884`)
+- Update issue templates (:pr:`1880`)
+- Favor concrete types over "Iterable" (:pr:`1882`)
+- Pass last valid ``CallbackContext`` to ``TIMEOUT`` handlers of ``ConversationHandler`` (:pr:`1826`)
+- Tweak handling of persistence and update persistence after job calls (:pr:`1827`)
+- Use checkout@v2 for GitHub actions (:pr:`1887`)
 
 Version 12.5.1
 ==============
@@ -808,19 +1784,12 @@ Version 12.5.1
 
 **Minor changes, doc fixes or bug fixes:**
 
-- Add missing docs for `PollHandler` and `PollAnswerHandler` (`#1853`_)
-- Fix wording in `Filters` docs (`#1855`_)
-- Reorder tests to make them more stable (`#1835`_)
-- Make `ConversationHandler` attributes immutable (`#1756`_)
-- Make `PrefixHandler` attributes `command` and `prefix` editable (`#1636`_)
-- Fix UTC as default `tzinfo` for `Job` (`#1696`_)
-
-.. _`#1853`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1853
-.. _`#1855`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1855
-.. _`#1835`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1835
-.. _`#1756`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1756
-.. _`#1636`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1636
-.. _`#1696`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1696
+- Add missing docs for `PollHandler` and `PollAnswerHandler` (:pr:`1853`)
+- Fix wording in `Filters` docs (:pr:`1855`)
+- Reorder tests to make them more stable (:pr:`1835`)
+- Make `ConversationHandler` attributes immutable (:pr:`1756`)
+- Make `PrefixHandler` attributes `command` and `prefix` editable (:pr:`1636`)
+- Fix UTC as default `tzinfo` for `Job` (:pr:`1696`)
 
 Version 12.5
 ============
@@ -828,44 +1797,24 @@ Version 12.5
 
 **New Features:**
 
-- `Bot.link` gives the `t.me` link of the bot (`#1770`_)
+- `Bot.link` gives the `t.me` link of the bot (:pr:`1770`)
 
 **Major Changes:**
 
-- Bot API 4.5 and 4.6 support. (`#1508`_, `#1723`_)
+- Bot API 4.5 and 4.6 support. (:pr:`1508`, :pr:`1723`)
 
 **Minor changes, CI improvements or bug fixes:**
 
-- Remove legacy CI files (`#1783`_, `#1791`_)
-- Update pre-commit config file (`#1787`_)
-- Remove builtin names (`#1792`_)
-- CI improvements (`#1808`_, `#1848`_)
-- Support Python 3.8 (`#1614`_, `#1824`_)
-- Use stale bot for auto closing stale issues (`#1820`_, `#1829`_, `#1840`_)
-- Doc fixes (`#1778`_, `#1818`_)
-- Fix typo in `edit_message_media` (`#1779`_)
-- In examples, answer CallbackQueries and use `edit_message_text` shortcut (`#1721`_)
-- Revert accidental change in vendored urllib3 (`#1775`_)
-
-.. _`#1783`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1783
-.. _`#1787`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1787
-.. _`#1792`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1792
-.. _`#1791`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1791
-.. _`#1808`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1808
-.. _`#1614`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1614
-.. _`#1770`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1770
-.. _`#1824`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1824
-.. _`#1820`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1820
-.. _`#1829`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1829
-.. _`#1840`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1840
-.. _`#1778`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1778
-.. _`#1779`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1779
-.. _`#1721`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1721
-.. _`#1775`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1775
-.. _`#1848`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1848
-.. _`#1818`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1818
-.. _`#1508`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1508
-.. _`#1723`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1723
+- Remove legacy CI files (:pr:`1783`, :pr:`1791`)
+- Update pre-commit config file (:pr:`1787`)
+- Remove builtin names (:pr:`1792`)
+- CI improvements (:pr:`1808`, :pr:`1848`)
+- Support Python 3.8 (:pr:`1614`, :pr:`1824`)
+- Use stale bot for auto closing stale issues (:pr:`1820`, :pr:`1829`, :pr:`1840`)
+- Doc fixes (:pr:`1778`, :pr:`1818`)
+- Fix typo in `edit_message_media` (:pr:`1779`)
+- In examples, answer CallbackQueries and use `edit_message_text` shortcut (:pr:`1721`)
+- Revert accidental change in vendored urllib3 (:pr:`1775`)
 
 Version 12.4.2
 ==============
@@ -873,19 +1822,15 @@ Version 12.4.2
 
 **Bug Fixes**
 
-- Pass correct parse_mode to InlineResults if bot.defaults is None (`#1763`_)
-- Make sure PP can read files that dont have bot_data (`#1760`_)
-
-.. _`#1763`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1763
-.. _`#1760`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1760
+- Pass correct parse_mode to InlineResults if bot.defaults is None (:pr:`1763`)
+- Make sure PP can read files that dont have bot_data (:pr:`1760`)
 
 Version 12.4.1
 ==============
 *Released 2020-02-08*
 
-This is a quick release for `#1744`_ which was accidently left out of v12.4.0 though mentioned in the
+This is a quick release for :pr:`1744` which was accidently left out of v12.4.0 though mentioned in the
 release notes.
-
 
 Version 12.4.0
 ==============
@@ -893,70 +1838,34 @@ Version 12.4.0
 
 **New features:**
 
-- Set default values for arguments appearing repeatedly. We also have a `wiki page for the new defaults`_. (`#1490`_)
-- Store data in ``CallbackContext.bot_data`` to access it in every callback. Also persists. (`#1325`_)
-- ``Filters.poll`` allows only messages containing a poll (`#1673`_)
+- Set default values for arguments appearing repeatedly. We also have a `wiki page for the new defaults`_. (:pr:`1490`)
+- Store data in ``CallbackContext.bot_data`` to access it in every callback. Also persists. (:pr:`1325`)
+- ``Filters.poll`` allows only messages containing a poll (:pr:`1673`)
 
 **Major changes:**
 
-- ``Filters.text`` now accepts messages that start with a slash, because ``CommandHandler`` checks for ``MessageEntity.BOT_COMMAND`` since v12. This might lead to your MessageHandlers receiving more updates than before (`#1680`_).
-- ``Filters.command`` new checks for ``MessageEntity.BOT_COMMAND`` instead of just a leading slash. Also by ``Filters.command(False)`` you can now filters for messages containing a command `anywhere` in the text (`#1744`_).
+- ``Filters.text`` now accepts messages that start with a slash, because ``CommandHandler`` checks for ``MessageEntity.BOT_COMMAND`` since v12. This might lead to your MessageHandlers receiving more updates than before (:pr:`1680`).
+- ``Filters.command`` new checks for ``MessageEntity.BOT_COMMAND`` instead of just a leading slash. Also by ``Filters.command(False)`` you can now filters for messages containing a command `anywhere` in the text (:pr:`1744`).
 
 **Minor changes, CI improvements or bug fixes:**
 
-- Add ``disptacher`` argument to ``Updater`` to allow passing a customized ``Dispatcher`` (`#1484`_)
-- Add missing names for ``Filters`` (`#1632`_)
-- Documentation fixes (`#1624`_, `#1647`_, `#1669`_, `#1703`_, `#1718`_, `#1734`_, `#1740`_, `#1642`_, `#1739`_, `#1746`_)
-- CI improvements (`#1716`_, `#1731`_, `#1738`_, `#1748`_, `#1749`_, `#1750`_, `#1752`_)
-- Fix spelling issue for ``encode_conversations_to_json`` (`#1661`_)
-- Remove double assignement of ``Dispatcher.job_queue`` (`#1698`_)
-- Expose dispatcher as property for ``CallbackContext`` (`#1684`_)
-- Fix ``None`` check in ``JobQueue._put()`` (`#1707`_)
-- Log datetimes correctly in ``JobQueue`` (`#1714`_)
-- Fix false ``Message.link`` creation for private groups (`#1741`_)
-- Add option ``--with-upstream-urllib3`` to `setup.py` to allow using non-vendored version (`#1725`_)
-- Fix persistence for nested ``ConversationHandlers`` (`#1679`_)
-- Improve handling of non-decodable server responses (`#1623`_)
-- Fix download for files without ``file_path`` (`#1591`_)
-- test_webhook_invalid_posts is now considered flaky and retried on failure (`#1758`_)
+- Add ``disptacher`` argument to ``Updater`` to allow passing a customized ``Dispatcher`` (:pr:`1484`)
+- Add missing names for ``Filters`` (:pr:`1632`)
+- Documentation fixes (:pr:`1624`, :pr:`1647`, :pr:`1669`, :pr:`1703`, :pr:`1718`, :pr:`1734`, :pr:`1740`, :pr:`1642`, :pr:`1739`, :pr:`1746`)
+- CI improvements (:pr:`1716`, :pr:`1731`, :pr:`1738`, :pr:`1748`, :pr:`1749`, :pr:`1750`, :pr:`1752`)
+- Fix spelling issue for ``encode_conversations_to_json`` (:pr:`1661`)
+- Remove double assignement of ``Dispatcher.job_queue`` (:pr:`1698`)
+- Expose dispatcher as property for ``CallbackContext`` (:pr:`1684`)
+- Fix ``None`` check in ``JobQueue._put()`` (:pr:`1707`)
+- Log datetimes correctly in ``JobQueue`` (:pr:`1714`)
+- Fix false ``Message.link`` creation for private groups (:pr:`1741`)
+- Add option ``--with-upstream-urllib3`` to `setup.py` to allow using non-vendored version (:pr:`1725`)
+- Fix persistence for nested ``ConversationHandlers`` (:pr:`1679`)
+- Improve handling of non-decodable server responses (:pr:`1623`)
+- Fix download for files without ``file_path`` (:pr:`1591`)
+- test_webhook_invalid_posts is now considered flaky and retried on failure (:pr:`1758`)
 
 .. _`wiki page for the new defaults`: https://github.com/python-telegram-bot/python-telegram-bot/wiki/Adding-defaults-to-your-bot
-.. _`#1744`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1744
-.. _`#1752`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1752
-.. _`#1750`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1750
-.. _`#1591`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1591
-.. _`#1490`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1490
-.. _`#1749`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1749
-.. _`#1623`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1623
-.. _`#1748`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1748
-.. _`#1679`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1679
-.. _`#1711`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1711
-.. _`#1325`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1325
-.. _`#1746`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1746
-.. _`#1725`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1725
-.. _`#1739`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1739
-.. _`#1741`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1741
-.. _`#1642`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1642
-.. _`#1738`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1738
-.. _`#1740`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1740
-.. _`#1734`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1734
-.. _`#1680`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1680
-.. _`#1718`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1718
-.. _`#1714`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1714
-.. _`#1707`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1707
-.. _`#1731`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1731
-.. _`#1673`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1673
-.. _`#1684`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1684
-.. _`#1703`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1703
-.. _`#1698`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1698
-.. _`#1669`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1669
-.. _`#1661`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1661
-.. _`#1647`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1647
-.. _`#1632`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1632
-.. _`#1624`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1624
-.. _`#1716`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1716
-.. _`#1484`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1484
-.. _`#1758`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1484
 
 Version 12.3.0
 ==============
@@ -964,49 +1873,24 @@ Version 12.3.0
 
 **New features:**
 
-- `Filters.caption` allows only messages with caption (`#1631`_).
-- Filter for exact messages/captions with new capability of `Filters.text` and `Filters.caption`. Especially useful in combination with ReplyKeyboardMarkup. (`#1631`_).
+- `Filters.caption` allows only messages with caption (:pr:`1631`).
+- Filter for exact messages/captions with new capability of `Filters.text` and `Filters.caption`. Especially useful in combination with ReplyKeyboardMarkup. (:pr:`1631`).
 
 **Major changes:**
 
-- Fix inconsistent handling of naive datetimes (`#1506`_).
+- Fix inconsistent handling of naive datetimes (:pr:`1506`).
 
 **Minor changes, CI improvements or bug fixes:**
 
-- Documentation fixes (`#1558`_, `#1569`_, `#1579`_, `#1572`_, `#1566`_, `#1577`_, `#1656`_).
-- Add mutex protection on `ConversationHandler` (`#1533`_).
-- Add `MAX_PHOTOSIZE_UPLOAD` constant (`#1560`_).
-- Add args and kwargs to `Message.forward()` (`#1574`_).
-- Transfer to GitHub Actions CI (`#1555`_, `#1556`_, `#1605`_, `#1606`_, `#1607`_, `#1612`_, `#1615`_, `#1645`_).
-- Fix deprecation warning with Py3.8 by vendored urllib3 (`#1618`_).
-- Simplify assignements for optional arguments (`#1600`_)
-- Allow private groups for `Message.link` (`#1619`_).
-- Fix wrong signature call for `ConversationHandler.TIMEOUT` handlers (`#1653`_).
-
-.. _`#1631`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1631
-.. _`#1506`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1506
-.. _`#1558`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1558
-.. _`#1569`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1569
-.. _`#1579`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1579
-.. _`#1572`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1572
-.. _`#1566`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1566
-.. _`#1577`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1577
-.. _`#1533`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1533
-.. _`#1560`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1560
-.. _`#1574`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1574
-.. _`#1555`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1555
-.. _`#1556`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1556
-.. _`#1605`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1605
-.. _`#1606`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1606
-.. _`#1607`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1607
-.. _`#1612`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1612
-.. _`#1615`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1615
-.. _`#1618`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1618
-.. _`#1600`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1600
-.. _`#1619`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1619
-.. _`#1653`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1653
-.. _`#1656`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1656
-.. _`#1645`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1645
+- Documentation fixes (:pr:`1558`, :pr:`1569`, :pr:`1579`, :pr:`1572`, :pr:`1566`, :pr:`1577`, :pr:`1656`).
+- Add mutex protection on `ConversationHandler` (:pr:`1533`).
+- Add `MAX_PHOTOSIZE_UPLOAD` constant (:pr:`1560`).
+- Add args and kwargs to `Message.forward()` (:pr:`1574`).
+- Transfer to GitHub Actions CI (:pr:`1555`, :pr:`1556`, :pr:`1605`, :pr:`1606`, :pr:`1607`, :pr:`1612`, :pr:`1615`, :pr:`1645`).
+- Fix deprecation warning with Py3.8 by vendored urllib3 (:pr:`1618`).
+- Simplify assignements for optional arguments (:pr:`1600`)
+- Allow private groups for `Message.link` (:pr:`1619`).
+- Fix wrong signature call for `ConversationHandler.TIMEOUT` handlers (:pr:`1653`).
 
 Version 12.2.0
 ==============
@@ -1014,27 +1898,18 @@ Version 12.2.0
 
 **New features:**
 
-- Nested ConversationHandlers (`#1512`_).
+- Nested ConversationHandlers (:pr:`1512`).
 
 **Minor changes, CI improvments or bug fixes:**
 
-- Fix CI failures due to non-backward compat attrs depndency (`#1540`_).
+- Fix CI failures due to non-backward compat attrs depndency (:pr:`1540`).
 - travis.yaml: TEST_OFFICIAL removed from allowed_failures.
-- Fix typos in examples (`#1537`_).
-- Fix Bot.to_dict to use proper first_name (`#1525`_).
-- Refactor ``test_commandhandler.py`` (`#1408`_).
-- Add Python 3.8 (RC version) to Travis testing matrix (`#1543`_).
-- test_bot.py: Add to_dict test (`#1544`_).
-- Flake config moved into setup.cfg (`#1546`_).
-
-.. _`#1512`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1512
-.. _`#1540`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1540
-.. _`#1537`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1537
-.. _`#1525`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1525
-.. _`#1408`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1408
-.. _`#1543`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1543
-.. _`#1544`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1544
-.. _`#1546`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1546
+- Fix typos in examples (:pr:`1537`).
+- Fix Bot.to_dict to use proper first_name (:pr:`1525`).
+- Refactor ``test_commandhandler.py`` (:pr:`1408`).
+- Add Python 3.8 (RC version) to Travis testing matrix (:pr:`1543`).
+- test_bot.py: Add to_dict test (:pr:`1544`).
+- Flake config moved into setup.cfg (:pr:`1546`).
 
 Version 12.1.1
 ==============
@@ -1042,9 +1917,7 @@ Version 12.1.1
 
 **Hot fix release**
 
-Fixed regression in the vendored urllib3 (`#1517`_).
-
-.. _`#1517`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1517
+Fixed regression in the vendored urllib3 (:pr:`1517`).
 
 Version 12.1.0
 ================
@@ -1052,23 +1925,15 @@ Version 12.1.0
 
 **Major changes:**
 
-- Bot API 4.4 support (`#1464`_, `#1510`_)
+- Bot API 4.4 support (:pr:`1464`, :pr:`1510`)
 - Add `get_file` method to `Animation` & `ChatPhoto`. Add, `get_small_file` & `get_big_file`
-  methods to `ChatPhoto` (`#1489`_)
-- Tools for deep linking (`#1049`_)
+  methods to `ChatPhoto` (:pr:`1489`)
+- Tools for deep linking (:pr:`1049`)
 
 **Minor changes and/or bug fixes:**
 
-- Documentation fixes (`#1500`_, `#1499`_)
-- Improved examples (`#1502`_)
-
-.. _`#1464`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1464
-.. _`#1502`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1502
-.. _`#1499`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1499
-.. _`#1500`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1500
-.. _`#1049`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1049
-.. _`#1489`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1489
-.. _`#1510`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1510
+- Documentation fixes (:pr:`1500`, :pr:`1499`)
+- Improved examples (:pr:`1502`)
 
 Version 12.0.0
 ================
@@ -1087,38 +1952,38 @@ Expect minor releases soon (mainly complete Bot API 4.4 support)
 - Various ConversationHandler changes and fixes
 - Bot API 4.1, 4.2, 4.3 support
 - Python 3.4 is no longer supported
-- Error Handler now handles all types of exceptions (`#1485`_)
-- Return UTC from from_timestamp() (`#1485`_)
+- Error Handler now handles all types of exceptions (:pr:`1485`)
+- Return UTC from from_timestamp() (:pr:`1485`)
 
 **See the wiki page at https://github.com/python-telegram-bot/python-telegram-bot/wiki/Transition-guide-to-Version-12.0 for a detailed guide on how to migrate from version 11 to version 12.**
 
-Context based callbacks (`#1100`_)
-----------------------------------
+Context based callbacks (:pr:`1100`)
+------------------------------------
 
 - Use of ``pass_`` in handlers is deprecated.
 - Instead use ``use_context=True`` on ``Updater`` or ``Dispatcher`` and change callback from (bot, update, others...) to (update, context).
 - This also applies to error handlers ``Dispatcher.add_error_handler`` and JobQueue jobs (change (bot, job) to (context) here).
 - For users with custom handlers subclassing Handler, this is mostly backwards compatible, but to use the new context based callbacks you need to implement the new collect_additional_context method.
 - Passing bot to ``JobQueue.__init__`` is deprecated. Use JobQueue.set_dispatcher with a dispatcher instead.
-- Dispatcher makes sure to use a single `CallbackContext` for a entire update. This means that if an update is handled by multiple handlers (by using the group argument), you can add custom arguments to the `CallbackContext` in a lower group handler and use it in higher group handler. NOTE: Never use with @run_async, see docs for more info. (`#1283`_)
+- Dispatcher makes sure to use a single `CallbackContext` for a entire update. This means that if an update is handled by multiple handlers (by using the group argument), you can add custom arguments to the `CallbackContext` in a lower group handler and use it in higher group handler. NOTE: Never use with @run_async, see docs for more info. (:pr:`1283`)
 - If you have custom handlers they will need to be updated to support the changes in this release.
 - Update all examples to use context based callbacks.
 
-Persistence (`#1017`_)
-----------------------
+Persistence (:pr:`1017`)
+------------------------
 
 - Added PicklePersistence and DictPersistence for adding persistence to your bots.
 - BasePersistence can be subclassed for all your persistence needs.
 - Add a new example that shows a persistent ConversationHandler bot
 
-Handler overhaul (`#1114`_)
----------------------------
+Handler overhaul (:pr:`1114`)
+-----------------------------
 
 - CommandHandler now only triggers on actual commands as defined by telegram servers (everything that the clients mark as a tabable link).
 - PrefixHandler can be used if you need to trigger on prefixes (like all messages starting with a "/" (old CommandHandler behaviour) or even custom prefixes like "#" or "!").
 
-Filter overhaul (`#1221`_)
---------------------------
+Filter overhaul (:pr:`1221`)
+----------------------------
 
 - RegexHandler is deprecated and should be replaced with a MessageHandler with a regex filter.
 - Use update filters to filter update types instead of arguments (message_updates, channel_post_updates and edited_updates) on the handlers.
@@ -1129,91 +1994,46 @@ Filter overhaul (`#1221`_)
 ConversationHandler
 -------------------
 
-- Remove ``run_async_timeout`` and ``timed_out_behavior`` arguments (`#1344`_)
-- Replace with ``WAITING`` constant and behavior from states (`#1344`_)
-- Only emit one warning for multiple CallbackQueryHandlers in a ConversationHandler (`#1319`_)
-- Use warnings.warn for ConversationHandler warnings (`#1343`_)
-- Fix unresolvable promises (`#1270`_)
-
+- Remove ``run_async_timeout`` and ``timed_out_behavior`` arguments (:pr:`1344`)
+- Replace with ``WAITING`` constant and behavior from states (:pr:`1344`)
+- Only emit one warning for multiple CallbackQueryHandlers in a ConversationHandler (:pr:`1319`)
+- Use warnings.warn for ConversationHandler warnings (:pr:`1343`)
+- Fix unresolvable promises (:pr:`1270`)
 
 Bug fixes & improvements
 ------------------------
 
 - Handlers should be faster due to deduped logic.
-- Avoid compiling compiled regex in regex filter. (`#1314`_)
-- Add missing ``left_chat_member`` to Message.MESSAGE_TYPES (`#1336`_)
-- Make custom timeouts actually work properly (`#1330`_)
+- Avoid compiling compiled regex in regex filter. (:pr:`1314`)
+- Add missing ``left_chat_member`` to Message.MESSAGE_TYPES (:pr:`1336`)
+- Make custom timeouts actually work properly (:pr:`1330`)
 - Add convenience classmethods (from_button, from_row and from_column) to InlineKeyboardMarkup
-- Small typo fix in setup.py (`#1306`_)
-- Add Conflict error (HTTP error code 409) (`#1154`_)
-- Change MAX_CAPTION_LENGTH to 1024 (`#1262`_)
-- Remove some unnecessary clauses (`#1247`_, `#1239`_)
-- Allow filenames without dots in them when sending files (`#1228`_)
-- Fix uploading files with unicode filenames (`#1214`_)
-- Replace http.server with Tornado (`#1191`_)
-- Allow SOCKSConnection to parse username and password from URL (`#1211`_)
-- Fix for arguments in passport/data.py (`#1213`_)
-- Improve message entity parsing by adding text_mention (`#1206`_)
-- Documentation fixes (`#1348`_, `#1397`_, `#1436`_)
-- Merged filters short-circuit (`#1350`_)
-- Fix webhook listen with tornado (`#1383`_)
-- Call task_done() on update queue after update processing finished (`#1428`_)
-- Fix send_location() - latitude may be 0 (`#1437`_)
-- Make MessageEntity objects comparable (`#1465`_)
-- Add prefix to thread names (`#1358`_)
+- Small typo fix in setup.py (:pr:`1306`)
+- Add Conflict error (HTTP error code 409) (:pr:`1154`)
+- Change MAX_CAPTION_LENGTH to 1024 (:pr:`1262`)
+- Remove some unnecessary clauses (:pr:`1247`, :pr:`1239`)
+- Allow filenames without dots in them when sending files (:pr:`1228`)
+- Fix uploading files with unicode filenames (:pr:`1214`)
+- Replace http.server with Tornado (:pr:`1191`)
+- Allow SOCKSConnection to parse username and password from URL (:pr:`1211`)
+- Fix for arguments in passport/data.py (:pr:`1213`)
+- Improve message entity parsing by adding text_mention (:pr:`1206`)
+- Documentation fixes (:pr:`1348`, :pr:`1397`, :pr:`1436`)
+- Merged filters short-circuit (:pr:`1350`)
+- Fix webhook listen with tornado (:pr:`1383`)
+- Call task_done() on update queue after update processing finished (:pr:`1428`)
+- Fix send_location() - latitude may be 0 (:pr:`1437`)
+- Make MessageEntity objects comparable (:pr:`1465`)
+- Add prefix to thread names (:pr:`1358`)
 
 Buf fixes since v12.0.0b1
 -------------------------
 
-- Fix setting bot on ShippingQuery (`#1355`_)
-- Fix _trigger_timeout() missing 1 required positional argument: 'job' (`#1367`_)
-- Add missing message.text check in PrefixHandler check_update (`#1375`_)
-- Make updates persist even on DispatcherHandlerStop (`#1463`_)
-- Dispatcher force updating persistence object's chat data attribute(`#1462`_)
-
-.. _`#1100`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1100
-.. _`#1283`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1283
-.. _`#1017`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1017
-.. _`#1325`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1325
-.. _`#1301`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1301
-.. _`#1312`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1312
-.. _`#1324`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1324
-.. _`#1114`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1114
-.. _`#1221`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1221
-.. _`#1314`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1314
-.. _`#1336`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1336
-.. _`#1330`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1330
-.. _`#1306`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1306
-.. _`#1154`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1154
-.. _`#1262`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1262
-.. _`#1247`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1247
-.. _`#1239`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1239
-.. _`#1228`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1228
-.. _`#1214`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1214
-.. _`#1191`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1191
-.. _`#1211`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1211
-.. _`#1213`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1213
-.. _`#1206`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1206
-.. _`#1344`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1344
-.. _`#1319`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1319
-.. _`#1343`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1343
-.. _`#1270`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1270
-.. _`#1348`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1348
-.. _`#1350`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1350
-.. _`#1383`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1383
-.. _`#1397`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1397
-.. _`#1428`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1428
-.. _`#1436`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1436
-.. _`#1437`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1437
-.. _`#1465`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1465
-.. _`#1358`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1358
-.. _`#1355`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1355
-.. _`#1367`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1367
-.. _`#1375`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1375
-.. _`#1463`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1463
-.. _`#1462`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1462
-.. _`#1483`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1483
-.. _`#1485`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1485
+- Fix setting bot on ShippingQuery (:pr:`1355`)
+- Fix _trigger_timeout() missing 1 required positional argument: 'job' (:pr:`1367`)
+- Add missing message.text check in PrefixHandler check_update (:pr:`1375`)
+- Make updates persist even on DispatcherHandlerStop (:pr:`1463`)
+- Dispatcher force updating persistence object's chat data attribute(:pr:`1462`)
 
 Internal improvements
 ---------------------
@@ -1228,7 +2048,7 @@ Version 11.1.0
 ==============
 *Released 2018-09-01*
 
-Fixes and updates for Telegram Passport: (`#1198`_)
+Fixes and updates for Telegram Passport: (:pr:`1198`)
 
 - Fix passport decryption failing at random times
 - Added support for middle names.
@@ -1238,8 +2058,6 @@ Fixes and updates for Telegram Passport: (`#1198`_)
 - Replaced the payload parameter with the new parameter nonce
 - Add hash to EncryptedPassportElement
 
-.. _`#1198`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1198
-
 Version 11.0.0
 ==============
 *Released 2018-08-29*
@@ -1247,7 +2065,7 @@ Version 11.0.0
 Fully support Bot API version 4.0!
 (also some bugfixes :))
 
-Telegram Passport (`#1174`_):
+Telegram Passport (:pr:`1174`):
 
 - Add full support for telegram passport.
     - New types: PassportData, PassportFile, EncryptedPassportElement, EncryptedCredentials, PassportElementError, PassportElementErrorDataField, PassportElementErrorFrontSide, PassportElementErrorReverseSide, PassportElementErrorSelfie, PassportElementErrorFile and PassportElementErrorFiles.
@@ -1259,7 +2077,7 @@ Telegram Passport (`#1174`_):
 - See new passportbot.py example for details on how to use, or go to `our telegram passport wiki page`_ for more info
 - NOTE: Passport decryption requires new dependency `cryptography`.
 
-Inputfile rework (`#1184`_):
+Inputfile rework (:pr:`1184`):
 
 - Change how Inputfile is handled internally
 - This allows support for specifying the thumbnails of photos and videos using the thumb= argument in the different send\_ methods.
@@ -1269,32 +2087,21 @@ Inputfile rework (`#1184`_):
 
 Other Bot API 4.0 changes:
 
-- Add forusquare_type to Venue, InlineQueryResultVenue, InputVenueMessageContent, and Bot.send_venue. (`#1170`_)
-- Add vCard support by adding vcard field to Contact, InlineQueryResultContact, InputContactMessageContent, and Bot.send_contact. (`#1166`_)
-- Support new message entities: CASHTAG and PHONE_NUMBER. (`#1179`_)
+- Add forusquare_type to Venue, InlineQueryResultVenue, InputVenueMessageContent, and Bot.send_venue. (:pr:`1170`)
+- Add vCard support by adding vcard field to Contact, InlineQueryResultContact, InputContactMessageContent, and Bot.send_contact. (:pr:`1166`)
+- Support new message entities: CASHTAG and PHONE_NUMBER. (:pr:`1179`)
     - Cashtag seems to be things like `$USD` and `$GBP`, but it seems telegram doesn't currently send them to bots.
     - Phone number also seems to have limited support for now
-- Add Bot.send_animation, add width, height, and duration to Animation, and add Filters.animation. (`#1172`_)
+- Add Bot.send_animation, add width, height, and duration to Animation, and add Filters.animation. (:pr:`1172`)
 
 Non Bot API 4.0 changes:
 
-- Minor integer comparison fix (`#1147`_)
-- Fix Filters.regex failing on non-text message (`#1158`_)
-- Fix ProcessLookupError if process finishes before we kill it (`#1126`_)
-- Add t.me links for User, Chat and Message if available and update User.mention_* (`#1092`_)
-- Fix mention_markdown/html on py2 (`#1112`_)
+- Minor integer comparison fix (:pr:`1147`)
+- Fix Filters.regex failing on non-text message (:pr:`1158`)
+- Fix ProcessLookupError if process finishes before we kill it (:pr:`1126`)
+- Add t.me links for User, Chat and Message if available and update User.mention_* (:pr:`1092`)
+- Fix mention_markdown/html on py2 (:pr:`1112`)
 
-.. _`#1092`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1092
-.. _`#1112`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1112
-.. _`#1126`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1126
-.. _`#1147`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1147
-.. _`#1158`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1158
-.. _`#1166`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1166
-.. _`#1170`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1170
-.. _`#1174`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1174
-.. _`#1172`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1172
-.. _`#1179`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1179
-.. _`#1184`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1184
 .. _`our telegram passport wiki page`: https://github.com/python-telegram-bot/python-telegram-bot/wiki/Telegram-Passport
 
 Version 10.1.0
@@ -1303,27 +2110,16 @@ Version 10.1.0
 
 Fixes changing previous behaviour:
 
-- Add urllib3 fix for socks5h support (`#1085`_)
-- Fix send_sticker() timeout=20 (`#1088`_)
+- Add urllib3 fix for socks5h support (:pr:`1085`)
+- Fix send_sticker() timeout=20 (:pr:`1088`)
 
 Fixes:
 
-- Add a caption_entity filter for filtering caption entities (`#1068`_)
-- Inputfile encode filenames (`#1086`_)
-- InputFile: Fix proper naming of file when reading from subprocess.PIPE (`#1079`_)
-- Remove pytest-catchlog from requirements (`#1099`_)
-- Documentation fixes (`#1061`_, `#1078`_, `#1081`_, `#1096`_)
-
-.. _`#1061`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1061
-.. _`#1068`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1068
-.. _`#1078`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1078
-.. _`#1079`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1079
-.. _`#1081`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1081
-.. _`#1085`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1085
-.. _`#1086`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1086
-.. _`#1088`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1088
-.. _`#1096`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1096
-.. _`#1099`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1099
+- Add a caption_entity filter for filtering caption entities (:pr:`1068`)
+- Inputfile encode filenames (:pr:`1086`)
+- InputFile: Fix proper naming of file when reading from subprocess.PIPE (:pr:`1079`)
+- Remove pytest-catchlog from requirements (:pr:`1099`)
+- Documentation fixes (:pr:`1061`, :pr:`1078`, :pr:`1081`, :pr:`1096`)
 
 Version 10.0.2
 ==============
@@ -1331,32 +2127,22 @@ Version 10.0.2
 
 Important fix:
 
-- Handle utf8 decoding errors (`#1076`_)
+- Handle utf8 decoding errors (:pr:`1076`)
 
 New features:
 
-- Added Filter.regex (`#1028`_)
-- Filters for Category and file types (`#1046`_)
-- Added video note filter (`#1067`_)
+- Added Filter.regex (:pr:`1028`)
+- Filters for Category and file types (:pr:`1046`)
+- Added video note filter (:pr:`1067`)
 
 Fixes:
 
-- Fix in telegram.Message (`#1042`_)
-- Make chat_id a positional argument inside shortcut methods of Chat and User classes (`#1050`_)
-- Make Bot.full_name return a unicode object. (`#1063`_)
-- CommandHandler faster check (`#1074`_)
-- Correct documentation of Dispatcher.add_handler (`#1071`_)
+- Fix in telegram.Message (:pr:`1042`)
+- Make chat_id a positional argument inside shortcut methods of Chat and User classes (:pr:`1050`)
+- Make Bot.full_name return a unicode object. (:pr:`1063`)
+- CommandHandler faster check (:pr:`1074`)
+- Correct documentation of Dispatcher.add_handler (:pr:`1071`)
 - Various small fixes to documentation.
-
-.. _`#1028`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1028
-.. _`#1042`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1042
-.. _`#1046`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1046
-.. _`#1050`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1050
-.. _`#1067`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1067
-.. _`#1063`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1063
-.. _`#1074`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1074
-.. _`#1076`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1076
-.. _`#1071`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1071
 
 Version 10.0.1
 ==============
@@ -1364,11 +2150,8 @@ Version 10.0.1
 
 Fixes:
 
-- Fix conversationhandler timeout (PR `#1032`_)
-- Add missing docs utils (PR `#912`_)
-
-.. _`#1032`: https://github.com/python-telegram-bot/python-telegram-bot/pull/826
-.. _`#912`: https://github.com/python-telegram-bot/python-telegram-bot/pull/826
+- Fix conversationhandler timeout (PR :pr:`1032`)
+- Add missing docs utils (PR :pr:`912`)
 
 Version 10.0.0
 ==============
@@ -1376,66 +2159,39 @@ Version 10.0.0
 
 Non backward compatabile changes and changed defaults
 
-- JobQueue: Remove deprecated prevent_autostart & put() (PR `#1012`_)
-- Bot, Updater: Remove deprecated network_delay (PR `#1012`_)
-- Remove deprecated Message.new_chat_member (PR `#1012`_)
-- Retry bootstrap phase indefinitely (by default) on network errors (PR `#1018`_)
+- JobQueue: Remove deprecated prevent_autostart & put() (PR :pr:`1012`)
+- Bot, Updater: Remove deprecated network_delay (PR :pr:`1012`)
+- Remove deprecated Message.new_chat_member (PR :pr:`1012`)
+- Retry bootstrap phase indefinitely (by default) on network errors (PR :pr:`1018`)
 
 New Features
 
-- Support v3.6 API (PR `#1006`_)
-- User.full_name convinience property (PR `#949`_)
-- Add `send_phone_number_to_provider` and `send_email_to_provider` arguments to send_invoice (PR `#986`_)
-- Bot: Add shortcut methods reply_{markdown,html} (PR `#827`_)
-- Bot: Add shortcut method reply_media_group (PR `#994`_)
-- Added utils.helpers.effective_message_type (PR `#826`_)
-- Bot.get_file now allows passing a file in addition to file_id (PR `#963`_)
-- Add .get_file() to Audio, Document, PhotoSize, Sticker, Video, VideoNote and Voice (PR `#963`_)
-- Add .send_*() methods to User and Chat (PR `#963`_)
-- Get jobs by name (PR `#1011`_)
-- Add Message caption html/markdown methods (PR `#1013`_)
-- File.download_as_bytearray - new method to get a d/led file as bytearray (PR `#1019`_)
-- File.download(): Now returns a meaningful return value (PR `#1019`_)
-- Added conversation timeout in ConversationHandler (PR `#895`_)
+- Support v3.6 API (PR :pr:`1006`)
+- User.full_name convinience property (PR :pr:`949`)
+- Add `send_phone_number_to_provider` and `send_email_to_provider` arguments to send_invoice (PR :pr:`986`)
+- Bot: Add shortcut methods reply_{markdown,html} (PR :pr:`827`)
+- Bot: Add shortcut method reply_media_group (PR :pr:`994`)
+- Added utils.helpers.effective_message_type (PR :pr:`826`)
+- Bot.get_file now allows passing a file in addition to file_id (PR :pr:`963`)
+- Add .get_file() to Audio, Document, PhotoSize, Sticker, Video, VideoNote and Voice (PR :pr:`963`)
+- Add .send_*() methods to User and Chat (PR :pr:`963`)
+- Get jobs by name (PR :pr:`1011`)
+- Add Message caption html/markdown methods (PR :pr:`1013`)
+- File.download_as_bytearray - new method to get a d/led file as bytearray (PR :pr:`1019`)
+- File.download(): Now returns a meaningful return value (PR :pr:`1019`)
+- Added conversation timeout in ConversationHandler (PR :pr:`895`)
 
 Changes
 
-- Store bot in PreCheckoutQuery (PR `#953`_)
-- Updater: Issue INFO log upon received signal (PR `#951`_)
-- JobQueue: Thread safety fixes (PR `#977`_)
-- WebhookHandler: Fix exception thrown during error handling (PR `#985`_)
-- Explicitly check update.effective_chat in ConversationHandler.check_update (PR `#959`_)
-- Updater: Better handling of timeouts during get_updates (PR `#1007`_)
-- Remove unnecessary to_dict() (PR `#834`_)
-- CommandHandler - ignore strings in entities and "/" followed by whitespace (PR `#1020`_)
-- Documentation & style fixes (PR `#942`_, PR `#956`_, PR `#962`_, PR `#980`_, PR `#983`_)
-
-.. _`#826`: https://github.com/python-telegram-bot/python-telegram-bot/pull/826
-.. _`#827`: https://github.com/python-telegram-bot/python-telegram-bot/pull/827
-.. _`#834`: https://github.com/python-telegram-bot/python-telegram-bot/pull/834
-.. _`#895`: https://github.com/python-telegram-bot/python-telegram-bot/pull/895
-.. _`#942`: https://github.com/python-telegram-bot/python-telegram-bot/pull/942
-.. _`#949`: https://github.com/python-telegram-bot/python-telegram-bot/pull/949
-.. _`#951`: https://github.com/python-telegram-bot/python-telegram-bot/pull/951
-.. _`#956`: https://github.com/python-telegram-bot/python-telegram-bot/pull/956
-.. _`#953`: https://github.com/python-telegram-bot/python-telegram-bot/pull/953
-.. _`#962`: https://github.com/python-telegram-bot/python-telegram-bot/pull/962
-.. _`#959`: https://github.com/python-telegram-bot/python-telegram-bot/pull/959
-.. _`#963`: https://github.com/python-telegram-bot/python-telegram-bot/pull/963
-.. _`#977`: https://github.com/python-telegram-bot/python-telegram-bot/pull/977
-.. _`#980`: https://github.com/python-telegram-bot/python-telegram-bot/pull/980
-.. _`#983`: https://github.com/python-telegram-bot/python-telegram-bot/pull/983
-.. _`#985`: https://github.com/python-telegram-bot/python-telegram-bot/pull/985
-.. _`#986`: https://github.com/python-telegram-bot/python-telegram-bot/pull/986
-.. _`#994`: https://github.com/python-telegram-bot/python-telegram-bot/pull/994
-.. _`#1006`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1006
-.. _`#1007`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1007
-.. _`#1011`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1011
-.. _`#1012`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1012
-.. _`#1013`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1013
-.. _`#1018`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1018
-.. _`#1019`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1019
-.. _`#1020`: https://github.com/python-telegram-bot/python-telegram-bot/pull/1020
+- Store bot in PreCheckoutQuery (PR :pr:`953`)
+- Updater: Issue INFO log upon received signal (PR :pr:`951`)
+- JobQueue: Thread safety fixes (PR :pr:`977`)
+- WebhookHandler: Fix exception thrown during error handling (PR :pr:`985`)
+- Explicitly check update.effective_chat in ConversationHandler.check_update (PR :pr:`959`)
+- Updater: Better handling of timeouts during get_updates (PR :pr:`1007`)
+- Remove unnecessary to_dict() (PR :pr:`834`)
+- CommandHandler - ignore strings in entities and "/" followed by whitespace (PR :pr:`1020`)
+- Documentation & style fixes (PR :pr:`942`, PR :pr:`956`, PR :pr:`962`, PR :pr:`980`, PR :pr:`983`)
 
 Version 9.0.0
 =============
@@ -1443,53 +2199,39 @@ Version 9.0.0
 
 Breaking changes (possibly)
 
-- Drop support for python 3.3 (PR `#930`_)
-
+- Drop support for python 3.3 (PR :pr:`930`)
 
 New Features
 
-- Support Bot API 3.5 (PR `#920`_)
-
+- Support Bot API 3.5 (PR :pr:`920`)
 
 Changes
 
-- Fix race condition in dispatcher start/stop (`#887`_)
-- Log error trace if there is no error handler registered (`#694`_)
-- Update examples with consistent string formatting (`#870`_)
+- Fix race condition in dispatcher start/stop (:pr:`887`)
+- Log error trace if there is no error handler registered (:pr:`694`)
+- Update examples with consistent string formatting (:pr:`870`)
 - Various changes and improvements to the docs.
-
-.. _`#920`: https://github.com/python-telegram-bot/python-telegram-bot/pull/920
-.. _`#930`: https://github.com/python-telegram-bot/python-telegram-bot/pull/930
-.. _`#887`: https://github.com/python-telegram-bot/python-telegram-bot/pull/887
-.. _`#694`: https://github.com/python-telegram-bot/python-telegram-bot/pull/694
-.. _`#870`: https://github.com/python-telegram-bot/python-telegram-bot/pull/870
 
 Version 8.1.1
 =============
 *Released 2017-10-15*
 
-- Fix Commandhandler crashing on single character messages (PR `#873`_).
-
-.. _`#873`: https://github.com/python-telegram-bot/python-telegram-bot/pull/871
+- Fix Commandhandler crashing on single character messages (PR :pr:`873`).
 
 Version 8.1.0
 =============
 *Released 2017-10-14*
 
 New features
-- Support Bot API 3.4 (PR `#865`_).
+- Support Bot API 3.4 (PR :pr:`865`).
 
 Changes
 - MessageHandler & RegexHandler now consider channel_updates.
-- Fix command not recognized if it is directly followed by a newline (PR `#869`_).
-- Removed Bot._message_wrapper (PR `#822`_).
+- Fix command not recognized if it is directly followed by a newline (PR :pr:`869`).
+- Removed Bot._message_wrapper (PR :pr:`822`).
 - Unitests are now also running on AppVeyor (Windows VM).
 - Various unitest improvements.
 - Documentation fixes.
-
-.. _`#822`: https://github.com/python-telegram-bot/python-telegram-bot/pull/822
-.. _`#865`: https://github.com/python-telegram-bot/python-telegram-bot/pull/865
-.. _`#869`: https://github.com/python-telegram-bot/python-telegram-bot/pull/869
 
 Version 8.0.0
 =============
@@ -1497,42 +2239,29 @@ Version 8.0.0
 
 New features
 
-- Fully support Bot Api 3.3 (PR `#806`_).
+- Fully support Bot Api 3.3 (PR :pr:`806`).
 - DispatcherHandlerStop (`see docs`_).
-- Regression fix for text_html & text_markdown (PR `#777`_).
-- Added effective_attachment to message (PR `#766`_).
+- Regression fix for text_html & text_markdown (PR :pr:`777`).
+- Added effective_attachment to message (PR :pr:`766`).
 
 Non backward compatible changes
 
-- Removed Botan support from the library  (PR `#776`_).
-- Fully support Bot Api 3.3 (PR `#806`_).
-- Remove de_json() (PR `#789`_).
+- Removed Botan support from the library  (PR :pr:`776`).
+- Fully support Bot Api 3.3 (PR :pr:`806`).
+- Remove de_json() (PR :pr:`789`).
 
 Changes
 
-- Sane defaults for tcp socket options on linux (PR `#754`_).
-- Add RESTRICTED as constant to ChatMember (PR `#761`_).
-- Add rich comparison to CallbackQuery (PR `#764`_).
-- Fix get_game_high_scores (PR `#771`_).
-- Warn on small con_pool_size during custom initalization of Updater (PR `#793`_).
-- Catch exceptions in error handlerfor errors that happen during polling (PR `#810`_).
-- For testing we switched to pytest (PR `#788`_).
+- Sane defaults for tcp socket options on linux (PR :pr:`754`).
+- Add RESTRICTED as constant to ChatMember (PR :pr:`761`).
+- Add rich comparison to CallbackQuery (PR :pr:`764`).
+- Fix get_game_high_scores (PR :pr:`771`).
+- Warn on small con_pool_size during custom initalization of Updater (PR :pr:`793`).
+- Catch exceptions in error handlerfor errors that happen during polling (PR :pr:`810`).
+- For testing we switched to pytest (PR :pr:`788`).
 - Lots of small improvements to our tests and documentation.
 
-
-.. _`see docs`: http://python-telegram-bot.readthedocs.io/en/stable/telegram.ext.dispatcher.html#telegram.ext.Dispatcher.add_handler
-.. _`#777`: https://github.com/python-telegram-bot/python-telegram-bot/pull/777
-.. _`#806`: https://github.com/python-telegram-bot/python-telegram-bot/pull/806
-.. _`#766`: https://github.com/python-telegram-bot/python-telegram-bot/pull/766
-.. _`#776`: https://github.com/python-telegram-bot/python-telegram-bot/pull/776
-.. _`#789`: https://github.com/python-telegram-bot/python-telegram-bot/pull/789
-.. _`#754`: https://github.com/python-telegram-bot/python-telegram-bot/pull/754
-.. _`#761`: https://github.com/python-telegram-bot/python-telegram-bot/pull/761
-.. _`#764`: https://github.com/python-telegram-bot/python-telegram-bot/pull/764
-.. _`#771`: https://github.com/python-telegram-bot/python-telegram-bot/pull/771
-.. _`#788`: https://github.com/python-telegram-bot/python-telegram-bot/pull/788
-.. _`#793`: https://github.com/python-telegram-bot/python-telegram-bot/pull/793
-.. _`#810`: https://github.com/python-telegram-bot/python-telegram-bot/pull/810
+.. _`see docs`: https://docs.python-telegram-bot.org/en/v13.11/telegram.ext.dispatcher.html?highlight=Dispatcher.add_handler#telegram.ext.Dispatcher.add_handler
 
 Version 7.0.1
 ===============
@@ -1597,18 +2326,18 @@ Pre-version 7.0
 
 - Add support for Bot API 2.3.1
 - Add support for ``deleteMessage`` API method
-- New, simpler API for ``JobQueue`` - https://github.com/python-telegram-bot/python-telegram-bot/pull/484
-- Download files into file-like objects - https://github.com/python-telegram-bot/python-telegram-bot/pull/459
+- New, simpler API for ``JobQueue`` - :pr:`484`
+- Download files into file-like objects - :pr:`459`
 - Use vendor ``urllib3`` to address issues with timeouts
   - The default timeout for messages is now 5 seconds. For sending media, the default timeout is now 20 seconds.
 - String attributes that are not set are now ``None`` by default, instead of empty strings
-- Add ``text_markdown`` and ``text_html`` properties to ``Message`` - https://github.com/python-telegram-bot/python-telegram-bot/pull/507
-- Add support for Socks5 proxy - https://github.com/python-telegram-bot/python-telegram-bot/pull/518
-- Add support for filters in ``CommandHandler`` - https://github.com/python-telegram-bot/python-telegram-bot/pull/536
-- Add the ability to invert (not) filters - https://github.com/python-telegram-bot/python-telegram-bot/pull/552
+- Add ``text_markdown`` and ``text_html`` properties to ``Message`` - :pr:`507`
+- Add support for Socks5 proxy - :pr:`518`
+- Add support for filters in ``CommandHandler`` - :pr:`536`
+- Add the ability to invert (not) filters - :pr:`552`
 - Add ``Filters.group`` and ``Filters.private``
-- Compatibility with GAE via ``urllib3.contrib`` package - https://github.com/python-telegram-bot/python-telegram-bot/pull/583
-- Add equality rich comparision operators to telegram objects - https://github.com/python-telegram-bot/python-telegram-bot/pull/604
+- Compatibility with GAE via ``urllib3.contrib`` package - :pr:`583`
+- Add equality rich comparision operators to telegram objects - :pr:`604`
 - Several bugfixes and other improvements
 - Remove some deprecated code
 
@@ -1662,7 +2391,7 @@ Pre-version 7.0
 
 - Rework ``JobQueue``
 - Introduce ``ConversationHandler``
-- Introduce ``telegram.constants`` - https://github.com/python-telegram-bot/python-telegram-bot/pull/342
+- Introduce ``telegram.constants`` - :pr:`342`
 
 **2016-07-12**
 
@@ -1762,7 +2491,7 @@ Pre-version 7.0
 
 - Implement Bot API 2.0
 - Almost complete recode of ``Dispatcher``
-- Please read the `Transistion Guide to 4.0 <https://github.com/python-telegram-bot/python-telegram-bot/wiki/Transistion-guide-to-Version-4.0>`_
+- Please read the `Transistion Guide to 4.0 <https://github.com/python-telegram-bot/python-telegram-bot/wiki/Transition-guide-to-Version-4.0>`_
 
 **2016-03-22**
 
@@ -1851,20 +2580,17 @@ Pre-version 7.0
 
 *Special thanks to @jh0ker for all hard work*
 
-
 **2015-10-08**
 
 *Released 2.8.7*
 
 - Type as optional for ``GroupChat`` class
 
-
 **2015-10-08**
 
 *Released 2.8.6*
 
 - Adds type to ``User`` and ``GroupChat`` classes (pre-release Telegram feature)
-
 
 **2015-09-24**
 
@@ -1873,13 +2599,11 @@ Pre-version 7.0
 - Handles HTTP Bad Gateway (503) errors on request
 - Fixes regression on ``Audio`` and ``Document`` for unicode fields
 
-
 **2015-09-20**
 
 *Released 2.8.4*
 
 - ``getFile`` and ``File.download`` is now fully supported
-
 
 **2015-09-10**
 
@@ -1895,7 +2619,6 @@ Pre-version 7.0
 - Markdown support for ``Bot.sendMessage(..., parse_mode=ParseMode.MARKDOWN)``
 - Refactor of ``TelegramError`` class (no more handling ``IOError`` or ``URLError``)
 
-
 **2015-09-05**
 
 *Released 2.8.2*
@@ -1903,13 +2626,11 @@ Pre-version 7.0
 - Fix regression on Telegram ReplyMarkup
 - Add certificate to ``is_inputfile`` method
 
-
 **2015-09-05**
 
 *Released 2.8.1*
 
 - Fix regression on Telegram objects with thumb properties
-
 
 **2015-09-04**
 
@@ -1921,13 +2642,11 @@ Pre-version 7.0
 - Added support for PyPy
 - Added docstring for existing classes
 
-
 **2015-08-19**
 
 *Released 2.7.1*
 
 - Fixed JSON serialization for ``message``
-
 
 **2015-08-17**
 
@@ -1937,13 +2656,11 @@ Pre-version 7.0
 - Due backward compatibility performer or/and title will be required for ``sendAudio``
 - Fixed JSON serialization when forwarded message
 
-
 **2015-08-15**
 
 *Released 2.6.1*
 
 - Fixed parsing image header issue on < Python 2.7.3
-
 
 **2015-08-14**
 
@@ -1953,13 +2670,11 @@ Pre-version 7.0
 - Giving ``AUTHORS`` the proper credits for their contribution for this project
 - ``Message.date`` and ``Message.forward_date`` are now ``datetime`` objects
 
-
 **2015-08-12**
 
 *Released 2.5.3*
 
 - ``telegram.Bot`` now supports to be unpickled
-
 
 **2015-08-11**
 
@@ -1969,20 +2684,17 @@ Pre-version 7.0
 - ``telegram.Bot`` now supports to be pickled
 - Return empty ``str`` instead ``None`` when ``message.text`` is empty
 
-
 **2015-08-10**
 
 *Released 2.5.1*
 
 - Moved from GPLv2 to LGPLv3
 
-
 **2015-08-09**
 
 *Released 2.5*
 
 - Fixes logging calls in API
-
 
 **2015-08-08**
 
@@ -1991,7 +2703,6 @@ Pre-version 7.0
 - Fixes ``Emoji`` class for Python 3
 - ``PEP8`` improvements
 
-
 **2015-08-08**
 
 *Released 2.3*
@@ -1999,20 +2710,17 @@ Pre-version 7.0
 - Fixes ``ForceReply`` class
 - Remove ``logging.basicConfig`` from library
 
-
 **2015-07-25**
 
 *Released 2.2*
 
 - Allows ``debug=True`` when initializing ``telegram.Bot``
 
-
 **2015-07-20**
 
 *Released 2.1*
 
 - Fix ``to_dict`` for ``Document`` and ``Video``
-
 
 **2015-07-19**
 
@@ -2022,7 +2730,6 @@ Pre-version 7.0
 - Improves ``__str__`` over ``to_json()``
 - Creates abstract class ``TelegramObject``
 
-
 **2015-07-15**
 
 *Released 1.9*
@@ -2030,13 +2737,11 @@ Pre-version 7.0
 - Python 3 officially supported
 - ``PEP8`` improvements
 
-
 **2015-07-12**
 
 *Released 1.8*
 
 - Fixes crash when replying an unicode text message (special thanks to JRoot3D)
-
 
 **2015-07-11**
 
@@ -2044,20 +2749,17 @@ Pre-version 7.0
 
 - Fixes crash when ``username`` is not defined on ``chat`` (special thanks to JRoot3D)
 
-
 **2015-07-10**
 
 *Released 1.6*
 
 - Improvements for GAE support
 
-
 **2015-07-10**
 
 *Released 1.5*
 
 - Fixes randomly unicode issues when using ``InputFile``
-
 
 **2015-07-10**
 
@@ -2066,13 +2768,11 @@ Pre-version 7.0
 - ``requests`` lib is no longer required
 - Google App Engine (GAE) is supported
 
-
 **2015-07-10**
 
 *Released 1.3*
 
 - Added support to ``setWebhook`` (special thanks to macrojames)
-
 
 **2015-07-09**
 
@@ -2082,13 +2782,11 @@ Pre-version 7.0
 - Emojis available
 - ``PEP8`` improvements
 
-
 **2015-07-08**
 
 *Released 1.1*
 
 - PyPi package now available
-
 
 **2015-07-08**
 

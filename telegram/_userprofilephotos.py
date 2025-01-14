@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,8 +17,8 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with this program.  If not, see [http://www.gnu.org/licenses/].
 """This module contains an object that represents a Telegram UserProfilePhotos."""
-
-from typing import TYPE_CHECKING, Any, List, Optional
+from collections.abc import Sequence
+from typing import TYPE_CHECKING, Optional
 
 from telegram._files.photosize import PhotoSize
 from telegram._telegramobject import TelegramObject
@@ -36,45 +36,45 @@ class UserProfilePhotos(TelegramObject):
 
     Args:
         total_count (:obj:`int`): Total number of profile pictures the target user has.
-        photos (List[List[:class:`telegram.PhotoSize`]]): Requested profile pictures (in up to 4
-            sizes each).
+        photos (Sequence[Sequence[:class:`telegram.PhotoSize`]]): Requested profile pictures (in up
+            to 4 sizes each).
+
+            .. versionchanged:: 20.0
+                |sequenceclassargs|
 
     Attributes:
         total_count (:obj:`int`): Total number of profile pictures.
-        photos (List[List[:class:`telegram.PhotoSize`]]): Requested profile pictures.
+        photos (tuple[tuple[:class:`telegram.PhotoSize`]]): Requested profile pictures (in up to 4
+            sizes each).
+
+            .. versionchanged:: 20.0
+                |tupleclassattrs|
 
     """
 
     __slots__ = ("photos", "total_count")
 
-    def __init__(self, total_count: int, photos: List[List[PhotoSize]], **_kwargs: Any):
+    def __init__(
+        self,
+        total_count: int,
+        photos: Sequence[Sequence[PhotoSize]],
+        *,
+        api_kwargs: Optional[JSONDict] = None,
+    ):
+        super().__init__(api_kwargs=api_kwargs)
         # Required
-        self.total_count = int(total_count)
-        self.photos = photos
+        self.total_count: int = total_count
+        self.photos: tuple[tuple[PhotoSize, ...], ...] = tuple(tuple(sizes) for sizes in photos)
 
         self._id_attrs = (self.total_count, self.photos)
 
+        self._freeze()
+
     @classmethod
-    def de_json(cls, data: Optional[JSONDict], bot: "Bot") -> Optional["UserProfilePhotos"]:
+    def de_json(cls, data: JSONDict, bot: Optional["Bot"] = None) -> "UserProfilePhotos":
         """See :meth:`telegram.TelegramObject.de_json`."""
         data = cls._parse_data(data)
 
-        if not data:
-            return None
-
         data["photos"] = [PhotoSize.de_list(photo, bot) for photo in data["photos"]]
 
-        return cls(**data)
-
-    def to_dict(self) -> JSONDict:
-        """See :meth:`telegram.TelegramObject.to_dict`."""
-        data = super().to_dict()
-
-        data["photos"] = []
-        for photo in self.photos:
-            data["photos"].append([x.to_dict() for x in photo])
-
-        return data
-
-    def __hash__(self) -> int:
-        return hash(tuple(tuple(p for p in photo) for photo in self.photos))
+        return super().de_json(data=data, bot=bot)

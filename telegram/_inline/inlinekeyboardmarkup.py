@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,8 +17,8 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with this program.  If not, see [http://www.gnu.org/licenses/].
 """This module contains an object that represents a Telegram InlineKeyboardMarkup."""
-
-from typing import TYPE_CHECKING, Any, List, Optional
+from collections.abc import Sequence
+from typing import TYPE_CHECKING, Optional
 
 from telegram._inline.inlinekeyboardbutton import InlineKeyboardButton
 from telegram._telegramobject import TelegramObject
@@ -36,47 +36,63 @@ class InlineKeyboardMarkup(TelegramObject):
     Objects of this class are comparable in terms of equality. Two objects of this class are
     considered equal, if their size of :attr:`inline_keyboard` and all the buttons are equal.
 
+    .. figure:: https://core.telegram.org/file/464001863/110f3/I47qTXAD9Z4.120010/e0\
+        ea04f66357b640ec
+        :align: center
+
+        An inline keyboard on a message
+
+    .. seealso::
+        Another kind of keyboard would be the :class:`telegram.ReplyKeyboardMarkup`.
+
+    Examples:
+        * :any:`Inline Keyboard 1 <examples.inlinekeyboard>`
+        * :any:`Inline Keyboard 2 <examples.inlinekeyboard2>`
+
     Args:
-        inline_keyboard (List[List[:class:`telegram.InlineKeyboardButton`]]): List of button rows,
-            each represented by a list of InlineKeyboardButton objects.
-        **kwargs (:obj:`dict`): Arbitrary keyword arguments.
+        inline_keyboard (Sequence[Sequence[:class:`telegram.InlineKeyboardButton`]]): Sequence of
+            button rows, each represented by a sequence of :class:`~telegram.InlineKeyboardButton`
+            objects.
+
+            .. versionchanged:: 20.0
+                |sequenceclassargs|
 
     Attributes:
-        inline_keyboard (List[List[:class:`telegram.InlineKeyboardButton`]]): List of button rows,
-            each represented by a list of InlineKeyboardButton objects.
+        inline_keyboard (tuple[tuple[:class:`telegram.InlineKeyboardButton`]]): Tuple of
+            button rows, each represented by a tuple of :class:`~telegram.InlineKeyboardButton`
+            objects.
+
+            .. versionchanged:: 20.0
+                |tupleclassattrs|
 
     """
 
     __slots__ = ("inline_keyboard",)
 
-    def __init__(self, inline_keyboard: List[List[InlineKeyboardButton]], **_kwargs: Any):
+    def __init__(
+        self,
+        inline_keyboard: Sequence[Sequence[InlineKeyboardButton]],
+        *,
+        api_kwargs: Optional[JSONDict] = None,
+    ):
+        super().__init__(api_kwargs=api_kwargs)
         if not check_keyboard_type(inline_keyboard):
             raise ValueError(
-                "The parameter `inline_keyboard` should be a list of "
-                "list of InlineKeyboardButtons"
+                "The parameter `inline_keyboard` should be a sequence of sequences of "
+                "InlineKeyboardButtons"
             )
         # Required
-        self.inline_keyboard = inline_keyboard
+        self.inline_keyboard: tuple[tuple[InlineKeyboardButton, ...], ...] = tuple(
+            tuple(row) for row in inline_keyboard
+        )
 
         self._id_attrs = (self.inline_keyboard,)
 
-    def to_dict(self) -> JSONDict:
-        """See :meth:`telegram.TelegramObject.to_dict`."""
-        data = super().to_dict()
-
-        data["inline_keyboard"] = []
-        for inline_keyboard in self.inline_keyboard:
-            data["inline_keyboard"].append([x.to_dict() for x in inline_keyboard])
-
-        return data
+        self._freeze()
 
     @classmethod
-    def de_json(cls, data: Optional[JSONDict], bot: "Bot") -> Optional["InlineKeyboardMarkup"]:
+    def de_json(cls, data: JSONDict, bot: Optional["Bot"] = None) -> "InlineKeyboardMarkup":
         """See :meth:`telegram.TelegramObject.de_json`."""
-        data = cls._parse_data(data)
-
-        if not data:
-            return None
 
         keyboard = []
         for row in data["inline_keyboard"]:
@@ -99,14 +115,13 @@ class InlineKeyboardMarkup(TelegramObject):
 
         Args:
             button (:class:`telegram.InlineKeyboardButton`): The button to use in the markup
-            **kwargs (:obj:`dict`): Arbitrary keyword arguments.
 
         """
-        return cls([[button]], **kwargs)
+        return cls([[button]], **kwargs)  # type: ignore[arg-type]
 
     @classmethod
     def from_row(
-        cls, button_row: List[InlineKeyboardButton], **kwargs: object
+        cls, button_row: Sequence[InlineKeyboardButton], **kwargs: object
     ) -> "InlineKeyboardMarkup":
         """Shortcut for::
 
@@ -115,16 +130,18 @@ class InlineKeyboardMarkup(TelegramObject):
         Return an InlineKeyboardMarkup from a single row of InlineKeyboardButtons
 
         Args:
-            button_row (List[:class:`telegram.InlineKeyboardButton`]): The button to use in the
-                markup
-            **kwargs (:obj:`dict`): Arbitrary keyword arguments.
+            button_row (Sequence[:class:`telegram.InlineKeyboardButton`]): The button to use
+                in the markup
+
+                .. versionchanged:: 20.0
+                    |sequenceargs|
 
         """
-        return cls([button_row], **kwargs)
+        return cls([button_row], **kwargs)  # type: ignore[arg-type]
 
     @classmethod
     def from_column(
-        cls, button_column: List[InlineKeyboardButton], **kwargs: object
+        cls, button_column: Sequence[InlineKeyboardButton], **kwargs: object
     ) -> "InlineKeyboardMarkup":
         """Shortcut for::
 
@@ -133,13 +150,12 @@ class InlineKeyboardMarkup(TelegramObject):
         Return an InlineKeyboardMarkup from a single column of InlineKeyboardButtons
 
         Args:
-            button_column (List[:class:`telegram.InlineKeyboardButton`]): The button to use in the
-                markup
-            **kwargs (:obj:`dict`): Arbitrary keyword arguments.
+            button_column (Sequence[:class:`telegram.InlineKeyboardButton`]): The button to use
+                in the markup
+
+                 .. versionchanged:: 20.0
+                    |sequenceargs|
 
         """
         button_grid = [[button] for button in button_column]
-        return cls(button_grid, **kwargs)
-
-    def __hash__(self) -> int:
-        return hash(tuple(tuple(button for button in row) for row in self.inline_keyboard))
+        return cls(button_grid, **kwargs)  # type: ignore[arg-type]

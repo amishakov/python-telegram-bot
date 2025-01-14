@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,14 +17,15 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with this program.  If not, see [http://www.gnu.org/licenses/].
 """This module contains an object that represents a Telegram ShippingOption."""
-
-from typing import TYPE_CHECKING, Any, List
+from collections.abc import Sequence
+from typing import TYPE_CHECKING, Optional
 
 from telegram._telegramobject import TelegramObject
+from telegram._utils.argumentparsing import parse_sequence_arg
 from telegram._utils.types import JSONDict
 
 if TYPE_CHECKING:
-    from telegram import LabeledPrice  # noqa
+    from telegram import LabeledPrice
 
 
 class ShippingOption(TelegramObject):
@@ -33,38 +34,43 @@ class ShippingOption(TelegramObject):
     Objects of this class are comparable in terms of equality. Two objects of this class are
     considered equal, if their :attr:`id` is equal.
 
+    Examples:
+        :any:`Payment Bot <examples.paymentbot>`
+
     Args:
         id (:obj:`str`): Shipping option identifier.
         title (:obj:`str`): Option title.
-        prices (List[:class:`telegram.LabeledPrice`]): List of price portions.
-        **kwargs (:obj:`dict`): Arbitrary keyword arguments.
+        prices (Sequence[:class:`telegram.LabeledPrice`]): List of price portions.
+
+            .. versionchanged:: 20.0
+                |sequenceclassargs|
 
     Attributes:
         id (:obj:`str`): Shipping option identifier.
         title (:obj:`str`): Option title.
-        prices (List[:class:`telegram.LabeledPrice`]): List of price portions.
+        prices (tuple[:class:`telegram.LabeledPrice`]): List of price portions.
+
+            .. versionchanged:: 20.0
+                |tupleclassattrs|
 
     """
 
-    __slots__ = ("prices", "title", "id")
+    __slots__ = ("id", "prices", "title")
 
     def __init__(
         self,
-        id: str,  # pylint: disable=redefined-builtin, invalid-name
+        id: str,  # pylint: disable=redefined-builtin
         title: str,
-        prices: List["LabeledPrice"],
-        **_kwargs: Any,
+        prices: Sequence["LabeledPrice"],
+        *,
+        api_kwargs: Optional[JSONDict] = None,
     ):
-        self.id = id  # pylint: disable=invalid-name
-        self.title = title
-        self.prices = prices
+        super().__init__(api_kwargs=api_kwargs)
+
+        self.id: str = id
+        self.title: str = title
+        self.prices: tuple[LabeledPrice, ...] = parse_sequence_arg(prices)
 
         self._id_attrs = (self.id,)
 
-    def to_dict(self) -> JSONDict:
-        """See :meth:`telegram.TelegramObject.to_dict`."""
-        data = super().to_dict()
-
-        data["prices"] = [p.to_dict() for p in self.prices]
-
-        return data
+        self._freeze()

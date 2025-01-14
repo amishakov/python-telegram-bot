@@ -15,14 +15,14 @@ bot.
 """
 
 import logging
-from typing import Any, Dict, Tuple
+from typing import Any
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import (
     Application,
-    CallbackContext,
     CallbackQueryHandler,
     CommandHandler,
+    ContextTypes,
     ConversationHandler,
     MessageHandler,
     filters,
@@ -32,6 +32,9 @@ from telegram.ext import (
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
+# set higher logging level for httpx to avoid all GET and POST requests being logged
+logging.getLogger("httpx").setLevel(logging.WARNING)
+
 logger = logging.getLogger(__name__)
 
 # State definitions for top level conversation
@@ -63,14 +66,14 @@ END = ConversationHandler.END
 
 
 # Helper
-def _name_switcher(level: str) -> Tuple[str, str]:
+def _name_switcher(level: str) -> tuple[str, str]:
     if level == PARENTS:
         return "Father", "Mother"
     return "Brother", "Sister"
 
 
 # Top level conversation callbacks
-async def start(update: Update, context: CallbackContext.DEFAULT_TYPE) -> str:
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Select an action: Adding parent/child or show data."""
     text = (
         "You may choose to add a family member, yourself, show the gathered data, or end the "
@@ -103,7 +106,7 @@ async def start(update: Update, context: CallbackContext.DEFAULT_TYPE) -> str:
     return SELECTING_ACTION
 
 
-async def adding_self(update: Update, context: CallbackContext.DEFAULT_TYPE) -> str:
+async def adding_self(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Add information about yourself."""
     context.user_data[CURRENT_LEVEL] = SELF
     text = "Okay, please tell me about yourself."
@@ -116,10 +119,10 @@ async def adding_self(update: Update, context: CallbackContext.DEFAULT_TYPE) -> 
     return DESCRIBING_SELF
 
 
-async def show_data(update: Update, context: CallbackContext.DEFAULT_TYPE) -> str:
+async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Pretty print gathered data."""
 
-    def pretty_print(data: Dict[str, Any], level: str) -> str:
+    def pretty_print(data: dict[str, Any], level: str) -> str:
         people = data.get(level)
         if not people:
             return "\nNo information yet."
@@ -153,14 +156,14 @@ async def show_data(update: Update, context: CallbackContext.DEFAULT_TYPE) -> st
     return SHOWING
 
 
-async def stop(update: Update, context: CallbackContext.DEFAULT_TYPE) -> int:
+async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """End Conversation by command."""
     await update.message.reply_text("Okay, bye.")
 
     return END
 
 
-async def end(update: Update, context: CallbackContext.DEFAULT_TYPE) -> int:
+async def end(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """End conversation from InlineKeyboardButton."""
     await update.callback_query.answer()
 
@@ -171,7 +174,7 @@ async def end(update: Update, context: CallbackContext.DEFAULT_TYPE) -> int:
 
 
 # Second level conversation callbacks
-async def select_level(update: Update, context: CallbackContext.DEFAULT_TYPE) -> str:
+async def select_level(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Choose to add a parent or a child."""
     text = "You may add a parent or a child. Also you can show the gathered data or go back."
     buttons = [
@@ -192,7 +195,7 @@ async def select_level(update: Update, context: CallbackContext.DEFAULT_TYPE) ->
     return SELECTING_LEVEL
 
 
-async def select_gender(update: Update, context: CallbackContext.DEFAULT_TYPE) -> str:
+async def select_gender(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Choose to add mother or father."""
     level = update.callback_query.data
     context.user_data[CURRENT_LEVEL] = level
@@ -219,7 +222,7 @@ async def select_gender(update: Update, context: CallbackContext.DEFAULT_TYPE) -
     return SELECTING_GENDER
 
 
-async def end_second_level(update: Update, context: CallbackContext.DEFAULT_TYPE) -> int:
+async def end_second_level(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Return to top level conversation."""
     context.user_data[START_OVER] = True
     await start(update, context)
@@ -228,7 +231,7 @@ async def end_second_level(update: Update, context: CallbackContext.DEFAULT_TYPE
 
 
 # Third level callbacks
-async def select_feature(update: Update, context: CallbackContext.DEFAULT_TYPE) -> str:
+async def select_feature(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Select a feature to update for the person."""
     buttons = [
         [
@@ -255,7 +258,7 @@ async def select_feature(update: Update, context: CallbackContext.DEFAULT_TYPE) 
     return SELECTING_FEATURE
 
 
-async def ask_for_input(update: Update, context: CallbackContext.DEFAULT_TYPE) -> str:
+async def ask_for_input(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Prompt user to input data for selected feature."""
     context.user_data[CURRENT_FEATURE] = update.callback_query.data
     text = "Okay, tell me."
@@ -266,7 +269,7 @@ async def ask_for_input(update: Update, context: CallbackContext.DEFAULT_TYPE) -
     return TYPING
 
 
-async def save_input(update: Update, context: CallbackContext.DEFAULT_TYPE) -> str:
+async def save_input(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Save input for feature and return to feature selection."""
     user_data = context.user_data
     user_data[FEATURES][user_data[CURRENT_FEATURE]] = update.message.text
@@ -276,7 +279,7 @@ async def save_input(update: Update, context: CallbackContext.DEFAULT_TYPE) -> s
     return await select_feature(update, context)
 
 
-async def end_describing(update: Update, context: CallbackContext.DEFAULT_TYPE) -> int:
+async def end_describing(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """End gathering of features and return to parent conversation."""
     user_data = context.user_data
     level = user_data[CURRENT_LEVEL]
@@ -294,7 +297,7 @@ async def end_describing(update: Update, context: CallbackContext.DEFAULT_TYPE) 
     return END
 
 
-async def stop_nested(update: Update, context: CallbackContext.DEFAULT_TYPE) -> str:
+async def stop_nested(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Completely end conversation from within nested conversation."""
     await update.message.reply_text("Okay, bye.")
 
@@ -368,8 +371,8 @@ def main() -> None:
         entry_points=[CommandHandler("start", start)],
         states={
             SHOWING: [CallbackQueryHandler(start, pattern="^" + str(END) + "$")],
-            SELECTING_ACTION: selection_handlers,
-            SELECTING_LEVEL: selection_handlers,
+            SELECTING_ACTION: selection_handlers,  # type: ignore[dict-item]
+            SELECTING_LEVEL: selection_handlers,  # type: ignore[dict-item]
             DESCRIBING_SELF: [description_conv],
             STOPPING: [CommandHandler("start", start)],
         },
@@ -379,7 +382,7 @@ def main() -> None:
     application.add_handler(conv_handler)
 
     # Run the bot until the user presses Ctrl-C
-    application.run_polling()
+    application.run_polling(allowed_updates=Update.ALL_TYPES)
 
 
 if __name__ == "__main__":

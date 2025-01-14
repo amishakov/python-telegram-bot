@@ -20,20 +20,23 @@ bot.
 
 import logging
 
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, helpers
-from telegram.constants import ParseMode
-from telegram.ext import (
-    Application,
-    CallbackContext,
-    CallbackQueryHandler,
-    CommandHandler,
-    filters,
+from telegram import (
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    LinkPreviewOptions,
+    Update,
+    helpers,
 )
+from telegram.constants import ParseMode
+from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes, filters
 
 # Enable logging
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
+
+# set higher logging level for httpx to avoid all GET and POST requests being logged
+logging.getLogger("httpx").setLevel(logging.WARNING)
 
 logger = logging.getLogger(__name__)
 
@@ -47,7 +50,7 @@ SO_COOL = "so-cool"
 KEYBOARD_CALLBACKDATA = "keyboard-callback-data"
 
 
-async def start(update: Update, context: CallbackContext.DEFAULT_TYPE) -> None:
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a deep-linked URL when the command /start is issued."""
     bot = context.bot
     url = helpers.create_deep_linked_url(bot.username, CHECK_THIS_OUT, group=True)
@@ -55,13 +58,12 @@ async def start(update: Update, context: CallbackContext.DEFAULT_TYPE) -> None:
     await update.message.reply_text(text)
 
 
-async def deep_linked_level_1(update: Update, context: CallbackContext.DEFAULT_TYPE) -> None:
+async def deep_linked_level_1(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Reached through the CHECK_THIS_OUT payload"""
     bot = context.bot
     url = helpers.create_deep_linked_url(bot.username, SO_COOL)
     text = (
-        "Awesome, you just accessed hidden functionality! "
-        "Now let's get back to the private chat."
+        "Awesome, you just accessed hidden functionality! Now let's get back to the private chat."
     )
     keyboard = InlineKeyboardMarkup.from_button(
         InlineKeyboardButton(text="Continue here!", url=url)
@@ -69,15 +71,17 @@ async def deep_linked_level_1(update: Update, context: CallbackContext.DEFAULT_T
     await update.message.reply_text(text, reply_markup=keyboard)
 
 
-async def deep_linked_level_2(update: Update, context: CallbackContext.DEFAULT_TYPE) -> None:
+async def deep_linked_level_2(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Reached through the SO_COOL payload"""
     bot = context.bot
     url = helpers.create_deep_linked_url(bot.username, USING_ENTITIES)
     text = f'You can also mask the deep-linked URLs as links: <a href="{url}">▶️ CLICK HERE</a>.'
-    await update.message.reply_text(text, parse_mode=ParseMode.HTML, disable_web_page_preview=True)
+    await update.message.reply_text(
+        text, parse_mode=ParseMode.HTML, link_preview_options=LinkPreviewOptions(is_disabled=True)
+    )
 
 
-async def deep_linked_level_3(update: Update, context: CallbackContext.DEFAULT_TYPE) -> None:
+async def deep_linked_level_3(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Reached through the USING_ENTITIES payload"""
     await update.message.reply_text(
         "It is also possible to make deep-linking using InlineKeyboardButtons.",
@@ -87,16 +91,14 @@ async def deep_linked_level_3(update: Update, context: CallbackContext.DEFAULT_T
     )
 
 
-async def deep_link_level_3_callback(
-    update: Update, context: CallbackContext.DEFAULT_TYPE
-) -> None:
+async def deep_link_level_3_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Answers CallbackQuery with deeplinking url."""
     bot = context.bot
     url = helpers.create_deep_linked_url(bot.username, USING_KEYBOARD)
     await update.callback_query.answer(url=url)
 
 
-async def deep_linked_level_4(update: Update, context: CallbackContext.DEFAULT_TYPE) -> None:
+async def deep_linked_level_4(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Reached through the USING_KEYBOARD payload"""
     payload = context.args
     await update.message.reply_text(
@@ -110,7 +112,7 @@ def main() -> None:
     application = Application.builder().token("TOKEN").build()
 
     # More info on what deep linking actually is (read this first if it's unclear to you):
-    # https://core.telegram.org/bots#deep-linking
+    # https://core.telegram.org/bots/features#deep-linking
 
     # Register a deep-linking handler
     application.add_handler(
@@ -139,7 +141,7 @@ def main() -> None:
     application.add_handler(CommandHandler("start", start))
 
     # Run the bot until the user presses Ctrl-C
-    application.run_polling()
+    application.run_polling(allowed_updates=Update.ALL_TYPES)
 
 
 if __name__ == "__main__":

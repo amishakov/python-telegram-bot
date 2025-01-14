@@ -15,13 +15,12 @@ bot.
 """
 
 import logging
-from typing import Dict
 
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 from telegram.ext import (
     Application,
-    CallbackContext,
     CommandHandler,
+    ContextTypes,
     ConversationHandler,
     MessageHandler,
     filters,
@@ -31,6 +30,9 @@ from telegram.ext import (
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
+# set higher logging level for httpx to avoid all GET and POST requests being logged
+logging.getLogger("httpx").setLevel(logging.WARNING)
+
 logger = logging.getLogger(__name__)
 
 CHOOSING, TYPING_REPLY, TYPING_CHOICE = range(3)
@@ -43,13 +45,13 @@ reply_keyboard = [
 markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
 
 
-def facts_to_str(user_data: Dict[str, str]) -> str:
+def facts_to_str(user_data: dict[str, str]) -> str:
     """Helper function for formatting the gathered user info."""
     facts = [f"{key} - {value}" for key, value in user_data.items()]
     return "\n".join(facts).join(["\n", "\n"])
 
 
-async def start(update: Update, context: CallbackContext.DEFAULT_TYPE) -> int:
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Start the conversation and ask user for input."""
     await update.message.reply_text(
         "Hi! My name is Doctor Botter. I will hold a more complex conversation with you. "
@@ -60,7 +62,7 @@ async def start(update: Update, context: CallbackContext.DEFAULT_TYPE) -> int:
     return CHOOSING
 
 
-async def regular_choice(update: Update, context: CallbackContext.DEFAULT_TYPE) -> int:
+async def regular_choice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Ask the user for info about the selected predefined choice."""
     text = update.message.text
     context.user_data["choice"] = text
@@ -69,7 +71,7 @@ async def regular_choice(update: Update, context: CallbackContext.DEFAULT_TYPE) 
     return TYPING_REPLY
 
 
-async def custom_choice(update: Update, context: CallbackContext.DEFAULT_TYPE) -> int:
+async def custom_choice(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Ask the user for a description of a custom category."""
     await update.message.reply_text(
         'Alright, please send me the category first, for example "Most impressive skill"'
@@ -78,7 +80,7 @@ async def custom_choice(update: Update, context: CallbackContext.DEFAULT_TYPE) -
     return TYPING_CHOICE
 
 
-async def received_information(update: Update, context: CallbackContext.DEFAULT_TYPE) -> int:
+async def received_information(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Store info provided by user and ask for the next category."""
     user_data = context.user_data
     text = update.message.text
@@ -96,7 +98,7 @@ async def received_information(update: Update, context: CallbackContext.DEFAULT_
     return CHOOSING
 
 
-async def done(update: Update, context: CallbackContext.DEFAULT_TYPE) -> int:
+async def done(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Display the gathered info and end the conversation."""
     user_data = context.user_data
     if "choice" in user_data:
@@ -144,7 +146,7 @@ def main() -> None:
     application.add_handler(conv_handler)
 
     # Run the bot until the user presses Ctrl-C
-    application.run_polling()
+    application.run_polling(allowed_updates=Update.ALL_TYPES)
 
 
 if __name__ == "__main__":

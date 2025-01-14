@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -18,9 +18,11 @@
 # along with this program.  If not, see [http://www.gnu.org/licenses/].
 """This module contains an object that represents a Telegram ForceReply."""
 
-from typing import Any
+from typing import Final, Optional
 
+from telegram import constants
 from telegram._telegramobject import TelegramObject
+from telegram._utils.types import JSONDict
 
 
 class ForceReply(TelegramObject):
@@ -28,7 +30,8 @@ class ForceReply(TelegramObject):
     Upon receiving a message with this object, Telegram clients will display a reply interface to
     the user (act as if the user has selected the bot's message and tapped 'Reply'). This can be
     extremely useful if you want to create user-friendly step-by-step interfaces without having
-    to sacrifice privacy mode.
+    to sacrifice `privacy mode <https://core.telegram.org/bots/features#privacy-mode>`_. Not
+    supported in channels and for messages sent on behalf of a Telegram Business account.
 
     Objects of this class are comparable in terms of equality. Two objects of this class are
     considered equal, if their :attr:`selective` is equal.
@@ -43,37 +46,61 @@ class ForceReply(TelegramObject):
 
             1) Users that are @mentioned in the :attr:`~telegram.Message.text` of the
                :class:`telegram.Message` object.
-            2) If the bot's message is a reply (has ``reply_to_message_id``), sender of the
-               original message.
+            2) If the bot's message is a reply to a message in the same chat and forum topic,
+               sender of the original message.
 
         input_field_placeholder (:obj:`str`, optional): The placeholder to be shown in the input
-            field when the reply is active; 1-64 characters.
+            field when the reply is active;
+            :tg-const:`telegram.ForceReply.MIN_INPUT_FIELD_PLACEHOLDER`-
+            :tg-const:`telegram.ForceReply.MAX_INPUT_FIELD_PLACEHOLDER`
+            characters.
 
             .. versionadded:: 13.7
-
-        **kwargs (:obj:`dict`): Arbitrary keyword arguments.
 
     Attributes:
         force_reply (:obj:`True`): Shows reply interface to the user, as if they manually selected
             the bots message and tapped 'Reply'.
-        selective (:obj:`bool`): Optional. Force reply from specific users only.
-        input_field_placeholder (:obj:`str`): Optional. The placeholder shown in the input
-            field when the reply is active.
+        selective (:obj:`bool`): Optional. Force reply from specific users only. Targets:
+
+            1) Users that are @mentioned in the :attr:`~telegram.Message.text` of the
+               :class:`telegram.Message` object.
+            2) If the bot's message is a reply to a message in the same chat and forum topic,
+                sender of the original message.
+        input_field_placeholder (:obj:`str`): Optional. The placeholder to be shown in the input
+            field when the reply is active;
+            :tg-const:`telegram.ForceReply.MIN_INPUT_FIELD_PLACEHOLDER`-
+            :tg-const:`telegram.ForceReply.MAX_INPUT_FIELD_PLACEHOLDER`
+            characters.
 
             .. versionadded:: 13.7
 
     """
 
-    __slots__ = ("selective", "force_reply", "input_field_placeholder")
+    __slots__ = ("force_reply", "input_field_placeholder", "selective")
 
     def __init__(
         self,
-        selective: bool = False,
-        input_field_placeholder: str = None,
-        **_kwargs: Any,
+        selective: Optional[bool] = None,
+        input_field_placeholder: Optional[str] = None,
+        *,
+        api_kwargs: Optional[JSONDict] = None,
     ):
-        self.force_reply = True
-        self.selective = bool(selective)
-        self.input_field_placeholder = input_field_placeholder
+        super().__init__(api_kwargs=api_kwargs)
+        self.force_reply: bool = True
+        self.selective: Optional[bool] = selective
+        self.input_field_placeholder: Optional[str] = input_field_placeholder
 
         self._id_attrs = (self.selective,)
+
+        self._freeze()
+
+    MIN_INPUT_FIELD_PLACEHOLDER: Final[int] = constants.ReplyLimit.MIN_INPUT_FIELD_PLACEHOLDER
+    """:const:`telegram.constants.ReplyLimit.MIN_INPUT_FIELD_PLACEHOLDER`
+
+    .. versionadded:: 20.0
+    """
+    MAX_INPUT_FIELD_PLACEHOLDER: Final[int] = constants.ReplyLimit.MAX_INPUT_FIELD_PLACEHOLDER
+    """:const:`telegram.constants.ReplyLimit.MAX_INPUT_FIELD_PLACEHOLDER`
+
+    .. versionadded:: 20.0
+    """

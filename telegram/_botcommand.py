@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,9 +17,12 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with this program.  If not, see [http://www.gnu.org/licenses/].
 """This module contains an object that represents a Telegram Bot Command."""
-from typing import Any
 
+from typing import Final, Optional
+
+from telegram import constants
 from telegram._telegramobject import TelegramObject
+from telegram._utils.types import JSONDict
 
 
 class BotCommand(TelegramObject):
@@ -30,20 +33,51 @@ class BotCommand(TelegramObject):
     considered equal, if their :attr:`command` and :attr:`description` are equal.
 
     Args:
-        command (:obj:`str`): Text of the command; 1-32 characters. Can contain only lowercase
+        command (:obj:`str`): Text of the command; :tg-const:`telegram.BotCommand.MIN_COMMAND`-
+            :tg-const:`telegram.BotCommand.MAX_COMMAND` characters. Can contain only lowercase
             English letters, digits and underscores.
-        description (:obj:`str`): Description of the command; 1-256 characters.
+        description (:obj:`str`): Description of the command;
+            :tg-const:`telegram.BotCommand.MIN_DESCRIPTION`-
+            :tg-const:`telegram.BotCommand.MAX_DESCRIPTION` characters.
 
     Attributes:
-        command (:obj:`str`): Text of the command.
-        description (:obj:`str`): Description of the command.
+        command (:obj:`str`): Text of the command; :tg-const:`telegram.BotCommand.MIN_COMMAND`-
+            :tg-const:`telegram.BotCommand.MAX_COMMAND` characters. Can contain only lowercase
+            English letters, digits and underscores.
+        description (:obj:`str`): Description of the command;
+            :tg-const:`telegram.BotCommand.MIN_DESCRIPTION`-
+            :tg-const:`telegram.BotCommand.MAX_DESCRIPTION` characters.
 
     """
 
-    __slots__ = ("description", "command")
+    __slots__ = ("command", "description")
 
-    def __init__(self, command: str, description: str, **_kwargs: Any):
-        self.command = command
-        self.description = description
+    def __init__(self, command: str, description: str, *, api_kwargs: Optional[JSONDict] = None):
+        super().__init__(api_kwargs=api_kwargs)
+        self.command: str = command
+        self.description: str = description
 
         self._id_attrs = (self.command, self.description)
+
+        self._freeze()
+
+    MIN_COMMAND: Final[int] = constants.BotCommandLimit.MIN_COMMAND
+    """:const:`telegram.constants.BotCommandLimit.MIN_COMMAND`
+
+    .. versionadded:: 20.0
+    """
+    MAX_COMMAND: Final[int] = constants.BotCommandLimit.MAX_COMMAND
+    """:const:`telegram.constants.BotCommandLimit.MAX_COMMAND`
+
+    .. versionadded:: 20.0
+    """
+    MIN_DESCRIPTION: Final[int] = constants.BotCommandLimit.MIN_DESCRIPTION
+    """:const:`telegram.constants.BotCommandLimit.MIN_DESCRIPTION`
+
+    .. versionadded:: 20.0
+    """
+    MAX_DESCRIPTION: Final[int] = constants.BotCommandLimit.MAX_DESCRIPTION
+    """:const:`telegram.constants.BotCommandLimit.MAX_DESCRIPTION`
+
+    .. versionadded:: 20.0
+    """

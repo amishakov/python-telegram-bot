@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -20,9 +20,10 @@
 deletion.
 """
 
-from typing import Any
+from typing import Optional
 
 from telegram._telegramobject import TelegramObject
+from telegram._utils.types import JSONDict
 
 
 class MessageAutoDeleteTimerChanged(TelegramObject):
@@ -36,7 +37,6 @@ class MessageAutoDeleteTimerChanged(TelegramObject):
     Args:
         message_auto_delete_time (:obj:`int`): New auto-delete time for messages in the
             chat.
-        **kwargs (:obj:`dict`): Arbitrary keyword arguments.
 
     Attributes:
         message_auto_delete_time (:obj:`int`): New auto-delete time for messages in the
@@ -49,8 +49,12 @@ class MessageAutoDeleteTimerChanged(TelegramObject):
     def __init__(
         self,
         message_auto_delete_time: int,
-        **_kwargs: Any,
+        *,
+        api_kwargs: Optional[JSONDict] = None,
     ):
-        self.message_auto_delete_time = int(message_auto_delete_time)
+        super().__init__(api_kwargs=api_kwargs)
+        self.message_auto_delete_time: int = message_auto_delete_time
 
         self._id_attrs = (self.message_auto_delete_time,)
+
+        self._freeze()

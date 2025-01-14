@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,14 +17,14 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with this program.  If not, see [http://www.gnu.org/licenses/].
 """Common base class for media objects"""
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from telegram._telegramobject import TelegramObject
 from telegram._utils.defaultvalue import DEFAULT_NONE
 from telegram._utils.types import JSONDict, ODVInput
 
 if TYPE_CHECKING:
-    from telegram import Bot, File
+    from telegram import File
 
 
 class _BaseMedium(TelegramObject):
@@ -39,7 +39,6 @@ class _BaseMedium(TelegramObject):
             is supposed to be the same over time and for different bots.
             Can't be used to download or reuse the file.
         file_size (:obj:`int`, optional): File size.
-        bot (:class:`telegram.Bot`, optional): The Bot to use for instance methods.
 
     Attributes:
         file_id (:obj:`str`): File identifier.
@@ -47,33 +46,40 @@ class _BaseMedium(TelegramObject):
             is supposed to be the same over time and for different bots.
             Can't be used to download or reuse the file.
         file_size (:obj:`int`): Optional. File size.
-        bot (:class:`telegram.Bot`): Optional. The Bot to use for instance methods.
+
 
     """
 
     __slots__ = ("file_id", "file_size", "file_unique_id")
 
     def __init__(
-        self, file_id: str, file_unique_id: str, file_size: int = None, bot: "Bot" = None
+        self,
+        file_id: str,
+        file_unique_id: str,
+        file_size: Optional[int] = None,
+        *,
+        api_kwargs: Optional[JSONDict] = None,
     ):
+        super().__init__(api_kwargs=api_kwargs)
+
         # Required
         self.file_id: str = str(file_id)
-        self.file_unique_id = str(file_unique_id)
+        self.file_unique_id: str = str(file_unique_id)
         # Optionals
-        self.file_size = file_size
-        self.set_bot(bot)
+        self.file_size: Optional[int] = file_size
 
         self._id_attrs = (self.file_unique_id,)
 
     async def get_file(
         self,
+        *,
         read_timeout: ODVInput[float] = DEFAULT_NONE,
         write_timeout: ODVInput[float] = DEFAULT_NONE,
         connect_timeout: ODVInput[float] = DEFAULT_NONE,
         pool_timeout: ODVInput[float] = DEFAULT_NONE,
-        api_kwargs: JSONDict = None,
+        api_kwargs: Optional[JSONDict] = None,
     ) -> "File":
-        """Convenience wrapper over :attr:`telegram.Bot.get_file`
+        """Convenience wrapper over :meth:`telegram.Bot.get_file`
 
         For the documentation of the arguments, please see :meth:`telegram.Bot.get_file`.
 

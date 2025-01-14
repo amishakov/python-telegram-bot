@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,13 +17,10 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with this program.  If not, see [http://www.gnu.org/licenses/].
 """This module contains an object that represents a Telegram Voice."""
-
-from typing import TYPE_CHECKING, Any
+from typing import Optional
 
 from telegram._files._basemedium import _BaseMedium
-
-if TYPE_CHECKING:
-    from telegram import Bot
+from telegram._utils.types import JSONDict
 
 
 class Voice(_BaseMedium):
@@ -38,21 +35,19 @@ class Voice(_BaseMedium):
         file_unique_id (:obj:`str`): Unique identifier for this file, which
             is supposed to be the same over time and for different bots.
             Can't be used to download or reuse the file.
-        duration (:obj:`int`, optional): Duration of the audio in seconds as defined by sender.
-        mime_type (:obj:`str`, optional): MIME type of the file as defined by sender.
+        duration (:obj:`int`): Duration of the audio in seconds as defined by the sender.
+        mime_type (:obj:`str`, optional): MIME type of the file as defined by the sender.
         file_size (:obj:`int`, optional): File size in bytes.
-        bot (:class:`telegram.Bot`, optional): The Bot to use for instance methods.
-        **kwargs (:obj:`dict`): Arbitrary keyword arguments.
 
     Attributes:
-        file_id (:obj:`str`): Identifier for this file.
+        file_id (:obj:`str`): Identifier for this file, which can be used to download
+            or reuse the file.
         file_unique_id (:obj:`str`): Unique identifier for this file, which
             is supposed to be the same over time and for different bots.
             Can't be used to download or reuse the file.
-        duration (:obj:`int`): Duration of the audio in seconds as defined by sender.
-        mime_type (:obj:`str`): Optional. MIME type of the file as defined by sender.
+        duration (:obj:`int`): Duration of the audio in seconds as defined by the sender.
+        mime_type (:obj:`str`): Optional. MIME type of the file as defined by the sender.
         file_size (:obj:`int`): Optional. File size in bytes.
-        bot (:class:`telegram.Bot`): Optional. The Bot to use for instance methods.
 
     """
 
@@ -63,18 +58,19 @@ class Voice(_BaseMedium):
         file_id: str,
         file_unique_id: str,
         duration: int,
-        mime_type: str = None,
-        file_size: int = None,
-        bot: "Bot" = None,
-        **_kwargs: Any,
+        mime_type: Optional[str] = None,
+        file_size: Optional[int] = None,
+        *,
+        api_kwargs: Optional[JSONDict] = None,
     ):
         super().__init__(
             file_id=file_id,
             file_unique_id=file_unique_id,
             file_size=file_size,
-            bot=bot,
+            api_kwargs=api_kwargs,
         )
-        # Required
-        self.duration = int(duration)
-        # Optional
-        self.mime_type = mime_type
+        with self._unfrozen():
+            # Required
+            self.duration: int = duration
+            # Optional
+            self.mime_type: Optional[str] = mime_type

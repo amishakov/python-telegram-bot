@@ -1,6 +1,6 @@
-telegram.PhotoSize
-==================
-.. Also lists methods of _BaseThumbedMedium, but not the ones of TelegramObject
+PhotoSize
+=========
+.. Also lists methods of _BaseMedium, but not the ones of TelegramObject
 
 .. autoclass:: telegram.PhotoSize
     :members:

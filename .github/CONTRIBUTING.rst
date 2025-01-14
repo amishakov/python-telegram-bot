@@ -13,7 +13,7 @@ Setting things up
 
    .. code-block:: bash
 
-      $ git clone https://github.com/<your username>/python-telegram-bot --recursive
+      $ git clone https://github.com/<your username>/python-telegram-bot
       $ cd python-telegram-bot
 
 3. Add a track to the original repository:
@@ -26,7 +26,7 @@ Setting things up
 
    .. code-block:: bash
 
-      $ pip install -r requirements.txt -r requirements-dev.txt
+      $ pip install -r requirements-dev-all.txt
 
 
 5. Install pre-commit hooks:
@@ -67,6 +67,7 @@ Here's how to make a one-off code change.
       $ git checkout -b your-branch-name
 
 3. **Make a commit to your feature branch**. Each commit should be self-contained and have a descriptive commit message that helps other developers understand why the changes were made.
+   We also have a check-list for PRs `below`_.
 
    - You can refer to relevant issues in the commit message by writing, e.g., "#105".
 
@@ -80,31 +81,16 @@ Here's how to make a one-off code change.
 
    - The following exceptions to the above (Google's) style guides applies:
 
-        - Documenting types of global variables and complex types of class members can be done using the Sphinx docstring convention.
+     - Documenting types of global variables and complex types of class members can be done using the Sphinx docstring convention.
 
-   -  In addition, PTB uses the `Black`_ coder formatting. Plugins for Black exist for some `popular editors`_. You can use those instead of manually formatting everything.
+   -  In addition, PTB uses some formatting/styling and linting tools in the pre-commit setup. Some of those tools also have command line tools that can help to run these tools outside of the pre-commit step. If you'd like to leverage that, please have a look at the `pre-commit config file`_ for an overview of which tools (and which versions of them) are used. For example, we use `Black`_ for code formatting. Plugins for Black exist for some `popular editors`_. You can use those instead of manually formatting everything.
 
-   - Please ensure that the code you write is well-tested.
+   - Please ensure that the code you write is well-tested and that all automated tests still pass. We
+     have dedicated an `testing page`_ to help you with that.
 
-        - In addition to that, we provide the `dev` marker for pytest. If you write one or multiple tests and want to run only those, you can decorate them via `@pytest.mark.dev` and then run it with minimal overhead with `pytest ./path/to/test_file.py -m dev`.
-
-   - Don’t break backward compatibility.
+   - Don't break backward compatibility.
 
    - Add yourself to the AUTHORS.rst_ file in an alphabetical fashion.
-
-   - Before making a commit ensure that all automated tests still pass:
-
-     .. code-block:: bash
-
-        $ pytest -v
-
-     To run ``test_official`` (particularly useful if you made API changes), run
-
-     .. code-block:: bash
-
-        $ export TEST_OFFICIAL=true
-
-     prior to running the tests.
 
    - If you want run style & type checks before committing run
 
@@ -136,11 +122,11 @@ Here's how to make a one-off code change.
 
    - When your reviewer has reviewed the code, you'll get a notification. You'll need to respond in two ways:
 
-       - Make a new commit addressing the comments you agree with, and push it to the same branch. Ideally, the commit message would explain what the commit does (e.g. "Fix lint error"), but if there are lots of disparate review comments, it's fine to refer to the original commit message and add something like "(address review comments)".
+     - Make a new commit addressing the comments you agree with, and push it to the same branch. Ideally, the commit message would explain what the commit does (e.g. "Fix lint error"), but if there are lots of disparate review comments, it's fine to refer to the original commit message and add something like "(address review comments)".
 
-       - In order to keep the commit history intact, please avoid squashing or amending history and then force-pushing to the PR. Reviewers often want to look at individual commits.
+     - In order to keep the commit history intact, please avoid squashing or amending history and then force-pushing to the PR. Reviewers often want to look at individual commits.
 
-       - In addition, please reply to each comment. Each reply should be either "Done" or a response explaining why the corresponding suggestion wasn't implemented. All comments must be resolved before LGTM can be given.
+     - In addition, please reply to each comment. Each reply should be either "Done" or a response explaining why the corresponding suggestion wasn't implemented. All comments must be resolved before LGTM can be given.
 
    - Resolve any merge conflicts that arise. To resolve conflicts between 'your-branch-name' (in your fork) and 'master' (in the ``python-telegram-bot`` repository), run:
 
@@ -165,6 +151,52 @@ Here's how to make a one-off code change.
 
 7. **Celebrate.** Congratulations, you have contributed to ``python-telegram-bot``!
 
+Check-list for PRs
+------------------
+
+This checklist is a non-exhaustive reminder of things that should be done before a PR is merged, both for you as contributor and for the maintainers.
+Feel free to copy (parts of) the checklist to the PR description to remind you or the maintainers of open points or if you have questions on anything.
+
+- Added ``.. versionadded:: NEXT.VERSION``, ``.. versionchanged:: NEXT.VERSION``, ``.. deprecated:: NEXT.VERSION`` or ``.. versionremoved:: NEXT.VERSION`` to the docstrings for user facing changes (for methods/class descriptions, arguments and attributes)
+- Created new or adapted existing unit tests
+- Documented code changes according to the `CSI standard <https://standards.mousepawmedia.com/en/stable/csi.html>`__
+- Added myself alphabetically to ``AUTHORS.rst`` (optional)
+- Added new classes & modules to the docs and all suitable ``__all__`` s
+- Checked the `Stability Policy <https://docs.python-telegram-bot.org/stability_policy.html>`_ in case of deprecations or changes to documented behavior
+
+**If the PR contains API changes (otherwise, you can ignore this passage)**
+
+- Checked the Bot API specific sections of the `Stability Policy <https://docs.python-telegram-bot.org/stability_policy.html>`_
+- Created a PR to remove functionality deprecated in the previous Bot API release (`see here <https://docs.python-telegram-bot.org/en/stable/stability_policy.html#case-2>`_)
+
+-  New classes:
+
+   - Added ``self._id_attrs`` and corresponding documentation
+   - ``__init__`` accepts ``api_kwargs`` as kw-only
+
+-  Added new shortcuts:
+
+   - In :class:`~telegram.Chat` & :class:`~telegram.User` for all methods that accept ``chat/user_id``
+   - In :class:`~telegram.Message` for all methods that accept ``chat_id`` and ``message_id``
+   - For new :class:`~telegram.Message` shortcuts: Added ``quote`` argument if methods accepts ``reply_to_message_id``
+   - In :class:`~telegram.CallbackQuery` for all methods that accept either ``chat_id`` and ``message_id`` or ``inline_message_id``
+
+-  If relevant:
+
+   - Added new constants at :mod:`telegram.constants` and shortcuts to them as class variables
+   - Link new and existing constants in docstrings instead of hard-coded numbers and strings
+   - Add new message types to :attr:`telegram.Message.effective_attachment`
+   - Added new handlers for new update types
+
+     - Add the handlers to the warning loop in the :class:`~telegram.ext.ConversationHandler`
+
+   - Added new filters for new message (sub)types
+   - Added or updated documentation for the changed class(es) and/or method(s)
+   - Added the new method(s) to ``_extbot.py``
+   - Added or updated ``bot_methods.rst``
+   - Updated the Bot API version number in all places: ``README.rst`` (including the badge) and ``telegram.constants.BOT_API_VERSION_INFO``
+   - Added logic for arbitrary callback data in :class:`telegram.ext.ExtBot` for new methods that either accept a ``reply_markup`` in some form or have a return type that is/contains :class:`~telegram.Message`
+
 Documenting
 ===========
 
@@ -178,13 +210,8 @@ doc strings don't have a separate documentation site they generate, instead, the
 
 User facing documentation
 -------------------------
-We use `sphinx`_ to generate static HTML docs. To build them, first make sure you have the required dependencies:
-
-.. code-block:: bash
-
-   $ pip install -r docs/requirements-docs.txt
-
-then run the following from the PTB root directory:
+We use `sphinx`_ to generate static HTML docs. To build them, first make sure you're running Python 3.10 or above and have the required dependencies installed as explained above.
+Then, run the following from the PTB root directory:
 
 .. code-block:: bash
 
@@ -198,7 +225,7 @@ or, if you don't have ``make`` available (e.g. on Windows):
 
 Once the process terminates, you can view the built documentation by opening ``docs/build/html/index.html`` with a browser.
 
-- Add ``.. versionadded:: version``, ``.. versionchanged:: version`` or ``.. deprecated:: version`` to the associated documentation of your changes, depending on what kind of change you made. This only applies if the change you made is visible to an end user. The directives should be added to class/method descriptions if their general behaviour changed and to the description of all arguments & attributes that changed.
+- Add ``.. versionadded:: NEXT.VERSION``, ``.. versionchanged:: NEXT.VERSION`` or ``.. deprecated:: NEXT.VERSION`` to the associated documentation of your changes, depending on what kind of change you made. This only applies if the change you made is visible to an end user. The directives should be added to class/method descriptions if their general behaviour changed and to the description of all arguments & attributes that changed.
 
 Dev facing documentation
 ------------------------
@@ -243,39 +270,23 @@ callable we prefer that the call also uses keyword arg syntax. For example:
 This gives us the flexibility to re-order arguments and more importantly
 to add new required arguments. It's also more explicit and easier to read.
 
-Properly defining optional arguments
-------------------------------------
 
-It's always good to not initialize optional arguments at class creation,
-instead use ``**kwargs`` to get them. It's well known Telegram API can
-change without notice, in that case if a new argument is added it won't
-break the API classes. For example:
-
-.. code-block:: python
-
-    # GOOD
-    def __init__(self, id, name, last_name=None, **kwargs):
-        self.last_name = last_name
-
-
-    # BAD
-    def __init__(self, id, name, last_name=None):
-        self.last_name = last_name
-
-
-.. _`Code of Conduct`: https://www.python.org/psf/codeofconduct/
+.. _`Code of Conduct`: https://policies.python.org/python.org/code-of-conduct/
 .. _`issue tracker`: https://github.com/python-telegram-bot/python-telegram-bot/issues
 .. _`Telegram group`: https://telegram.me/pythontelegrambotgroup
-.. _`PEP 8 Style Guide`: https://www.python.org/dev/peps/pep-0008/
-.. _`sphinx`: http://sphinx-doc.org
-.. _`Google Python Style Guide`: http://google.github.io/styleguide/pyguide.html
+.. _`PEP 8 Style Guide`: https://peps.python.org/pep-0008/
+.. _`sphinx`: https://www.sphinx-doc.org/en/master
+.. _`Google Python Style Guide`: https://google.github.io/styleguide/pyguide.html
 .. _`Google Python Style Docstrings`: https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html
-.. _AUTHORS.rst: ../AUTHORS.rst
+.. _AUTHORS.rst: https://github.com/python-telegram-bot/python-telegram-bot/blob/master/AUTHORS.rst
 .. _`MyPy`: https://mypy.readthedocs.io/en/stable/index.html
 .. _`here`: https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html
+.. _`pre-commit config file`: https://github.com/python-telegram-bot/python-telegram-bot/blob/master/.pre-commit-config.yaml
 .. _`Black`: https://black.readthedocs.io/en/stable/index.html
-.. _`popular editors`: https://black.readthedocs.io/en/stable/editor_integration.html
-.. _`RTD`: https://python-telegram-bot.readthedocs.io/
-.. _`RTD build`: https://python-telegram-bot.readthedocs.io/en/doc-fixes
+.. _`popular editors`: https://black.readthedocs.io/en/stable/integrations/editors.html
+.. _`RTD`: https://docs.python-telegram-bot.org/
+.. _`RTD build`: https://docs.python-telegram-bot.org/en/doc-fixes
 .. _`CSI`: https://standards.mousepawmedia.com/en/stable/csi.html
 .. _`section`: #documenting
+.. _`testing page`: https://github.com/python-telegram-bot/python-telegram-bot/blob/master/tests/README.rst
+.. _`below`: #check-list-for-prs

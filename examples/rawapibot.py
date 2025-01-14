@@ -6,15 +6,19 @@ on the telegram.ext bot framework.
 This program is dedicated to the public domain under the CC0 license.
 """
 import asyncio
+import contextlib
 import logging
 from typing import NoReturn
 
-from telegram import Bot
+from telegram import Bot, Update
 from telegram.error import Forbidden, NetworkError
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
+# set higher logging level for httpx to avoid all GET and POST requests being logged
+logging.getLogger("httpx").setLevel(logging.WARNING)
+
 logger = logging.getLogger(__name__)
 
 
@@ -43,7 +47,7 @@ async def main() -> NoReturn:
 async def echo(bot: Bot, update_id: int) -> int:
     """Echo the message the user sent."""
     # Request updates after the last update_id
-    updates = await bot.get_updates(offset=update_id, timeout=10)
+    updates = await bot.get_updates(offset=update_id, timeout=10, allowed_updates=Update.ALL_TYPES)
     for update in updates:
         next_update_id = update.update_id + 1
 
@@ -58,7 +62,5 @@ async def echo(bot: Bot, update_id: int) -> int:
 
 
 if __name__ == "__main__":
-    try:
+    with contextlib.suppress(KeyboardInterrupt):  # Ignore exception when Ctrl-C is pressed
         asyncio.run(main())
-    except KeyboardInterrupt:  # Ignore exception when Ctrl-C is pressed
-        pass
