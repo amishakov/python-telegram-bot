@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -20,30 +20,30 @@
 import pytest
 
 from telegram import BotCommand, Dice
+from tests.auxil.slots import mro_slots
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="module")
 def bot_command():
     return BotCommand(command="start", description="A command")
 
 
-class TestBotCommand:
+class TestBotCommandWithoutRequest:
     command = "start"
     description = "A command"
 
-    def test_slot_behaviour(self, bot_command, mro_slots):
+    def test_slot_behaviour(self, bot_command):
         for attr in bot_command.__slots__:
             assert getattr(bot_command, attr, "err") != "err", f"got extra slot '{attr}'"
         assert len(mro_slots(bot_command)) == len(set(mro_slots(bot_command))), "duplicate slot"
 
-    def test_de_json(self, bot):
+    def test_de_json(self, offline_bot):
         json_dict = {"command": self.command, "description": self.description}
-        bot_command = BotCommand.de_json(json_dict, bot)
+        bot_command = BotCommand.de_json(json_dict, offline_bot)
+        assert bot_command.api_kwargs == {}
 
         assert bot_command.command == self.command
         assert bot_command.description == self.description
-
-        assert BotCommand.de_json(None, bot) is None
 
     def test_to_dict(self, bot_command):
         bot_command_dict = bot_command.to_dict()

@@ -12,7 +12,7 @@ bot.
 
 import logging
 from collections import defaultdict
-from typing import DefaultDict, Optional, Set
+from typing import Optional
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.constants import ParseMode
@@ -30,6 +30,9 @@ from telegram.ext import (
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
+# set higher logging level for httpx to avoid all GET and POST requests being logged
+logging.getLogger("httpx").setLevel(logging.WARNING)
+
 logger = logging.getLogger(__name__)
 
 
@@ -37,19 +40,24 @@ class ChatData:
     """Custom class for chat_data. Here we store data per message."""
 
     def __init__(self) -> None:
-        self.clicks_per_message: DefaultDict[int, int] = defaultdict(int)
+        self.clicks_per_message: defaultdict[int, int] = defaultdict(int)
 
 
 # The [ExtBot, dict, ChatData, dict] is for type checkers like mypy
 class CustomContext(CallbackContext[ExtBot, dict, ChatData, dict]):
     """Custom class for context."""
 
-    def __init__(self, application: Application):
-        super().__init__(application=application)
+    def __init__(
+        self,
+        application: Application,
+        chat_id: Optional[int] = None,
+        user_id: Optional[int] = None,
+    ):
+        super().__init__(application=application, chat_id=chat_id, user_id=user_id)
         self._message_id: Optional[int] = None
 
     @property
-    def bot_user_ids(self) -> Set[int]:
+    def bot_user_ids(self) -> set[int]:
         """Custom shortcut to access a value stored in the bot_data dict"""
         return self.bot_data.setdefault("user_ids", set())
 
@@ -107,8 +115,7 @@ async def count_click(update: Update, context: CustomContext) -> None:
 async def print_users(update: Update, context: CustomContext) -> None:
     """Show which users have been using this bot."""
     await update.message.reply_text(
-        "The following user IDs have used this bot: "
-        f'{", ".join(map(str, context.bot_user_ids))}'
+        f"The following user IDs have used this bot: {', '.join(map(str, context.bot_user_ids))}"
     )
 
 
@@ -129,7 +136,7 @@ def main() -> None:
     application.add_handler(CallbackQueryHandler(count_click))
     application.add_handler(CommandHandler("print_users", print_users))
 
-    application.run_polling()
+    application.run_polling(allowed_updates=Update.ALL_TYPES)
 
 
 if __name__ == "__main__":

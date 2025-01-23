@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -19,25 +19,28 @@
 import pytest
 
 from telegram import LoginUrl
+from tests.auxil.slots import mro_slots
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="module")
 def login_url():
     return LoginUrl(
-        url=TestLoginUrl.url,
-        forward_text=TestLoginUrl.forward_text,
-        bot_username=TestLoginUrl.bot_username,
-        request_write_access=TestLoginUrl.request_write_access,
+        url=LoginUrlTestBase.url,
+        forward_text=LoginUrlTestBase.forward_text,
+        bot_username=LoginUrlTestBase.bot_username,
+        request_write_access=LoginUrlTestBase.request_write_access,
     )
 
 
-class TestLoginUrl:
+class LoginUrlTestBase:
     url = "http://www.google.com"
     forward_text = "Send me forward!"
     bot_username = "botname"
     request_write_access = True
 
-    def test_slot_behaviour(self, login_url, mro_slots):
+
+class TestLoginUrlWithoutRequest(LoginUrlTestBase):
+    def test_slot_behaviour(self, login_url):
         for attr in login_url.__slots__:
             assert getattr(login_url, attr, "err") != "err", f"got extra slot '{attr}'"
         assert len(mro_slots(login_url)) == len(set(mro_slots(login_url))), "duplicate slot"

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -18,14 +18,26 @@
 # along with this program.  If not, see [http://www.gnu.org/licenses/].
 """This module contains the Builder classes for the telegram.ext module."""
 from asyncio import Queue
+from collections.abc import Collection, Coroutine
 from pathlib import Path
-from typing import TYPE_CHECKING, Dict, Generic, Optional, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Callable, Generic, Optional, TypeVar, Union
+
+import httpx
 
 from telegram._bot import Bot
 from telegram._utils.defaultvalue import DEFAULT_FALSE, DEFAULT_NONE, DefaultValue
-from telegram._utils.types import DVInput, FilePathInput, ODVInput
+from telegram._utils.types import (
+    BaseUrl,
+    DVInput,
+    DVType,
+    FilePathInput,
+    HTTPVersion,
+    ODVInput,
+    SocketOpt,
+)
+from telegram._utils.warnings import warn
 from telegram.ext._application import Application
-from telegram.ext._callbackcontext import CallbackContext
+from telegram.ext._baseupdateprocessor import BaseUpdateProcessor, SimpleUpdateProcessor
 from telegram.ext._contexttypes import ContextTypes
 from telegram.ext._extbot import ExtBot
 from telegram.ext._jobqueue import JobQueue
@@ -33,9 +45,12 @@ from telegram.ext._updater import Updater
 from telegram.ext._utils.types import BD, BT, CCT, CD, JQ, UD
 from telegram.request import BaseRequest
 from telegram.request._httpxrequest import HTTPXRequest
+from telegram.warnings import PTBDeprecationWarning
 
 if TYPE_CHECKING:
-    from telegram.ext import BasePersistence, Defaults
+    from telegram import Update
+    from telegram.ext import BasePersistence, BaseRateLimiter, CallbackContext, Defaults
+    from telegram.ext._utils.types import RLARGS
 
 # Type hinting is a bit complicated here because we try to get to a sane level of
 # leveraging generics and therefore need a number of type variables.
@@ -54,23 +69,30 @@ _BOT_CHECKS = [
     ("request", "request instance"),
     ("get_updates_request", "get_updates_request instance"),
     ("connection_pool_size", "connection_pool_size"),
-    ("proxy_url", "proxy_url"),
+    ("proxy", "proxy"),
+    ("socket_options", "socket_options"),
     ("pool_timeout", "pool_timeout"),
     ("connect_timeout", "connect_timeout"),
     ("read_timeout", "read_timeout"),
     ("write_timeout", "write_timeout"),
+    ("media_write_timeout", "media_write_timeout"),
+    ("http_version", "http_version"),
     ("get_updates_connection_pool_size", "get_updates_connection_pool_size"),
-    ("get_updates_proxy_url", "get_updates_proxy_url"),
+    ("get_updates_proxy", "get_updates_proxy"),
+    ("get_updates_socket_options", "get_updates_socket_options"),
     ("get_updates_pool_timeout", "get_updates_pool_timeout"),
     ("get_updates_connect_timeout", "get_updates_connect_timeout"),
     ("get_updates_read_timeout", "get_updates_read_timeout"),
     ("get_updates_write_timeout", "get_updates_write_timeout"),
+    ("get_updates_http_version", "get_updates_http_version"),
     ("base_file_url", "base_file_url"),
     ("base_url", "base_url"),
     ("token", "token"),
     ("defaults", "defaults"),
     ("arbitrary_callback_data", "arbitrary_callback_data"),
     ("private_key", "private_key"),
+    ("rate_limiter", "rate_limiter instance"),
+    ("local_mode", "local_mode setting"),
 ]
 
 _TWO_ARGS_REQ = "The parameter `{}` may only be set, if no {} was set."
@@ -99,103 +121,144 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         * Unless a custom :class:`telegram.Bot` instance is set via :meth:`bot`, :meth:`build` will
           use :class:`telegram.ext.ExtBot` for the bot.
 
+    .. seealso:: :wiki:`Your First Bot <Extensions---Your-first-Bot>`,
+        :wiki:`Builder Pattern <Builder-Pattern>`
+
     .. _`builder pattern`: https://en.wikipedia.org/wiki/Builder_pattern
     """
 
     __slots__ = (
-        "_token",
-        "_base_url",
-        "_base_file_url",
-        "_connection_pool_size",
-        "_proxy_url",
-        "_connect_timeout",
-        "_read_timeout",
-        "_write_timeout",
-        "_pool_timeout",
-        "_request",
-        "_get_updates_connection_pool_size",
-        "_get_updates_proxy_url",
-        "_get_updates_connect_timeout",
-        "_get_updates_read_timeout",
-        "_get_updates_write_timeout",
-        "_get_updates_pool_timeout",
-        "_get_updates_request",
-        "_private_key",
-        "_private_key_password",
-        "_defaults",
-        "_arbitrary_callback_data",
-        "_bot",
-        "_update_queue",
-        "_job_queue",
-        "_persistence",
-        "_context_types",
         "_application_class",
         "_application_kwargs",
-        "_concurrent_updates",
+        "_arbitrary_callback_data",
+        "_base_file_url",
+        "_base_url",
+        "_bot",
+        "_connect_timeout",
+        "_connection_pool_size",
+        "_context_types",
+        "_defaults",
+        "_get_updates_connect_timeout",
+        "_get_updates_connection_pool_size",
+        "_get_updates_http_version",
+        "_get_updates_pool_timeout",
+        "_get_updates_proxy",
+        "_get_updates_read_timeout",
+        "_get_updates_request",
+        "_get_updates_socket_options",
+        "_get_updates_write_timeout",
+        "_http_version",
+        "_job_queue",
+        "_local_mode",
+        "_media_write_timeout",
+        "_persistence",
+        "_pool_timeout",
+        "_post_init",
+        "_post_shutdown",
+        "_post_stop",
+        "_private_key",
+        "_private_key_password",
+        "_proxy",
+        "_rate_limiter",
+        "_read_timeout",
+        "_request",
+        "_socket_options",
+        "_token",
+        "_update_processor",
+        "_update_queue",
         "_updater",
+        "_write_timeout",
     )
 
     def __init__(self: "InitApplicationBuilder"):
-        self._token: DVInput[str] = DefaultValue("")
-        self._base_url: DVInput[str] = DefaultValue("https://api.telegram.org/bot")
-        self._base_file_url: DVInput[str] = DefaultValue("https://api.telegram.org/file/bot")
+        self._token: DVType[str] = DefaultValue("")
+        self._base_url: DVType[BaseUrl] = DefaultValue("https://api.telegram.org/bot")
+        self._base_file_url: DVType[BaseUrl] = DefaultValue("https://api.telegram.org/file/bot")
         self._connection_pool_size: DVInput[int] = DEFAULT_NONE
-        self._proxy_url: DVInput[str] = DEFAULT_NONE
+        self._proxy: DVInput[Union[str, httpx.Proxy, httpx.URL]] = DEFAULT_NONE
+        self._socket_options: DVInput[Collection[SocketOpt]] = DEFAULT_NONE
         self._connect_timeout: ODVInput[float] = DEFAULT_NONE
         self._read_timeout: ODVInput[float] = DEFAULT_NONE
         self._write_timeout: ODVInput[float] = DEFAULT_NONE
+        self._media_write_timeout: ODVInput[float] = DEFAULT_NONE
         self._pool_timeout: ODVInput[float] = DEFAULT_NONE
-        self._request: DVInput["BaseRequest"] = DEFAULT_NONE
+        self._request: DVInput[BaseRequest] = DEFAULT_NONE
         self._get_updates_connection_pool_size: DVInput[int] = DEFAULT_NONE
-        self._get_updates_proxy_url: DVInput[str] = DEFAULT_NONE
+        self._get_updates_proxy: DVInput[Union[str, httpx.Proxy, httpx.URL]] = DEFAULT_NONE
+        self._get_updates_socket_options: DVInput[Collection[SocketOpt]] = DEFAULT_NONE
         self._get_updates_connect_timeout: ODVInput[float] = DEFAULT_NONE
         self._get_updates_read_timeout: ODVInput[float] = DEFAULT_NONE
         self._get_updates_write_timeout: ODVInput[float] = DEFAULT_NONE
         self._get_updates_pool_timeout: ODVInput[float] = DEFAULT_NONE
-        self._get_updates_request: DVInput["BaseRequest"] = DEFAULT_NONE
+        self._get_updates_request: DVInput[BaseRequest] = DEFAULT_NONE
+        self._get_updates_http_version: DVInput[str] = DefaultValue("1.1")
         self._private_key: ODVInput[bytes] = DEFAULT_NONE
         self._private_key_password: ODVInput[bytes] = DEFAULT_NONE
-        self._defaults: ODVInput["Defaults"] = DEFAULT_NONE
-        self._arbitrary_callback_data: DVInput[Union[bool, int]] = DEFAULT_FALSE
+        self._defaults: ODVInput[Defaults] = DEFAULT_NONE
+        self._arbitrary_callback_data: Union[DefaultValue[bool], int] = DEFAULT_FALSE
+        self._local_mode: DVType[bool] = DEFAULT_FALSE
         self._bot: DVInput[Bot] = DEFAULT_NONE
-        self._update_queue: DVInput[Queue] = DefaultValue(Queue())
-        self._job_queue: ODVInput["JobQueue"] = DefaultValue(JobQueue())
-        self._persistence: ODVInput["BasePersistence"] = DEFAULT_NONE
-        self._context_types: DVInput[ContextTypes] = DefaultValue(ContextTypes())
-        self._application_class: DVInput[Type[Application]] = DefaultValue(Application)
-        self._application_kwargs: Dict[str, object] = {}
-        self._concurrent_updates: DVInput[Union[int, bool]] = DEFAULT_FALSE
+        self._update_queue: DVType[Queue[Union[Update, object]]] = DefaultValue(Queue())
+
+        try:
+            self._job_queue: ODVInput[JobQueue] = DefaultValue(JobQueue())
+        except RuntimeError as exc:
+            if "PTB must be installed via" not in str(exc):
+                raise
+            self._job_queue = DEFAULT_NONE
+
+        self._persistence: ODVInput[BasePersistence] = DEFAULT_NONE
+        self._context_types: DVType[ContextTypes] = DefaultValue(ContextTypes())
+        self._application_class: DVType[type[Application]] = DefaultValue(Application)
+        self._application_kwargs: dict[str, object] = {}
+        self._update_processor: BaseUpdateProcessor = SimpleUpdateProcessor(
+            max_concurrent_updates=1
+        )
         self._updater: ODVInput[Updater] = DEFAULT_NONE
+        self._post_init: Optional[Callable[[Application], Coroutine[Any, Any, None]]] = None
+        self._post_shutdown: Optional[Callable[[Application], Coroutine[Any, Any, None]]] = None
+        self._post_stop: Optional[Callable[[Application], Coroutine[Any, Any, None]]] = None
+        self._rate_limiter: ODVInput[BaseRateLimiter] = DEFAULT_NONE
+        self._http_version: DVInput[str] = DefaultValue("1.1")
 
     def _build_request(self, get_updates: bool) -> BaseRequest:
         prefix = "_get_updates_" if get_updates else "_"
         if not isinstance(getattr(self, f"{prefix}request"), DefaultValue):
             return getattr(self, f"{prefix}request")
 
-        proxy_url = DefaultValue.get_value(getattr(self, f"{prefix}proxy_url"))
+        proxy = DefaultValue.get_value(getattr(self, f"{prefix}proxy"))
+        socket_options = DefaultValue.get_value(getattr(self, f"{prefix}socket_options"))
         if get_updates:
             connection_pool_size = (
                 DefaultValue.get_value(getattr(self, f"{prefix}connection_pool_size")) or 1
             )
         else:
             connection_pool_size = (
-                DefaultValue.get_value(getattr(self, f"{prefix}connection_pool_size")) or 128
+                DefaultValue.get_value(getattr(self, f"{prefix}connection_pool_size")) or 256
             )
 
-        timeouts = dict(
-            connect_timeout=getattr(self, f"{prefix}connect_timeout"),
-            read_timeout=getattr(self, f"{prefix}read_timeout"),
-            write_timeout=getattr(self, f"{prefix}write_timeout"),
-            pool_timeout=getattr(self, f"{prefix}pool_timeout"),
-        )
+        timeouts = {
+            "connect_timeout": getattr(self, f"{prefix}connect_timeout"),
+            "read_timeout": getattr(self, f"{prefix}read_timeout"),
+            "write_timeout": getattr(self, f"{prefix}write_timeout"),
+            "pool_timeout": getattr(self, f"{prefix}pool_timeout"),
+        }
+
+        if not get_updates:
+            timeouts["media_write_timeout"] = self._media_write_timeout
+
         # Get timeouts that were actually set-
         effective_timeouts = {
             key: value for key, value in timeouts.items() if not isinstance(value, DefaultValue)
         }
 
+        http_version = DefaultValue.get_value(getattr(self, f"{prefix}http_version")) or "1.1"
+
         return HTTPXRequest(
             connection_pool_size=connection_pool_size,
-            proxy_url=proxy_url,
+            proxy=proxy,
+            http_version=http_version,  # type: ignore[arg-type]
+            socket_options=socket_options,
             **effective_timeouts,
         )
 
@@ -213,7 +276,17 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
             arbitrary_callback_data=DefaultValue.get_value(self._arbitrary_callback_data),
             request=self._build_request(get_updates=False),
             get_updates_request=self._build_request(get_updates=True),
+            rate_limiter=DefaultValue.get_value(self._rate_limiter),
+            local_mode=DefaultValue.get_value(self._local_mode),
         )
+
+    def _bot_check(self, name: str) -> None:
+        if self._bot is not DEFAULT_NONE:
+            raise RuntimeError(_TWO_ARGS_REQ.format(name, "bot instance"))
+
+    def _updater_check(self, name: str) -> None:
+        if self._updater not in (DEFAULT_NONE, None):
+            raise RuntimeError(_TWO_ARGS_REQ.format(name, "updater"))
 
     def build(
         self: "ApplicationBuilder[BT, CCT, UD, CD, BD, JQ]",
@@ -246,23 +319,24 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
             bot = self._updater.bot
             update_queue = self._updater.update_queue
 
-        application: Application[
-            BT, CCT, UD, CD, BD, JQ
-        ] = DefaultValue.get_value(  # pylint: disable=not-callable
+        application: Application[BT, CCT, UD, CD, BD, JQ] = DefaultValue.get_value(
             self._application_class
         )(
             bot=bot,
             update_queue=update_queue,
             updater=updater,
-            concurrent_updates=DefaultValue.get_value(self._concurrent_updates),
+            update_processor=self._update_processor,
             job_queue=job_queue,
             persistence=persistence,
             context_types=DefaultValue.get_value(self._context_types),
+            post_init=self._post_init,
+            post_shutdown=self._post_shutdown,
+            post_stop=self._post_stop,
             **self._application_kwargs,  # For custom Application subclasses
         )
 
         if job_queue is not None:
-            job_queue.set_application(application)
+            job_queue.set_application(application)  # type: ignore[arg-type]
 
         if persistence is not None:
             # This raises an exception if persistence.store_data.callback_data is True
@@ -272,7 +346,9 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         return application
 
     def application_class(
-        self: BuilderType, application_class: Type[Application], kwargs: Dict[str, object] = None
+        self: BuilderType,
+        application_class: type[Application[Any, Any, Any, Any, Any, Any]],
+        kwargs: Optional[dict[str, object]] = None,
     ) -> BuilderType:
         """Sets a custom subclass instead of :class:`telegram.ext.Application`. The
         subclass's ``__init__`` should look like this
@@ -286,7 +362,7 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
 
         Args:
             application_class (:obj:`type`): A subclass of :class:`telegram.ext.Application`
-            kwargs (Dict[:obj:`str`, :obj:`object`], optional): Keyword arguments for the
+            kwargs (dict[:obj:`str`, :obj:`object`], optional): Keyword arguments for the
                 initialization. Defaults to an empty dict.
 
         Returns:
@@ -305,52 +381,52 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         Returns:
             :class:`ApplicationBuilder`: The same builder with the updated argument.
         """
-        if self._bot is not DEFAULT_NONE:
-            raise RuntimeError(_TWO_ARGS_REQ.format("token", "bot instance"))
-        if self._updater not in (DEFAULT_NONE, None):
-            raise RuntimeError(_TWO_ARGS_REQ.format("token", "updater"))
+        self._bot_check("token")
+        self._updater_check("token")
         self._token = token
         return self
 
-    def base_url(self: BuilderType, base_url: str) -> BuilderType:
+    def base_url(self: BuilderType, base_url: BaseUrl) -> BuilderType:
         """Sets the base URL for :attr:`telegram.ext.Application.bot`. If not called,
         will default to ``'https://api.telegram.org/bot'``.
 
-        .. seealso:: :paramref:`telegram.Bot.base_url`, `Local Bot API Server <https://github.com/\
-            python-telegram-bot/python-telegram-bot/wiki/Local-Bot-API-Server>`_,
-            :meth:`base_file_url`
+        .. seealso:: :paramref:`telegram.Bot.base_url`,
+            :wiki:`Local Bot API Server <Local-Bot-API-Server>`, :meth:`base_file_url`
+
+        .. versionchanged:: NEXT.VERSION
+           Supports callable input and string formatting.
 
         Args:
-            base_url (:obj:`str`): The URL.
+            base_url (:obj:`str` | Callable[[:obj:`str`], :obj:`str`]): The URL or
+                input for the URL as accepted by :paramref:`telegram.Bot.base_url`.
 
         Returns:
             :class:`ApplicationBuilder`: The same builder with the updated argument.
         """
-        if self._bot is not DEFAULT_NONE:
-            raise RuntimeError(_TWO_ARGS_REQ.format("base_url", "bot instance"))
-        if self._updater not in (DEFAULT_NONE, None):
-            raise RuntimeError(_TWO_ARGS_REQ.format("base_url", "updater"))
+        self._bot_check("base_url")
+        self._updater_check("base_url")
         self._base_url = base_url
         return self
 
-    def base_file_url(self: BuilderType, base_file_url: str) -> BuilderType:
+    def base_file_url(self: BuilderType, base_file_url: BaseUrl) -> BuilderType:
         """Sets the base file URL for :attr:`telegram.ext.Application.bot`. If not
         called, will default to ``'https://api.telegram.org/file/bot'``.
 
-        .. seealso:: :paramref:`telegram.Bot.base_file_url`, `Local Bot API Server <https://\
-            github.com/python-telegram-bot/python-telegram-bot/wiki/Local-Bot-API-Server>`_,
-            :meth:`base_url`
+        .. seealso:: :paramref:`telegram.Bot.base_file_url`,
+            :wiki:`Local Bot API Server <Local-Bot-API-Server>`, :meth:`base_url`
+
+        .. versionchanged:: NEXT.VERSION
+           Supports callable input and string formatting.
 
         Args:
-            base_file_url (:obj:`str`): The URL.
+            base_file_url (:obj:`str` | Callable[[:obj:`str`], :obj:`str`]): The URL or
+                input for the URL as accepted by :paramref:`telegram.Bot.base_file_url`.
 
         Returns:
             :class:`ApplicationBuilder`: The same builder with the updated argument.
         """
-        if self._bot is not DEFAULT_NONE:
-            raise RuntimeError(_TWO_ARGS_REQ.format("base_file_url", "bot instance"))
-        if self._updater not in (DEFAULT_NONE, None):
-            raise RuntimeError(_TWO_ARGS_REQ.format("base_file_url", "updater"))
+        self._bot_check("base_file_url")
+        self._updater_check("base_file_url")
         self._base_file_url = base_file_url
         return self
 
@@ -358,17 +434,30 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         prefix = "get_updates_" if get_updates else ""
         name = prefix + "request"
 
+        timeouts = ["connect_timeout", "read_timeout", "write_timeout", "pool_timeout"]
+        if not get_updates:
+            timeouts.append("media_write_timeout")
+
         # Code below tests if it's okay to set a Request object. Only okay if no other request args
         # or instances containing a Request were set previously
-        for attr in ("connect_timeout", "read_timeout", "write_timeout", "pool_timeout"):
+        for attr in timeouts:
             if not isinstance(getattr(self, f"_{prefix}{attr}"), DefaultValue):
                 raise RuntimeError(_TWO_ARGS_REQ.format(name, attr))
+
         if not isinstance(getattr(self, f"_{prefix}connection_pool_size"), DefaultValue):
             raise RuntimeError(_TWO_ARGS_REQ.format(name, "connection_pool_size"))
-        if not isinstance(getattr(self, f"_{prefix}proxy_url"), DefaultValue):
-            raise RuntimeError(_TWO_ARGS_REQ.format(name, "proxy_url"))
-        if self._bot is not DEFAULT_NONE:
-            raise RuntimeError(_TWO_ARGS_REQ.format(name, "bot instance"))
+
+        if not isinstance(getattr(self, f"_{prefix}proxy"), DefaultValue):
+            raise RuntimeError(_TWO_ARGS_REQ.format(name, "proxy"))
+
+        if not isinstance(getattr(self, f"_{prefix}socket_options"), DefaultValue):
+            raise RuntimeError(_TWO_ARGS_REQ.format(name, "socket_options"))
+
+        if not isinstance(getattr(self, f"_{prefix}http_version"), DefaultValue):
+            raise RuntimeError(_TWO_ARGS_REQ.format(name, "http_version"))
+
+        self._bot_check(name)
+
         if self._updater not in (DEFAULT_NONE, None):
             raise RuntimeError(_TWO_ARGS_REQ.format(name, "updater instance"))
 
@@ -411,7 +500,11 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
     def connection_pool_size(self: BuilderType, connection_pool_size: int) -> BuilderType:
         """Sets the size of the connection pool for the
         :paramref:`~telegram.request.HTTPXRequest.connection_pool_size` parameter of
-        :attr:`telegram.Bot.request`. Defaults to ``128``.
+        :attr:`telegram.Bot.request`. Defaults to ``256``.
+
+        .. include:: inclusions/pool_size_tip.rst
+
+        .. seealso:: :meth:`get_updates_connection_pool_size`
 
         Args:
             connection_pool_size (:obj:`int`): The size of the connection pool.
@@ -424,24 +517,74 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         return self
 
     def proxy_url(self: BuilderType, proxy_url: str) -> BuilderType:
-        """Sets the proxy for the :paramref:`~telegram.request.HTTPXRequest.proxy_url`
-        parameter of :attr:`telegram.Bot.request`. Defaults to :obj:`None`.
+        """Legacy name for :meth:`proxy`, kept for backward compatibility.
+
+        .. seealso:: :meth:`get_updates_proxy`
+
+        .. deprecated:: 20.7
 
         Args:
-            proxy_url (:obj:`str`): The URL to the proxy server. See
-                :paramref:`telegram.request.HTTPXRequest.proxy_url` for more information.
+            proxy_url (:obj:`str` | ``httpx.Proxy`` | ``httpx.URL``): See
+                :paramref:`telegram.ext.ApplicationBuilder.proxy.proxy`.
 
         Returns:
             :class:`ApplicationBuilder`: The same builder with the updated argument.
         """
-        self._request_param_check(name="proxy_url", get_updates=False)
-        self._proxy_url = proxy_url
+        warn(
+            PTBDeprecationWarning(
+                "20.7",
+                "`ApplicationBuilder.proxy_url` is deprecated. Use `ApplicationBuilder.proxy` "
+                "instead.",
+            ),
+            stacklevel=2,
+        )
+        return self.proxy(proxy_url)
+
+    def proxy(self: BuilderType, proxy: Union[str, httpx.Proxy, httpx.URL]) -> BuilderType:
+        """Sets the proxy for the :paramref:`~telegram.request.HTTPXRequest.proxy`
+        parameter of :attr:`telegram.Bot.request`. Defaults to :obj:`None`.
+
+        .. seealso:: :meth:`get_updates_proxy`
+
+        .. versionadded:: 20.7
+
+        Args:
+            proxy (:obj:`str` | ``httpx.Proxy`` | ``httpx.URL``): The URL to a proxy
+                server, a ``httpx.Proxy`` object or a ``httpx.URL`` object. See
+                :paramref:`telegram.request.HTTPXRequest.proxy` for more information.
+
+        Returns:
+            :class:`ApplicationBuilder`: The same builder with the updated argument.
+        """
+        self._request_param_check(name="proxy", get_updates=False)
+        self._proxy = proxy
+        return self
+
+    def socket_options(self: BuilderType, socket_options: Collection[SocketOpt]) -> BuilderType:
+        """Sets the options for the :paramref:`~telegram.request.HTTPXRequest.socket_options`
+        parameter of :attr:`telegram.Bot.request`. Defaults to :obj:`None`.
+
+        .. seealso:: :meth:`get_updates_socket_options`
+
+        .. versionadded:: 20.7
+
+        Args:
+            socket_options (Collection[:obj:`tuple`], optional): Socket options. See
+                :paramref:`telegram.request.HTTPXRequest.socket_options` for more information.
+
+        Returns:
+            :class:`ApplicationBuilder`: The same builder with the updated argument.
+        """
+        self._request_param_check(name="socket_options", get_updates=False)
+        self._socket_options = socket_options
         return self
 
     def connect_timeout(self: BuilderType, connect_timeout: Optional[float]) -> BuilderType:
         """Sets the connection attempt timeout for the
         :paramref:`~telegram.request.HTTPXRequest.connect_timeout` parameter of
         :attr:`telegram.Bot.request`. Defaults to ``5.0``.
+
+        .. seealso:: :meth:`get_updates_connect_timeout`
 
         Args:
             connect_timeout (:obj:`float`): See
@@ -459,6 +602,8 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         :paramref:`~telegram.request.HTTPXRequest.read_timeout` parameter of
         :attr:`telegram.Bot.request`. Defaults to ``5.0``.
 
+        .. seealso:: :meth:`get_updates_read_timeout`
+
         Args:
             read_timeout (:obj:`float`): See
                 :paramref:`telegram.request.HTTPXRequest.read_timeout` for more information.
@@ -475,6 +620,8 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         :paramref:`~telegram.request.HTTPXRequest.write_timeout` parameter of
         :attr:`telegram.Bot.request`. Defaults to ``5.0``.
 
+        .. seealso:: :meth:`get_updates_write_timeout`
+
         Args:
             write_timeout (:obj:`float`): See
                 :paramref:`telegram.request.HTTPXRequest.write_timeout` for more information.
@@ -486,10 +633,34 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         self._write_timeout = write_timeout
         return self
 
+    def media_write_timeout(
+        self: BuilderType, media_write_timeout: Optional[float]
+    ) -> BuilderType:
+        """Sets the media write operation timeout for the
+        :paramref:`~telegram.request.HTTPXRequest.media_write_timeout` parameter of
+        :attr:`telegram.Bot.request`. Defaults to ``20``.
+
+        .. versionadded:: 21.0
+
+        Args:
+            media_write_timeout (:obj:`float`): See
+                :paramref:`telegram.request.HTTPXRequest.media_write_timeout` for more information.
+
+        Returns:
+            :class:`ApplicationBuilder`: The same builder with the updated argument.
+        """
+        self._request_param_check(name="media_write_timeout", get_updates=False)
+        self._media_write_timeout = media_write_timeout
+        return self
+
     def pool_timeout(self: BuilderType, pool_timeout: Optional[float]) -> BuilderType:
         """Sets the connection pool's connection freeing timeout for the
         :paramref:`~telegram.request.HTTPXRequest.pool_timeout` parameter of
-        :attr:`telegram.Bot.request`. Defaults to :obj:`None`.
+        :attr:`telegram.Bot.request`. Defaults to ``1.0``.
+
+        .. include:: inclusions/pool_size_tip.rst
+
+        .. seealso:: :meth:`get_updates_pool_timeout`
 
         Args:
             pool_timeout (:obj:`float`): See
@@ -500,6 +671,47 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         """
         self._request_param_check(name="pool_timeout", get_updates=False)
         self._pool_timeout = pool_timeout
+        return self
+
+    def http_version(self: BuilderType, http_version: HTTPVersion) -> BuilderType:
+        """Sets the HTTP protocol version which is used for the
+        :paramref:`~telegram.request.HTTPXRequest.http_version` parameter of
+        :attr:`telegram.Bot.request`. By default, HTTP/1.1 is used.
+
+        .. seealso:: :meth:`get_updates_http_version`
+
+        Note:
+            Users have observed stability issues with HTTP/2, which happen due to how the `h2
+            library handles <https://github.com/python-hyper/h2/issues/1181>`_ cancellations of
+            keepalive connections. See `#3556 <https://github.com/python-telegram-bot/
+            python-telegram-bot/issues/3556>`_ for a discussion.
+
+            If you want to use HTTP/2, you must install PTB with the optional requirement
+            ``http2``, i.e.
+
+            .. code-block:: bash
+
+               pip install "python-telegram-bot[http2]"
+
+            Keep in mind that the HTTP/1.1 implementation may be considered the `"more
+            robust option at this time" <https://www.python-httpx.org/http2#enabling-http2>`_.
+
+        .. versionadded:: 20.1
+        .. versionchanged:: 20.2
+            Reset the default version to 1.1.
+
+        Args:
+            http_version (:obj:`str`): Pass ``"2"`` or ``"2.0"`` if you'd like to use HTTP/2 for
+                making requests to Telegram. Defaults to ``"1.1"``, in which case HTTP/1.1 is used.
+
+                .. versionchanged:: 20.5
+                    Accept ``"2"`` as a valid value.
+
+        Returns:
+            :class:`ApplicationBuilder`: The same builder with the updated argument.
+        """
+        self._request_param_check(name="http_version", get_updates=False)
+        self._http_version = http_version
         return self
 
     def get_updates_request(self: BuilderType, get_updates_request: BaseRequest) -> BuilderType:
@@ -526,6 +738,8 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         :paramref:`telegram.request.HTTPXRequest.connection_pool_size` parameter which is used
         for the :meth:`telegram.Bot.get_updates` request. Defaults to ``1``.
 
+        .. seealso:: :meth:`connection_pool_size`
+
         Args:
             get_updates_connection_pool_size (:obj:`int`): The size of the connection pool.
 
@@ -537,18 +751,70 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         return self
 
     def get_updates_proxy_url(self: BuilderType, get_updates_proxy_url: str) -> BuilderType:
-        """Sets the proxy for the :paramref:`telegram.request.HTTPXRequest.proxy_url`
-        parameter which is used for :meth:`telegram.Bot.get_updates`. Defaults to :obj:`None`.
+        """Legacy name for :meth:`get_updates_proxy`, kept for backward compatibility.
+
+        .. seealso:: :meth:`proxy`
+
+        .. deprecated:: 20.7
 
         Args:
-            get_updates_proxy_url (:obj:`str`): The URL to the proxy server. See
-                :paramref:`telegram.request.HTTPXRequest.proxy_url` for more information.
+            get_updates_proxy_url (:obj:`str` | ``httpx.Proxy`` | ``httpx.URL``): See
+                :paramref:`telegram.ext.ApplicationBuilder.get_updates_proxy.get_updates_proxy`.
 
         Returns:
             :class:`ApplicationBuilder`: The same builder with the updated argument.
         """
-        self._request_param_check(name="proxy_url", get_updates=True)
-        self._get_updates_proxy_url = get_updates_proxy_url
+        warn(
+            PTBDeprecationWarning(
+                "20.7",
+                "`ApplicationBuilder.get_updates_proxy_url` is deprecated. Use "
+                "`ApplicationBuilder.get_updates_proxy` instead.",
+            ),
+            stacklevel=2,
+        )
+        return self.get_updates_proxy(get_updates_proxy_url)
+
+    def get_updates_proxy(
+        self: BuilderType, get_updates_proxy: Union[str, httpx.Proxy, httpx.URL]
+    ) -> BuilderType:
+        """Sets the proxy for the :paramref:`telegram.request.HTTPXRequest.proxy`
+        parameter which is used for :meth:`telegram.Bot.get_updates`. Defaults to :obj:`None`.
+
+        .. seealso:: :meth:`proxy`
+
+        .. versionadded:: 20.7
+
+        Args:
+            proxy (:obj:`str` | ``httpx.Proxy`` | ``httpx.URL``): The URL to a proxy server,
+                a ``httpx.Proxy`` object or a ``httpx.URL`` object. See
+                :paramref:`telegram.request.HTTPXRequest.proxy` for more information.
+
+        Returns:
+            :class:`ApplicationBuilder`: The same builder with the updated argument.
+        """
+        self._request_param_check(name="proxy", get_updates=True)
+        self._get_updates_proxy = get_updates_proxy
+        return self
+
+    def get_updates_socket_options(
+        self: BuilderType, get_updates_socket_options: Collection[SocketOpt]
+    ) -> BuilderType:
+        """Sets the options for the :paramref:`~telegram.request.HTTPXRequest.socket_options`
+        parameter of :paramref:`telegram.Bot.get_updates_request`. Defaults to :obj:`None`.
+
+        .. seealso:: :meth:`socket_options`
+
+        .. versionadded:: 20.7
+
+        Args:
+            get_updates_socket_options (Collection[:obj:`tuple`], optional): Socket options. See
+                :paramref:`telegram.request.HTTPXRequest.socket_options` for more information.
+
+        Returns:
+            :class:`ApplicationBuilder`: The same builder with the updated argument.
+        """
+        self._request_param_check(name="socket_options", get_updates=True)
+        self._get_updates_socket_options = get_updates_socket_options
         return self
 
     def get_updates_connect_timeout(
@@ -557,6 +823,8 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         """Sets the connection attempt timeout for the
         :paramref:`telegram.request.HTTPXRequest.connect_timeout` parameter which is used for
         the :meth:`telegram.Bot.get_updates` request. Defaults to ``5.0``.
+
+        .. seealso:: :meth:`connect_timeout`
 
         Args:
             get_updates_connect_timeout (:obj:`float`): See
@@ -576,6 +844,8 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         :paramref:`telegram.request.HTTPXRequest.read_timeout` parameter which is used for the
         :meth:`telegram.Bot.get_updates` request. Defaults to ``5.0``.
 
+        .. seealso:: :meth:`read_timeout`
+
         Args:
             get_updates_read_timeout (:obj:`float`): See
                 :paramref:`telegram.request.HTTPXRequest.read_timeout` for more information.
@@ -594,6 +864,8 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         :paramref:`telegram.request.HTTPXRequest.write_timeout` parameter which is used for
         the :meth:`telegram.Bot.get_updates` request. Defaults to ``5.0``.
 
+        .. seealso:: :meth:`write_timeout`
+
         Args:
             get_updates_write_timeout (:obj:`float`): See
                 :paramref:`telegram.request.HTTPXRequest.write_timeout` for more information.
@@ -610,7 +882,9 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
     ) -> BuilderType:
         """Sets the connection pool's connection freeing timeout for the
         :paramref:`~telegram.request.HTTPXRequest.pool_timeout` parameter which is used for the
-        :meth:`telegram.Bot.get_updates` request. Defaults to :obj:`None`.
+        :meth:`telegram.Bot.get_updates` request. Defaults to ``1.0``.
+
+        .. seealso:: :meth:`pool_timeout`
 
         Args:
             get_updates_pool_timeout (:obj:`float`): See
@@ -623,17 +897,60 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         self._get_updates_pool_timeout = get_updates_pool_timeout
         return self
 
+    def get_updates_http_version(
+        self: BuilderType, get_updates_http_version: HTTPVersion
+    ) -> BuilderType:
+        """Sets the HTTP protocol version which is used for the
+        :paramref:`~telegram.request.HTTPXRequest.http_version` parameter which is used in the
+        :meth:`telegram.Bot.get_updates` request. By default, HTTP/1.1 is used.
+
+        .. seealso:: :meth:`http_version`
+
+        Note:
+            Users have observed stability issues with HTTP/2, which happen due to how the `h2
+            library handles <https://github.com/python-hyper/h2/issues/1181>`_ cancellations of
+            keepalive connections. See `#3556 <https://github.com/python-telegram-bot/
+            python-telegram-bot/issues/3556>`_ for a discussion.
+
+            You will also need to install the http2 dependency. Keep in mind that the HTTP/1.1
+            implementation may be considered the `"more robust option at this time"
+            <https://www.python-httpx.org/http2#enabling-http2>`_.
+
+            .. code-block:: bash
+
+               pip install httpx[http2]
+
+        .. versionadded:: 20.1
+        .. versionchanged:: 20.2
+            Reset the default version to 1.1.
+
+        Args:
+            get_updates_http_version (:obj:`str`): Pass ``"2"`` or ``"2.0"`` if you'd like to use
+                HTTP/2 for making requests to Telegram. Defaults to ``"1.1"``, in which case
+                HTTP/1.1 is used.
+
+                .. versionchanged:: 20.5
+                    Accept ``"2"`` as a valid value.
+
+        Returns:
+            :class:`ApplicationBuilder`: The same builder with the updated argument.
+        """
+        self._request_param_check(name="http_version", get_updates=True)
+        self._get_updates_http_version = get_updates_http_version
+        return self
+
     def private_key(
         self: BuilderType,
         private_key: Union[bytes, FilePathInput],
-        password: Union[bytes, FilePathInput] = None,
+        password: Optional[Union[bytes, FilePathInput]] = None,
     ) -> BuilderType:
         """Sets the private key and corresponding password for decryption of telegram passport data
         for :attr:`telegram.ext.Application.bot`.
 
-        .. seealso:: `passportbot.py <https://github.com/python-telegram-bot/python-telegram-bot\
-            /tree/master/examples#passportbotpy>`_, `Telegram Passports
-            <https://github.com/python-telegram-bot/python-telegram-bot/wiki/Telegram-Passport>`_
+        Examples:
+            :any:`Passport Bot <examples.passportbot>`
+
+        .. seealso:: :wiki:`Telegram Passports <Telegram-Passport>`
 
         Args:
             private_key (:obj:`bytes` | :obj:`str` | :obj:`pathlib.Path`): The private key or the
@@ -646,10 +963,8 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         Returns:
             :class:`ApplicationBuilder`: The same builder with the updated argument.
         """
-        if self._bot is not DEFAULT_NONE:
-            raise RuntimeError(_TWO_ARGS_REQ.format("private_key", "bot instance"))
-        if self._updater not in (DEFAULT_NONE, None):
-            raise RuntimeError(_TWO_ARGS_REQ.format("private_key", "updater"))
+        self._bot_check("private_key")
+        self._updater_check("private_key")
 
         self._private_key = (
             private_key if isinstance(private_key, bytes) else Path(private_key).read_bytes()
@@ -665,8 +980,7 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         """Sets the :class:`telegram.ext.Defaults` instance for
         :attr:`telegram.ext.Application.bot`.
 
-        .. seealso:: `Adding Defaults <https://github.com/python-telegram-bot/python-telegram-bot\
-            /wiki/Adding-defaults-to-your-bot>`_
+        .. seealso:: :wiki:`Adding Defaults to Your Bot <Adding-defaults-to-your-bot>`
 
         Args:
             defaults (:class:`telegram.ext.Defaults`): The defaults instance.
@@ -674,10 +988,8 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         Returns:
             :class:`ApplicationBuilder`: The same builder with the updated argument.
         """
-        if self._bot is not DEFAULT_NONE:
-            raise RuntimeError(_TWO_ARGS_REQ.format("defaults", "bot instance"))
-        if self._updater not in (DEFAULT_NONE, None):
-            raise RuntimeError(_TWO_ARGS_REQ.format("defaults", "updater"))
+        self._bot_check("defaults")
+        self._updater_check("defaults")
         self._defaults = defaults
         return self
 
@@ -689,10 +1001,18 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         cached in memory. If not called, only strings can be used as callback data and no data will
         be stored in memory.
 
-        .. seealso:: `Arbitrary callback_data <https://github.com/python-telegram-bot\
-            /python-telegram-bot/wiki/Arbitrary-callback_data>`_,
-            `arbitrarycallbackdatabot.py <https://github.com/python-telegram-bot\
-                /python-telegram-bot/tree/master/examples#arbitrarycallbackdatabotpy>`_
+        Important:
+            If you want to use this feature, you must install PTB with the optional requirement
+            ``callback-data``, i.e.
+
+            .. code-block:: bash
+
+               pip install "python-telegram-bot[callback-data]"
+
+        Examples:
+            :any:`Arbitrary callback_data Bot <examples.arbitrarycallbackdatabot>`
+
+        .. seealso:: :wiki:`Arbitrary callback_data <Arbitrary-callback_data>`
 
         Args:
             arbitrary_callback_data (:obj:`bool` | :obj:`int`): If :obj:`True` is passed, the
@@ -702,11 +1022,27 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         Returns:
             :class:`ApplicationBuilder`: The same builder with the updated argument.
         """
-        if self._bot is not DEFAULT_NONE:
-            raise RuntimeError(_TWO_ARGS_REQ.format("arbitrary_callback_data", "bot instance"))
-        if self._updater not in (DEFAULT_NONE, None):
-            raise RuntimeError(_TWO_ARGS_REQ.format("arbitrary_callback_data", "updater"))
+        self._bot_check("arbitrary_callback_data")
+        self._updater_check("arbitrary_callback_data")
         self._arbitrary_callback_data = arbitrary_callback_data
+        return self
+
+    def local_mode(self: BuilderType, local_mode: bool) -> BuilderType:
+        """Specifies the value for :paramref:`~telegram.Bot.local_mode` for the
+        :attr:`telegram.ext.Application.bot`.
+        If not called, will default to :obj:`False`.
+
+        .. seealso:: :wiki:`Local Bot API Server <Local-Bot-API-Server>`
+
+        Args:
+            local_mode (:obj:`bool`): Whether the bot should run in local mode.
+
+        Returns:
+            :class:`ApplicationBuilder`: The same builder with the updated argument.
+        """
+        self._bot_check("local_mode")
+        self._updater_check("local_mode")
+        self._local_mode = local_mode
         return self
 
     def bot(
@@ -723,21 +1059,20 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         Returns:
             :class:`ApplicationBuilder`: The same builder with the updated argument.
         """
-        if self._updater not in (DEFAULT_NONE, None):
-            raise RuntimeError(_TWO_ARGS_REQ.format("bot", "updater"))
+        self._updater_check("bot")
         for attr, error in _BOT_CHECKS:
             if not isinstance(getattr(self, f"_{attr}"), DefaultValue):
                 raise RuntimeError(_TWO_ARGS_REQ.format("bot", error))
         self._bot = bot
         return self  # type: ignore[return-value]
 
-    def update_queue(self: BuilderType, update_queue: Queue) -> BuilderType:
+    def update_queue(self: BuilderType, update_queue: "Queue[object]") -> BuilderType:
         """Sets a :class:`asyncio.Queue` instance for
         :attr:`telegram.ext.Application.update_queue`, i.e. the queue that the application will
         fetch updates from. Will also be used for the :attr:`telegram.ext.Application.updater`.
         If not called, a queue will be instantiated.
 
-         .. seealso:: :attr:`telegram.ext.Updater.update_queue`
+        .. seealso:: :attr:`telegram.ext.Updater.update_queue`
 
         Args:
             update_queue (:class:`asyncio.Queue`): The queue.
@@ -750,8 +1085,11 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         self._update_queue = update_queue
         return self
 
-    def concurrent_updates(self: BuilderType, concurrent_updates: Union[bool, int]) -> BuilderType:
+    def concurrent_updates(
+        self: BuilderType, concurrent_updates: Union[bool, int, "BaseUpdateProcessor"]
+    ) -> BuilderType:
         """Specifies if and how many updates may be processed concurrently instead of one by one.
+        If not called, updates will be processed one by one.
 
         Warning:
             Processing updates concurrently is not recommended when stateful handlers like
@@ -759,17 +1097,39 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
             that your bot does not (explicitly or implicitly) rely on updates being processed
             sequentially.
 
+        .. include:: inclusions/pool_size_tip.rst
+
         .. seealso:: :attr:`telegram.ext.Application.concurrent_updates`
 
         Args:
-            concurrent_updates (:obj:`bool` | :obj:`int`): Passing :obj:`True` will allow for
-                ``4096`` updates to be processed concurrently. Pass an integer to specify a
-                different number of updates that may be processed concurrently.
+            concurrent_updates (:obj:`bool` | :obj:`int` | :class:`BaseUpdateProcessor`): Passing
+                :obj:`True` will allow for ``256`` updates to be processed concurrently using
+                :class:`telegram.ext.SimpleUpdateProcessor`. Pass an integer to specify a different
+                number of updates that may be processed concurrently. Pass an instance of
+                :class:`telegram.ext.BaseUpdateProcessor` to use that instance for handling updates
+                concurrently.
+
+                .. versionchanged:: 20.4
+                    Now accepts :class:`BaseUpdateProcessor` instances.
 
         Returns:
             :class:`ApplicationBuilder`: The same builder with the updated argument.
         """
-        self._concurrent_updates = concurrent_updates
+        # Check if concurrent updates is bool and convert to integer
+        if concurrent_updates is True:
+            concurrent_updates = 256
+        elif concurrent_updates is False:
+            concurrent_updates = 1
+
+        # If `concurrent_updates` is an integer, create a `SimpleUpdateProcessor`
+        # instance with that integer value; otherwise, raise an error if the value
+        # is negative
+        if isinstance(concurrent_updates, int):
+            concurrent_updates = SimpleUpdateProcessor(concurrent_updates)
+
+        # Assign default value of concurrent_updates if it is instance of
+        # `BaseUpdateProcessor`
+        self._update_processor: BaseUpdateProcessor = concurrent_updates  # type: ignore[no-redef]
         return self
 
     def job_queue(
@@ -778,11 +1138,12 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
     ) -> "ApplicationBuilder[BT, CCT, UD, CD, BD, InJQ]":
         """Sets a :class:`telegram.ext.JobQueue` instance for
         :attr:`telegram.ext.Application.job_queue`. If not called, a job queue will be
-        instantiated.
+        instantiated if the requirements of :class:`telegram.ext.JobQueue` are installed.
 
-        .. seealso:: `JobQueue <https://github.com/python-telegram-bot/python-telegram-bot/wiki\
-            /Extensions-%E2%80%93-JobQueue>`_, `timerbot.py <https://github.com\
-                /python-telegram-bot/python-telegram-bot/tree/master/examples#timerbotpy>`_
+        Examples:
+            :any:`Timer Bot <examples.timerbot>`
+
+        .. seealso:: :wiki:`Job Queue <Extensions---JobQueue>`
 
         Note:
             * :meth:`telegram.ext.JobQueue.set_application` will be called automatically by
@@ -790,9 +1151,9 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
             * The job queue will be automatically started and stopped by
               :meth:`telegram.ext.Application.start` and :meth:`telegram.ext.Application.stop`,
               respectively.
-            * When passing :obj:`None`,
-              :attr:`telegram.ext.ConversationHandler.conversation_timeout` can not be used, as
-              this uses :attr:`telegram.ext.Application.job_queue` internally.
+            * When passing :obj:`None` or when the requirements of :class:`telegram.ext.JobQueue`
+              are not installed, :attr:`telegram.ext.ConversationHandler.conversation_timeout`
+              can not be used, as this uses :attr:`telegram.ext.Application.job_queue` internally.
 
         Args:
             job_queue (:class:`telegram.ext.JobQueue`): The job queue. Pass :obj:`None` if you
@@ -804,7 +1165,9 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         self._job_queue = job_queue
         return self  # type: ignore[return-value]
 
-    def persistence(self: BuilderType, persistence: "BasePersistence") -> BuilderType:
+    def persistence(
+        self: BuilderType, persistence: "BasePersistence[Any, Any, Any]"
+    ) -> BuilderType:
         """Sets a :class:`telegram.ext.BasePersistence` instance for
         :attr:`telegram.ext.Application.persistence`.
 
@@ -817,10 +1180,10 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
             :func:`copy.deepcopy`. This is due to the data being deep copied before handing it over
             to the persistence in order to avoid race conditions.
 
-        .. seealso:: `Making your bot persistent <https://github.com/python-telegram-bot\
-            /python-telegram-bot/wiki/Making-your-bot-persistent>`_,
-            `persistentconversationbot.py <https://github.com/python-telegram-bot\
-                /python-telegram-bot/tree/master/examples#persistentconversationbotpy>`_
+        Examples:
+            :any:`Persistent Conversation Bot <examples.persistentconversationbot>`
+
+        .. seealso:: :wiki:`Making Your Bot Persistent <Making-your-bot-persistent>`
 
         Warning:
             If a :class:`telegram.ext.ContextTypes` instance is set via :meth:`context_types`,
@@ -842,8 +1205,8 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         """Sets a :class:`telegram.ext.ContextTypes` instance for
         :attr:`telegram.ext.Application.context_types`.
 
-        .. seealso:: `contexttypesbot.py <https://github.com/python-telegram-bot\
-            /python-telegram-bot/tree/master/examples#contexttypesbotpy>`_
+        Examples:
+            :any:`Context Types Bot <examples.contexttypesbot>`
 
         Args:
             context_types (:class:`telegram.ext.ContextTypes`): The context types.
@@ -886,14 +1249,162 @@ class ApplicationBuilder(Generic[BT, CCT, UD, CD, BD, JQ]):
         self._updater = updater
         return self
 
+    def post_init(
+        self: BuilderType, post_init: Callable[[Application], Coroutine[Any, Any, None]]
+    ) -> BuilderType:
+        """
+        Sets a callback to be executed by :meth:`Application.run_polling` and
+        :meth:`Application.run_webhook` *after* executing :meth:`Application.initialize` but
+        *before* executing :meth:`Updater.start_polling` or :meth:`Updater.start_webhook`,
+        respectively.
+
+        Tip:
+            This can be used for custom startup logic that requires to await coroutines, e.g.
+            setting up the bots commands via :meth:`~telegram.Bot.set_my_commands`.
+
+        Example:
+            .. code::
+
+                async def post_init(application: Application) -> None:
+                    await application.bot.set_my_commands([('start', 'Starts the bot')])
+
+                application = Application.builder().token("TOKEN").post_init(post_init).build()
+
+        Note:
+            |post_methods_note|
+
+        .. seealso:: :meth:`post_stop`, :meth:`post_shutdown`
+
+        Args:
+            post_init (:term:`coroutine function`): The custom callback. Must be a
+                :term:`coroutine function` and must accept exactly one positional argument, which
+                is the :class:`~telegram.ext.Application`::
+
+                    async def post_init(application: Application) -> None:
+
+        Returns:
+            :class:`ApplicationBuilder`: The same builder with the updated argument.
+        """
+        self._post_init = post_init
+        return self
+
+    def post_shutdown(
+        self: BuilderType, post_shutdown: Callable[[Application], Coroutine[Any, Any, None]]
+    ) -> BuilderType:
+        """
+        Sets a callback to be executed by :meth:`Application.run_polling` and
+        :meth:`Application.run_webhook` *after* executing :meth:`Updater.shutdown`
+        and :meth:`Application.shutdown`.
+
+        Tip:
+            This can be used for custom shutdown logic that requires to await coroutines, e.g.
+            closing a database connection
+
+        Example:
+            .. code::
+
+                async def post_shutdown(application: Application) -> None:
+                    await application.bot_data['database'].close()
+
+                application = Application.builder()
+                                        .token("TOKEN")
+                                        .post_shutdown(post_shutdown)
+                                        .build()
+
+        Note:
+            |post_methods_note|
+
+        .. seealso:: :meth:`post_init`, :meth:`post_stop`
+
+        Args:
+            post_shutdown (:term:`coroutine function`): The custom callback. Must be a
+                :term:`coroutine function` and must accept exactly one positional argument, which
+                is the :class:`~telegram.ext.Application`::
+
+                    async def post_shutdown(application: Application) -> None:
+
+        Returns:
+            :class:`ApplicationBuilder`: The same builder with the updated argument.
+        """
+        self._post_shutdown = post_shutdown
+        return self
+
+    def post_stop(
+        self: BuilderType, post_stop: Callable[[Application], Coroutine[Any, Any, None]]
+    ) -> BuilderType:
+        """
+        Sets a callback to be executed by :meth:`Application.run_polling` and
+        :meth:`Application.run_webhook` *after* executing :meth:`Updater.stop`
+        and :meth:`Application.stop`.
+
+        .. versionadded:: 20.1
+
+        Tip:
+            This can be used for custom stop logic that requires to await coroutines, e.g.
+            sending message to a chat before shutting down the bot.
+
+        Hint:
+            The callback will be called only, if :meth:`Application.stop` was indeed called
+            successfully. For example, if the application is stopped early by calling
+            :meth:`Application.stop_running` within :meth:`post_init`, then the set callback will
+            *not* be called.
+
+        Example:
+            .. code::
+
+                async def post_stop(application: Application) -> None:
+                    await application.bot.send_message(123456, "Shutting down...")
+
+                application = Application.builder()
+                                        .token("TOKEN")
+                                        .post_stop(post_stop)
+                                        .build()
+
+        Note:
+            |post_methods_note|
+
+        .. seealso:: :meth:`post_init`, :meth:`post_shutdown`
+
+        Args:
+            post_stop (:term:`coroutine function`): The custom callback. Must be a
+                :term:`coroutine function` and must accept exactly one positional argument, which
+                is the :class:`~telegram.ext.Application`::
+
+                    async def post_stop(application: Application) -> None:
+
+        Returns:
+            :class:`ApplicationBuilder`: The same builder with the updated argument.
+        """
+        self._post_stop = post_stop
+        return self
+
+    def rate_limiter(
+        self: "ApplicationBuilder[BT, CCT, UD, CD, BD, JQ]",
+        rate_limiter: "BaseRateLimiter[RLARGS]",
+    ) -> "ApplicationBuilder[ExtBot[RLARGS], CCT, UD, CD, BD, JQ]":
+        """Sets a :class:`telegram.ext.BaseRateLimiter` instance for the
+        :paramref:`telegram.ext.ExtBot.rate_limiter` parameter of
+        :attr:`telegram.ext.Application.bot`.
+
+        Args:
+            rate_limiter (:class:`telegram.ext.BaseRateLimiter`): The rate limiter.
+
+        Returns:
+            :class:`ApplicationBuilder`: The same builder with the updated argument.
+        """
+        self._bot_check("rate_limiter")
+        self._updater_check("rate_limiter")
+        self._rate_limiter = rate_limiter
+        return self  # type: ignore[return-value]
+
 
 InitApplicationBuilder = (  # This is defined all the way down here so that its type is inferred
     ApplicationBuilder[  # by Pylance correctly.
-        ExtBot,
-        CallbackContext.DEFAULT_TYPE,
-        Dict,
-        Dict,
-        Dict,
-        JobQueue,
+        ExtBot[None],
+        ContextTypes.DEFAULT_TYPE,
+        dict[Any, Any],
+        dict[Any, Any],
+        dict[Any, Any],
+        JobQueue[ContextTypes.DEFAULT_TYPE],
     ]
 )

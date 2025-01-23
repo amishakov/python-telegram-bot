@@ -10,12 +10,15 @@ import traceback
 
 from telegram import Update
 from telegram.constants import ParseMode
-from telegram.ext import Application, CallbackContext, CommandHandler
+from telegram.ext import Application, CommandHandler, ContextTypes
 
 # Enable logging
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
+# set higher logging level for httpx to avoid all GET and POST requests being logged
+logging.getLogger("httpx").setLevel(logging.WARNING)
+
 logger = logging.getLogger(__name__)
 
 # This can be your own ID, or one for a developer group/channel.
@@ -23,10 +26,10 @@ logger = logging.getLogger(__name__)
 DEVELOPER_CHAT_ID = 123456789
 
 
-async def error_handler(update: object, context: CallbackContext.DEFAULT_TYPE) -> None:
+async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Log the error and send a telegram message to notify the developer."""
     # Log the error before we do anything else, so we can see it even if something breaks.
-    logger.error(msg="Exception while handling an update:", exc_info=context.error)
+    logger.error("Exception while handling an update:", exc_info=context.error)
 
     # traceback.format_exception returns the usual python message about an exception, but as a
     # list of strings rather than a single string, so we have to join them together.
@@ -37,7 +40,7 @@ async def error_handler(update: object, context: CallbackContext.DEFAULT_TYPE) -
     # You might need to add some logic to deal with messages longer than the 4096 character limit.
     update_str = update.to_dict() if isinstance(update, Update) else str(update)
     message = (
-        f"An exception was raised while handling an update\n"
+        "An exception was raised while handling an update\n"
         f"<pre>update = {html.escape(json.dumps(update_str, indent=2, ensure_ascii=False))}"
         "</pre>\n\n"
         f"<pre>context.chat_data = {html.escape(str(context.chat_data))}</pre>\n\n"
@@ -51,12 +54,12 @@ async def error_handler(update: object, context: CallbackContext.DEFAULT_TYPE) -
     )
 
 
-async def bad_command(update: Update, context: CallbackContext.DEFAULT_TYPE) -> None:
+async def bad_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Raise an error to trigger the error handler."""
     await context.bot.wrong_method_name()  # type: ignore[attr-defined]
 
 
-async def start(update: Update, context: CallbackContext.DEFAULT_TYPE) -> None:
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Displays info on how to trigger an error."""
     await update.effective_message.reply_html(
         "Use /bad_command to cause an error.\n"
@@ -77,7 +80,7 @@ def main() -> None:
     application.add_error_handler(error_handler)
 
     # Run the bot until the user presses Ctrl-C
-    application.run_polling()
+    application.run_polling(allowed_updates=Update.ALL_TYPES)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -18,17 +18,18 @@
 import pytest
 
 from telegram import MessageId, User
+from tests.auxil.slots import mro_slots
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="module")
 def message_id():
-    return MessageId(message_id=TestMessageId.m_id)
+    return MessageId(message_id=TestMessageIdWithoutRequest.m_id)
 
 
-class TestMessageId:
+class TestMessageIdWithoutRequest:
     m_id = 1234
 
-    def test_slot_behaviour(self, message_id, mro_slots):
+    def test_slot_behaviour(self, message_id):
         for attr in message_id.__slots__:
             assert getattr(message_id, attr, "err") != "err", f"got extra slot '{attr}'"
         assert len(mro_slots(message_id)) == len(set(mro_slots(message_id))), "duplicate slot"
@@ -36,6 +37,7 @@ class TestMessageId:
     def test_de_json(self):
         json_dict = {"message_id": self.m_id}
         message_id = MessageId.de_json(json_dict, None)
+        assert message_id.api_kwargs == {}
 
         assert message_id.message_id == self.m_id
 

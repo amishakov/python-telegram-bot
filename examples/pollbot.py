@@ -20,8 +20,8 @@ from telegram import (
 from telegram.constants import ParseMode
 from telegram.ext import (
     Application,
-    CallbackContext,
     CommandHandler,
+    ContextTypes,
     MessageHandler,
     PollAnswerHandler,
     PollHandler,
@@ -32,10 +32,16 @@ from telegram.ext import (
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
+# set higher logging level for httpx to avoid all GET and POST requests being logged
+logging.getLogger("httpx").setLevel(logging.WARNING)
+
 logger = logging.getLogger(__name__)
 
 
-async def start(update: Update, context: CallbackContext.DEFAULT_TYPE) -> None:
+TOTAL_VOTER_COUNT = 3
+
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Inform user about what this bot can do"""
     await update.message.reply_text(
         "Please select /poll to get a Poll, /quiz to get a Quiz or /preview"
@@ -43,7 +49,7 @@ async def start(update: Update, context: CallbackContext.DEFAULT_TYPE) -> None:
     )
 
 
-async def poll(update: Update, context: CallbackContext.DEFAULT_TYPE) -> None:
+async def poll(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Sends a predefined poll"""
     questions = ["Good", "Really good", "Fantastic", "Great"]
     message = await context.bot.send_poll(
@@ -65,7 +71,7 @@ async def poll(update: Update, context: CallbackContext.DEFAULT_TYPE) -> None:
     context.bot_data.update(payload)
 
 
-async def receive_poll_answer(update: Update, context: CallbackContext.DEFAULT_TYPE) -> None:
+async def receive_poll_answer(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Summarize a users poll vote"""
     answer = update.poll_answer
     answered_poll = context.bot_data[answer.poll_id]
@@ -88,11 +94,11 @@ async def receive_poll_answer(update: Update, context: CallbackContext.DEFAULT_T
     )
     answered_poll["answers"] += 1
     # Close poll after three participants voted
-    if answered_poll["answers"] == 3:
+    if answered_poll["answers"] == TOTAL_VOTER_COUNT:
         await context.bot.stop_poll(answered_poll["chat_id"], answered_poll["message_id"])
 
 
-async def quiz(update: Update, context: CallbackContext.DEFAULT_TYPE) -> None:
+async def quiz(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a predefined poll"""
     questions = ["1", "2", "4", "20"]
     message = await update.effective_message.reply_poll(
@@ -105,12 +111,12 @@ async def quiz(update: Update, context: CallbackContext.DEFAULT_TYPE) -> None:
     context.bot_data.update(payload)
 
 
-async def receive_quiz_answer(update: Update, context: CallbackContext.DEFAULT_TYPE) -> None:
+async def receive_quiz_answer(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Close quiz after three participants took it"""
     # the bot can receive closed poll updates we don't care about
     if update.poll.is_closed:
         return
-    if update.poll.total_voter_count == 3:
+    if update.poll.total_voter_count == TOTAL_VOTER_COUNT:
         try:
             quiz_data = context.bot_data[update.poll.id]
         # this means this poll answer update is from an old poll, we can't stop it then
@@ -119,7 +125,7 @@ async def receive_quiz_answer(update: Update, context: CallbackContext.DEFAULT_T
         await context.bot.stop_poll(quiz_data["chat_id"], quiz_data["message_id"])
 
 
-async def preview(update: Update, context: CallbackContext.DEFAULT_TYPE) -> None:
+async def preview(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Ask user to create a poll and display a preview of it"""
     # using this without a type lets the user chooses what he wants (quiz or poll)
     button = [[KeyboardButton("Press me!", request_poll=KeyboardButtonPollType())]]
@@ -130,7 +136,7 @@ async def preview(update: Update, context: CallbackContext.DEFAULT_TYPE) -> None
     )
 
 
-async def receive_poll(update: Update, context: CallbackContext.DEFAULT_TYPE) -> None:
+async def receive_poll(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """On receiving polls, reply to it by a closed poll copying the received poll"""
     actual_poll = update.effective_message.poll
     # Only need to set the question and options, since all other parameters don't matter for
@@ -144,7 +150,7 @@ async def receive_poll(update: Update, context: CallbackContext.DEFAULT_TYPE) ->
     )
 
 
-async def help_handler(update: Update, context: CallbackContext.DEFAULT_TYPE) -> None:
+async def help_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Display a help message"""
     await update.message.reply_text("Use /quiz, /poll or /preview to test this bot.")
 
@@ -163,7 +169,7 @@ def main() -> None:
     application.add_handler(PollHandler(receive_quiz_answer))
 
     # Run the bot until the user presses Ctrl-C
-    application.run_polling()
+    application.run_polling(allowed_updates=Update.ALL_TYPES)
 
 
 if __name__ == "__main__":

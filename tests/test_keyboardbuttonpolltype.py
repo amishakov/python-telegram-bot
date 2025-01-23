@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -19,17 +19,21 @@
 import pytest
 
 from telegram import KeyboardButtonPollType, Poll
+from telegram.constants import PollType
+from tests.auxil.slots import mro_slots
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="module")
 def keyboard_button_poll_type():
-    return KeyboardButtonPollType(TestKeyboardButtonPollType.type)
+    return KeyboardButtonPollType(KeyboardButtonPollTypeTestBase.type)
 
 
-class TestKeyboardButtonPollType:
+class KeyboardButtonPollTypeTestBase:
     type = Poll.QUIZ
 
-    def test_slot_behaviour(self, keyboard_button_poll_type, mro_slots):
+
+class TestKeyboardButtonPollTypeWithoutRequest(KeyboardButtonPollTypeTestBase):
+    def test_slot_behaviour(self, keyboard_button_poll_type):
         inst = keyboard_button_poll_type
         for attr in inst.__slots__:
             assert getattr(inst, attr, "err") != "err", f"got extra slot '{attr}'"
@@ -39,6 +43,22 @@ class TestKeyboardButtonPollType:
         keyboard_button_poll_type_dict = keyboard_button_poll_type.to_dict()
         assert isinstance(keyboard_button_poll_type_dict, dict)
         assert keyboard_button_poll_type_dict["type"] == self.type
+
+    def test_type_enum_conversion(self):
+        assert (
+            type(
+                KeyboardButtonPollType(
+                    type="quiz",
+                ).type
+            )
+            is PollType
+        )
+        assert (
+            KeyboardButtonPollType(
+                type="unknown",
+            ).type
+            == "unknown"
+        )
 
     def test_equality(self):
         a = KeyboardButtonPollType(Poll.QUIZ)

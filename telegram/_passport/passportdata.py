@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,12 +17,13 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with this program.  If not, see [http://www.gnu.org/licenses/].
 """Contains information about Telegram Passport data shared with the bot by the user."""
-
-from typing import TYPE_CHECKING, Any, List, Optional
+from collections.abc import Sequence
+from typing import TYPE_CHECKING, Optional
 
 from telegram._passport.credentials import EncryptedCredentials
 from telegram._passport.encryptedpassportelement import EncryptedPassportElement
 from telegram._telegramobject import TelegramObject
+from telegram._utils.argumentparsing import de_json_optional, de_list_optional, parse_sequence_arg
 from telegram._utils.types import JSONDict
 
 if TYPE_CHECKING:
@@ -39,75 +40,78 @@ class PassportData(TelegramObject):
         attribute :attr:`telegram.Credentials.nonce`.
 
     Args:
-        data (List[:class:`telegram.EncryptedPassportElement`]): Array with encrypted information
-            about documents and other Telegram Passport elements that was shared with the bot.
+        data (Sequence[:class:`telegram.EncryptedPassportElement`]): Array with encrypted
+            information about documents and other Telegram Passport elements that was shared with
+            the bot.
+
+            .. versionchanged:: 20.0
+                |sequenceclassargs|
+
         credentials (:class:`telegram.EncryptedCredentials`)): Encrypted credentials.
-        bot (:class:`telegram.Bot`, optional): The Bot to use for instance methods.
-        **kwargs (:obj:`dict`): Arbitrary keyword arguments.
 
     Attributes:
-        data (List[:class:`telegram.EncryptedPassportElement`]): Array with encrypted information
-            about documents and other Telegram Passport elements that was shared with the bot.
+        data (tuple[:class:`telegram.EncryptedPassportElement`]): Array with encrypted
+            information about documents and other Telegram Passport elements that was shared with
+            the bot.
+
+            .. versionchanged:: 20.0
+                |tupleclassattrs|
+
         credentials (:class:`telegram.EncryptedCredentials`): Encrypted credentials.
-        bot (:class:`telegram.Bot`, optional): The Bot to use for instance methods.
+
 
     """
 
-    __slots__ = ("credentials", "data", "_decrypted_data")
+    __slots__ = ("_decrypted_data", "credentials", "data")
 
     def __init__(
         self,
-        data: List[EncryptedPassportElement],
+        data: Sequence[EncryptedPassportElement],
         credentials: EncryptedCredentials,
-        bot: "Bot" = None,
-        **_kwargs: Any,
+        *,
+        api_kwargs: Optional[JSONDict] = None,
     ):
-        self.data = data
-        self.credentials = credentials
+        super().__init__(api_kwargs=api_kwargs)
 
-        self.set_bot(bot)
-        self._decrypted_data: Optional[List[EncryptedPassportElement]] = None
+        self.data: tuple[EncryptedPassportElement, ...] = parse_sequence_arg(data)
+        self.credentials: EncryptedCredentials = credentials
+
+        self._decrypted_data: Optional[tuple[EncryptedPassportElement]] = None
         self._id_attrs = tuple([x.type for x in data] + [credentials.hash])
 
+        self._freeze()
+
     @classmethod
-    def de_json(cls, data: Optional[JSONDict], bot: "Bot") -> Optional["PassportData"]:
+    def de_json(cls, data: JSONDict, bot: Optional["Bot"] = None) -> "PassportData":
         """See :meth:`telegram.TelegramObject.de_json`."""
         data = cls._parse_data(data)
 
-        if not data:
-            return None
+        data["data"] = de_list_optional(data.get("data"), EncryptedPassportElement, bot)
+        data["credentials"] = de_json_optional(data.get("credentials"), EncryptedCredentials, bot)
 
-        data["data"] = EncryptedPassportElement.de_list(data.get("data"), bot)
-        data["credentials"] = EncryptedCredentials.de_json(data.get("credentials"), bot)
-
-        return cls(bot=bot, **data)
-
-    def to_dict(self) -> JSONDict:
-        """See :meth:`telegram.TelegramObject.to_dict`."""
-        data = super().to_dict()
-
-        data["data"] = [e.to_dict() for e in self.data]
-
-        return data
+        return super().de_json(data=data, bot=bot)
 
     @property
-    def decrypted_data(self) -> List[EncryptedPassportElement]:
+    def decrypted_data(self) -> tuple[EncryptedPassportElement, ...]:
         """
-        List[:class:`telegram.EncryptedPassportElement`]: Lazily decrypt and return information
+        tuple[:class:`telegram.EncryptedPassportElement`]: Lazily decrypt and return information
             about documents and other Telegram Passport elements which were shared with the bot.
+
+        .. versionchanged:: 20.0
+            Returns a tuple instead of a list.
 
         Raises:
             telegram.error.PassportDecryptionError: Decryption failed. Usually due to bad
                 private/public key but can also suggest malformed/tampered data.
         """
         if self._decrypted_data is None:
-            self._decrypted_data = [
-                EncryptedPassportElement.de_json_decrypted(  # type: ignore[misc]
+            self._decrypted_data = tuple(  # type: ignore[assignment]
+                EncryptedPassportElement.de_json_decrypted(
                     element.to_dict(), self.get_bot(), self.decrypted_credentials
                 )
                 for element in self.data
-            ]
-        return self._decrypted_data
+            )
+        return self._decrypted_data  # type: ignore[return-value]
 
     @property
     def decrypted_credentials(self) -> "Credentials":

@@ -9,6 +9,8 @@ The current development team includes
 - `Poolitzer <https://github.com/Poolitzer>`_ (community liaison)
 - `Shivam <https://github.com/Starry69>`_
 - `Harshil <https://github.com/harshil21>`_
+- `Dmitry Kolomatskiy <https://github.com/lemontree210>`_
+- `Aditya <https://github.com/clot27>`_
 
 Emeritus maintainers include
 `Jannes Höke <https://github.com/jh0ker>`_ (`@jh0ker <https://t.me/jh0ker>`_ on Telegram),
@@ -19,16 +21,23 @@ Contributors
 
 The following wonderful people contributed directly or indirectly to this project:
 
+- `Abdelrahman <https://github.com/aelkheir>`_
 - `Abshar <https://github.com/abxhr>`_
+- `Abubakar Alaya <https://github.com/Ecode2>`_
 - `Alateas <https://github.com/alateas>`_
 - `Ales Dokshanin <https://github.com/alesdokshanin>`_
+- `Alexandre <https://github.com/xTudoS>`_
+- `Alizia <https://github.com/thefunkycat>`_
 - `Ambro17 <https://github.com/Ambro17>`_
 - `Andrej Zhilenkov <https://github.com/Andrej730>`_
 - `Anton Tagunov <https://github.com/anton-tagunov>`_
+- `Anya Marcano <https://github.com/AnyaMarcanito>`
 - `Avanatiker <https://github.com/Avanatiker>`_
 - `Balduro <https://github.com/Balduro>`_
 - `Bibo-Joshi <https://github.com/Bibo-Joshi>`_
+- `Biruk Alamirew <https://github.com/BAcode-X>`_
 - `bimmlerd <https://github.com/bimmlerd>`_
+- `cyc8 <https://github.com/cyc8>`_ 
 - `d-qoi <https://github.com/d-qoi>`_
 - `daimajia <https://github.com/daimajia>`_
 - `Daniel Reed <https://github.com/nmlorg>`_
@@ -45,14 +54,19 @@ The following wonderful people contributed directly or indirectly to this projec
 - `Evan Haberecht <https://github.com/habereet>`_
 - `Evgeny Denisov <https://github.com/eIGato>`_
 - `evgfilim1 <https://github.com/evgfilim1>`_
+- `ExalFabu <https://github.com/ExalFabu>`_
 - `franciscod <https://github.com/franciscod>`_
 - `gamgi <https://github.com/gamgi>`_
 - `Gauthamram Ravichandran <https://github.com/GauthamramRavichandran>`_
 - `Harshil <https://github.com/harshil21>`_
+- `Henry Galue <https://github.com/henryg311>`
 - `Hugo Damer <https://github.com/HakimusGIT>`_
 - `ihoru <https://github.com/ihoru>`_
+- `Iulian Onofrei <https://github.com/revolter>`_
+- `Jainam Oswal <https://github.com/jainamoswal>`_
 - `Jasmin Bom <https://github.com/jsmnbom>`_
 - `JASON0916 <https://github.com/JASON0916>`_
+- `Jeamhowards Montiel <https://github.com/Jeam-zx>`
 - `jeffffc <https://github.com/jeffffc>`_
 - `Jelle Besseling <https://github.com/pingiun>`_
 - `jh0ker <https://github.com/jh0ker>`_
@@ -61,16 +75,26 @@ The following wonderful people contributed directly or indirectly to this projec
 - `Joscha Götzer <https://github.com/Rostgnom>`_
 - `jossalgon <https://github.com/jossalgon>`_
 - `JRoot3D <https://github.com/JRoot3D>`_
+- `Juan Cuevas <https://github.com/cuevasrja>`
+- `kenjitagawa <https://github.com/kenjitagawa>`_
 - `kennethcheo <https://github.com/kennethcheo>`_
 - `Kirill Vasin <https://github.com/vasinkd>`_
 - `Kjwon15 <https://github.com/kjwon15>`_
 - `Li-aung Yip <https://github.com/LiaungYip>`_
 - `Loo Zheng Yuan <https://github.com/loozhengyuan>`_
 - `LRezende <https://github.com/lrezende>`_
+- `Luca Bellanti <https://github.com/Trifase>`_
+- `Lucas Molinari <https://github.com/lucasmolinari>`_
+- `Luis Pérez <https://github.com/nemacysts>`_
 - `macrojames <https://github.com/macrojames>`_
 - `Matheus Lemos <https://github.com/mlemosf>`_
+- `Michael Dix <https://github.com/Eisberge>`_
 - `Michael Elovskikh <https://github.com/wronglink>`_
+- `Miguel C. R. <https://github.com/MiguelX413>`_
+- `Miguel Salomon <https://github.com/Migueldsc12>`
+- `miles <https://github.com/miles170>`_
 - `Mischa Krüger <https://github.com/Makman2>`_
+- `Mohd Yusuf <https://github.com/mohdyusuf2312>`_
 - `naveenvhegde <https://github.com/naveenvhegde>`_
 - `neurrone <https://github.com/neurrone>`_
 - `NikitaPirate <https://github.com/NikitaPirate>`_
@@ -81,9 +105,11 @@ The following wonderful people contributed directly or indirectly to this projec
 - `Oleg Sushchenko <https://github.com/feuillemorte>`_
 - `Or Bin <https://github.com/OrBin>`_
 - `overquota <https://github.com/overquota>`_
+- `Pablo Martinez <https://github.com/elpekenin>`_
 - `Paradox <https://github.com/paradox70>`_
 - `Patrick Hofmann <https://github.com/PH89>`_
 - `Paul Larsen <https://github.com/PaulSonOfLars>`_
+- `Pawan <https://github.com/pawanrai9999>`_
 - `Pieter Schutz <https://github.com/eldinnie>`_
 - `Piraty <https://github.com/piraty>`_
 - `Poolitzer <https://github.com/Poolitzer>`_
@@ -91,9 +117,13 @@ The following wonderful people contributed directly or indirectly to this projec
 - `Rahiel Kasim <https://github.com/rahiel>`_
 - `Riko Naka <https://github.com/rikonaka>`_
 - `Rizlas <https://github.com/rizlas>`_
+- `Snehashish Biswas <https://github.com/Snehashish06>`_
 - `Sahil Sharma <https://github.com/sahilsharma811>`_
+- `Sam Mosleh <https://github.com/sam-mosleh>`_
 - `Sascha <https://github.com/saschalalala>`_
 - `Shelomentsev D <https://github.com/shelomentsevd>`_
+- `Shivam Saini <https://github.com/shivamsn97>`_
+- `Siloé Garcez <https://github.com/roast-lord>`_
 - `Simon Schürrle <https://github.com/SitiSchu>`_
 - `sooyhwang <https://github.com/sooyhwang>`_
 - `syntx <https://github.com/syntx>`_
@@ -105,8 +135,12 @@ The following wonderful people contributed directly or indirectly to this projec
 - `Vorobjev Simon <https://github.com/simonvorobjev>`_
 - `Wagner Macedo <https://github.com/wagnerluis1982>`_
 - `wjt <https://github.com/wjt>`_
+- `Wonseok Oh <https://github.com/marinelay>`_
+- `Yaw Danso <https://github.com/dglitxh>`_
+- `Yao Kuan <https://github.com/thatguylah>`_
 - `zeroone2numeral2 <https://github.com/zeroone2numeral2>`_
 - `zeshuaro <https://github.com/zeshuaro>`_
 - `zpavloudis <https://github.com/zpavloudis>`_
+
 
 Please add yourself here alphabetically when you submit your first pull request.

@@ -2,7 +2,7 @@
 # pylint: disable=too-many-arguments
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -19,12 +19,15 @@
 # along with this program.  If not, see [http://www.gnu.org/licenses/].
 """This module contains an object that represents a Telegram InlineQuery."""
 
-from typing import TYPE_CHECKING, Any, Callable, ClassVar, Optional, Sequence, Union
+from collections.abc import Sequence
+from typing import TYPE_CHECKING, Callable, Final, Optional, Union
 
 from telegram import constants
 from telegram._files.location import Location
+from telegram._inline.inlinequeryresultsbutton import InlineQueryResultsButton
 from telegram._telegramobject import TelegramObject
 from telegram._user import User
+from telegram._utils.argumentparsing import de_json_optional
 from telegram._utils.defaultvalue import DEFAULT_NONE
 from telegram._utils.types import JSONDict, ODVInput
 
@@ -40,13 +43,30 @@ class InlineQuery(TelegramObject):
     Objects of this class are comparable in terms of equality. Two objects of this class are
     considered equal, if their :attr:`id` is equal.
 
+    .. figure:: https://core.telegram.org/file/464001466/10e4a/r4FKyQ7gw5g.134366/f2\
+        606a53d683374703
+        :align: center
+
+        Inline queries on Telegram
+
+    .. seealso::
+        The :class:`telegram.InlineQueryResult` classes represent the media the user can choose
+        from (see above figure).
+
     Note:
-        In Python :keyword:`from` is a reserved word use :paramref:`from_user` instead.
+        In Python :keyword:`from` is a reserved word. Use :paramref:`from_user` instead.
+
+    .. versionchanged:: 20.0
+        The following are now keyword-only arguments in Bot methods:
+        ``{read, write, connect, pool}_timeout``, :paramref:`answer.api_kwargs`,
+        ``auto_pagination``. Use a named argument for those,
+        and notice that some positional arguments changed position as a result.
 
     Args:
         id (:obj:`str`): Unique identifier for this query.
         from_user (:class:`telegram.User`): Sender.
-        query (:obj:`str`): Text of the query (up to 256 characters).
+        query (:obj:`str`): Text of the query (up to
+            :tg-const:`telegram.InlineQuery.MAX_QUERY_LENGTH` characters).
         offset (:obj:`str`): Offset of the results to be returned, can be controlled by the bot.
         chat_type (:obj:`str`, optional): Type of the chat, from which the inline query was sent.
             Can be either :tg-const:`telegram.Chat.SENDER` for a private chat with the inline query
@@ -58,78 +78,81 @@ class InlineQuery(TelegramObject):
             .. versionadded:: 13.5
         location (:class:`telegram.Location`, optional): Sender location, only for bots that
             request user location.
-        bot (:class:`telegram.Bot`, optional): The Bot to use for instance methods.
-        **kwargs (:obj:`dict`): Arbitrary keyword arguments.
 
     Attributes:
         id (:obj:`str`): Unique identifier for this query.
         from_user (:class:`telegram.User`): Sender.
-        query (:obj:`str`): Text of the query (up to 256 characters).
+        query (:obj:`str`): Text of the query (up to
+            :tg-const:`telegram.InlineQuery.MAX_QUERY_LENGTH` characters).
         offset (:obj:`str`): Offset of the results to be returned, can be controlled by the bot.
-        location (:class:`telegram.Location`): Optional. Sender location, only for bots that
-            request user location.
-        chat_type (:obj:`str`, optional): Type of the chat, from which the inline query was sent.
+        chat_type (:obj:`str`): Optional. Type of the chat, from which the inline query was sent.
+            Can be either :tg-const:`telegram.Chat.SENDER` for a private chat with the inline query
+            sender, :tg-const:`telegram.Chat.PRIVATE`, :tg-const:`telegram.Chat.GROUP`,
+            :tg-const:`telegram.Chat.SUPERGROUP` or :tg-const:`telegram.Chat.CHANNEL`. The chat
+            type should be always known for requests sent from official clients and most
+            third-party clients, unless the request was sent from a secret chat.
 
             .. versionadded:: 13.5
+        location (:class:`telegram.Location`): Optional. Sender location, only for bots that
+            request user location.
 
     """
 
-    __slots__ = ("location", "chat_type", "id", "offset", "from_user", "query")
+    __slots__ = ("chat_type", "from_user", "id", "location", "offset", "query")
 
     def __init__(
         self,
-        id: str,  # pylint: disable=redefined-builtin, invalid-name
+        id: str,  # pylint: disable=redefined-builtin
         from_user: User,
         query: str,
         offset: str,
-        location: Location = None,
-        bot: "Bot" = None,
-        chat_type: str = None,
-        **_kwargs: Any,
+        location: Optional[Location] = None,
+        chat_type: Optional[str] = None,
+        *,
+        api_kwargs: Optional[JSONDict] = None,
     ):
+        super().__init__(api_kwargs=api_kwargs)
         # Required
-        self.id = id  # pylint: disable=invalid-name
-        self.from_user = from_user
-        self.query = query
-        self.offset = offset
+        self.id: str = id
+        self.from_user: User = from_user
+        self.query: str = query
+        self.offset: str = offset
 
         # Optional
-        self.location = location
-        self.chat_type = chat_type
+        self.location: Optional[Location] = location
+        self.chat_type: Optional[str] = chat_type
 
-        self.set_bot(bot)
         self._id_attrs = (self.id,)
 
+        self._freeze()
+
     @classmethod
-    def de_json(cls, data: Optional[JSONDict], bot: "Bot") -> Optional["InlineQuery"]:
+    def de_json(cls, data: JSONDict, bot: Optional["Bot"] = None) -> "InlineQuery":
         """See :meth:`telegram.TelegramObject.de_json`."""
         data = cls._parse_data(data)
 
-        if not data:
-            return None
+        data["from_user"] = de_json_optional(data.pop("from", None), User, bot)
+        data["location"] = de_json_optional(data.get("location"), Location, bot)
 
-        data["from_user"] = User.de_json(data.get("from"), bot)
-        data["location"] = Location.de_json(data.get("location"), bot)
-
-        return cls(bot=bot, **data)
+        return super().de_json(data=data, bot=bot)
 
     async def answer(
         self,
         results: Union[
             Sequence["InlineQueryResult"], Callable[[int], Optional[Sequence["InlineQueryResult"]]]
         ],
-        cache_time: int = 300,
-        is_personal: bool = None,
-        next_offset: str = None,
-        switch_pm_text: str = None,
-        switch_pm_parameter: str = None,
+        cache_time: Optional[int] = None,
+        is_personal: Optional[bool] = None,
+        next_offset: Optional[str] = None,
+        button: Optional[InlineQueryResultsButton] = None,
+        *,
+        current_offset: Optional[str] = None,
+        auto_pagination: bool = False,
         read_timeout: ODVInput[float] = DEFAULT_NONE,
         write_timeout: ODVInput[float] = DEFAULT_NONE,
         connect_timeout: ODVInput[float] = DEFAULT_NONE,
         pool_timeout: ODVInput[float] = DEFAULT_NONE,
-        current_offset: str = None,
-        api_kwargs: JSONDict = None,
-        auto_pagination: bool = False,
+        api_kwargs: Optional[JSONDict] = None,
     ) -> bool:
         """Shortcut for::
 
@@ -146,7 +169,7 @@ class InlineQuery(TelegramObject):
         .. versionchanged:: 20.0
             Raises :class:`ValueError` instead of :class:`TypeError`.
 
-        Args:
+        Keyword Args:
             auto_pagination (:obj:`bool`, optional): If set to :obj:`True`, :attr:`offset` will be
                 passed as
                 :paramref:`current_offset <telegram.Bot.answer_inline_query.current_offset>` to
@@ -166,8 +189,7 @@ class InlineQuery(TelegramObject):
             cache_time=cache_time,
             is_personal=is_personal,
             next_offset=next_offset,
-            switch_pm_text=switch_pm_text,
-            switch_pm_parameter=switch_pm_parameter,
+            button=button,
             read_timeout=read_timeout,
             write_timeout=write_timeout,
             connect_timeout=connect_timeout,
@@ -175,13 +197,28 @@ class InlineQuery(TelegramObject):
             api_kwargs=api_kwargs,
         )
 
-    MAX_RESULTS: ClassVar[int] = constants.InlineQueryLimit.RESULTS
+    MAX_RESULTS: Final[int] = constants.InlineQueryLimit.RESULTS
     """:const:`telegram.constants.InlineQueryLimit.RESULTS`
 
     .. versionadded:: 13.2
     """
-    MAX_SWITCH_PM_TEXT_LENGTH: ClassVar[int] = constants.InlineQueryLimit.SWITCH_PM_TEXT_LENGTH
-    """:const:`telegram.constants.InlineQueryLimit.SWITCH_PM_TEXT_LENGTH`
+    MIN_SWITCH_PM_TEXT_LENGTH: Final[int] = constants.InlineQueryLimit.MIN_SWITCH_PM_TEXT_LENGTH
+    """:const:`telegram.constants.InlineQueryLimit.MIN_SWITCH_PM_TEXT_LENGTH`
+
+    .. versionadded:: 20.0
+    """
+    MAX_SWITCH_PM_TEXT_LENGTH: Final[int] = constants.InlineQueryLimit.MAX_SWITCH_PM_TEXT_LENGTH
+    """:const:`telegram.constants.InlineQueryLimit.MAX_SWITCH_PM_TEXT_LENGTH`
+
+    .. versionadded:: 20.0
+    """
+    MAX_OFFSET_LENGTH: Final[int] = constants.InlineQueryLimit.MAX_OFFSET_LENGTH
+    """:const:`telegram.constants.InlineQueryLimit.MAX_OFFSET_LENGTH`
+
+    .. versionadded:: 20.0
+    """
+    MAX_QUERY_LENGTH: Final[int] = constants.InlineQueryLimit.MAX_QUERY_LENGTH
+    """:const:`telegram.constants.InlineQueryLimit.MAX_QUERY_LENGTH`
 
     .. versionadded:: 20.0
     """

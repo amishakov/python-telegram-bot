@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,9 +17,40 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with this program.  If not, see [http://www.gnu.org/licenses/].
 # pylint: disable=missing-module-docstring
+from typing import Final, NamedTuple
 
-__version__ = "20.0a0"
+__all__ = ("__version__", "__version_info__")
 
-from telegram import constants
 
-bot_api_version = constants.BOT_API_VERSION  # pylint: disable=invalid-name
+class Version(NamedTuple):
+    """Copies the behavior of sys.version_info.
+    serial is always 0 for stable releases.
+    """
+
+    major: int
+    minor: int
+    micro: int
+    releaselevel: str  # Literal['alpha', 'beta', 'candidate', 'final']
+    serial: int
+
+    def _rl_shorthand(self) -> str:
+        return {
+            "alpha": "a",
+            "beta": "b",
+            "candidate": "rc",
+        }[self.releaselevel]
+
+    def __str__(self) -> str:
+        version = f"{self.major}.{self.minor}"
+        if self.micro != 0:
+            version = f"{version}.{self.micro}"
+        if self.releaselevel != "final":
+            version = f"{version}{self._rl_shorthand()}{self.serial}"
+
+        return version
+
+
+__version_info__: Final[Version] = Version(
+    major=21, minor=10, micro=0, releaselevel="final", serial=0
+)
+__version__: Final[str] = str(__version_info__)

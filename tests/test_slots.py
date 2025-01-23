@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -37,7 +37,7 @@ def test_class_has_slots_and_no_dict():
 
         for name, cls in inspect.getmembers(module, inspect.isclass):
             if cls.__module__ != module.__name__ or any(  # exclude 'imported' modules
-                x in name for x in {"__class__", "__init__", "Queue", "Webhook"}
+                x in name for x in ("__class__", "__init__", "Queue", "Webhook")
             ):
                 continue
 
@@ -46,7 +46,7 @@ def test_class_has_slots_and_no_dict():
             assert not isinstance(cls.__slots__, str), f"{name!r}s slots shouldn't be strings"
 
             # specify if a certain module/class/base class should have dict-
-            if any(i in included for i in {cls.__module__, name, cls.__base__.__name__}):
+            if any(i in included for i in (cls.__module__, name, cls.__base__.__name__)):
                 assert "__dict__" in get_slots(cls), f"class {name!r} ({path}) has no __dict__"
                 continue
 
@@ -54,5 +54,4 @@ def test_class_has_slots_and_no_dict():
 
 
 def get_slots(_class):
-    slots = [attr for cls in _class.__mro__ if hasattr(cls, "__slots__") for attr in cls.__slots__]
-    return slots
+    return [attr for cls in _class.__mro__ if hasattr(cls, "__slots__") for attr in cls.__slots__]

@@ -19,8 +19,8 @@ import logging
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 from telegram.ext import (
     Application,
-    CallbackContext,
     CommandHandler,
+    ContextTypes,
     ConversationHandler,
     MessageHandler,
     filters,
@@ -30,12 +30,15 @@ from telegram.ext import (
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
+# set higher logging level for httpx to avoid all GET and POST requests being logged
+logging.getLogger("httpx").setLevel(logging.WARNING)
+
 logger = logging.getLogger(__name__)
 
 GENDER, PHOTO, LOCATION, BIO = range(4)
 
 
-async def start(update: Update, context: CallbackContext.DEFAULT_TYPE) -> int:
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Starts the conversation and asks the user about their gender."""
     reply_keyboard = [["Boy", "Girl", "Other"]]
 
@@ -51,7 +54,7 @@ async def start(update: Update, context: CallbackContext.DEFAULT_TYPE) -> int:
     return GENDER
 
 
-async def gender(update: Update, context: CallbackContext.DEFAULT_TYPE) -> int:
+async def gender(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Stores the selected gender and asks for a photo."""
     user = update.message.from_user
     logger.info("Gender of %s: %s", user.first_name, update.message.text)
@@ -64,11 +67,11 @@ async def gender(update: Update, context: CallbackContext.DEFAULT_TYPE) -> int:
     return PHOTO
 
 
-async def photo(update: Update, context: CallbackContext.DEFAULT_TYPE) -> int:
+async def photo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Stores the photo and asks for a location."""
     user = update.message.from_user
     photo_file = await update.message.photo[-1].get_file()
-    await photo_file.download("user_photo.jpg")
+    await photo_file.download_to_drive("user_photo.jpg")
     logger.info("Photo of %s: %s", user.first_name, "user_photo.jpg")
     await update.message.reply_text(
         "Gorgeous! Now, send me your location please, or send /skip if you don't want to."
@@ -77,7 +80,7 @@ async def photo(update: Update, context: CallbackContext.DEFAULT_TYPE) -> int:
     return LOCATION
 
 
-async def skip_photo(update: Update, context: CallbackContext.DEFAULT_TYPE) -> int:
+async def skip_photo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Skips the photo and asks for a location."""
     user = update.message.from_user
     logger.info("User %s did not send a photo.", user.first_name)
@@ -88,7 +91,7 @@ async def skip_photo(update: Update, context: CallbackContext.DEFAULT_TYPE) -> i
     return LOCATION
 
 
-async def location(update: Update, context: CallbackContext.DEFAULT_TYPE) -> int:
+async def location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Stores the location and asks for some info about the user."""
     user = update.message.from_user
     user_location = update.message.location
@@ -102,7 +105,7 @@ async def location(update: Update, context: CallbackContext.DEFAULT_TYPE) -> int
     return BIO
 
 
-async def skip_location(update: Update, context: CallbackContext.DEFAULT_TYPE) -> int:
+async def skip_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Skips the location and asks for info about the user."""
     user = update.message.from_user
     logger.info("User %s did not send a location.", user.first_name)
@@ -113,7 +116,7 @@ async def skip_location(update: Update, context: CallbackContext.DEFAULT_TYPE) -
     return BIO
 
 
-async def bio(update: Update, context: CallbackContext.DEFAULT_TYPE) -> int:
+async def bio(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Stores the info about the user and ends the conversation."""
     user = update.message.from_user
     logger.info("Bio of %s: %s", user.first_name, update.message.text)
@@ -122,7 +125,7 @@ async def bio(update: Update, context: CallbackContext.DEFAULT_TYPE) -> int:
     return ConversationHandler.END
 
 
-async def cancel(update: Update, context: CallbackContext.DEFAULT_TYPE) -> int:
+async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Cancels and ends the conversation."""
     user = update.message.from_user
     logger.info("User %s canceled the conversation.", user.first_name)
@@ -156,7 +159,7 @@ def main() -> None:
     application.add_handler(conv_handler)
 
     # Run the bot until the user presses Ctrl-C
-    application.run_polling()
+    application.run_polling(allowed_updates=Update.ALL_TYPES)
 
 
 if __name__ == "__main__":

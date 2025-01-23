@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -18,9 +18,11 @@
 # along with this program.  If not, see [http://www.gnu.org/licenses/].
 """This module contains an object that represents a Telegram Location."""
 
-from typing import Any
+from typing import Final, Optional
 
+from telegram import constants
 from telegram._telegramobject import TelegramObject
+from telegram._utils.types import JSONDict
 
 
 class Location(TelegramObject):
@@ -30,26 +32,27 @@ class Location(TelegramObject):
     considered equal, if their :attr:`longitude` and :attr:`latitude` are equal.
 
     Args:
-        longitude (:obj:`float`): Longitude as defined by sender.
-        latitude (:obj:`float`): Latitude as defined by sender.
+        longitude (:obj:`float`): Longitude as defined by the sender.
+        latitude (:obj:`float`): Latitude as defined by the sender.
         horizontal_accuracy (:obj:`float`, optional): The radius of uncertainty for the location,
-            measured in meters; 0-:tg-const:`telegram.constants.LocationLimit.HORIZONTAL_ACCURACY`.
+            measured in meters; 0-:tg-const:`telegram.Location.HORIZONTAL_ACCURACY`.
         live_period (:obj:`int`, optional): Time relative to the message sending date, during which
             the location can be updated, in seconds. For active live locations only.
         heading (:obj:`int`, optional): The direction in which user is moving, in degrees;
-            1-:tg-const:`telegram.constants.LocationLimit.HEADING`. For active live locations only.
+            :tg-const:`telegram.Location.MIN_HEADING`-:tg-const:`telegram.Location.MAX_HEADING`.
+            For active live locations only.
         proximity_alert_radius (:obj:`int`, optional): Maximum distance for proximity alerts about
             approaching another chat member, in meters. For sent live locations only.
-        **kwargs (:obj:`dict`): Arbitrary keyword arguments.
 
     Attributes:
-        longitude (:obj:`float`): Longitude as defined by sender.
-        latitude (:obj:`float`): Latitude as defined by sender.
+        longitude (:obj:`float`): Longitude as defined by the sender.
+        latitude (:obj:`float`): Latitude as defined by the sender.
         horizontal_accuracy (:obj:`float`): Optional. The radius of uncertainty for the location,
-            measured in meters.
+            measured in meters; 0-:tg-const:`telegram.Location.HORIZONTAL_ACCURACY`.
         live_period (:obj:`int`): Optional. Time relative to the message sending date, during which
             the location can be updated, in seconds. For active live locations only.
-        heading (:obj:`int`): Optional. The direction in which user is moving, in degrees.
+        heading (:obj:`int`): Optional. The direction in which user is moving, in degrees;
+            :tg-const:`telegram.Location.MIN_HEADING`-:tg-const:`telegram.Location.MAX_HEADING`.
             For active live locations only.
         proximity_alert_radius (:obj:`int`): Optional. Maximum distance for proximity alerts about
             approaching another chat member, in meters. For sent live locations only.
@@ -57,34 +60,54 @@ class Location(TelegramObject):
     """
 
     __slots__ = (
-        "longitude",
-        "horizontal_accuracy",
-        "proximity_alert_radius",
-        "live_period",
-        "latitude",
         "heading",
+        "horizontal_accuracy",
+        "latitude",
+        "live_period",
+        "longitude",
+        "proximity_alert_radius",
     )
 
     def __init__(
         self,
         longitude: float,
         latitude: float,
-        horizontal_accuracy: float = None,
-        live_period: int = None,
-        heading: int = None,
-        proximity_alert_radius: int = None,
-        **_kwargs: Any,
+        horizontal_accuracy: Optional[float] = None,
+        live_period: Optional[int] = None,
+        heading: Optional[int] = None,
+        proximity_alert_radius: Optional[int] = None,
+        *,
+        api_kwargs: Optional[JSONDict] = None,
     ):
+        super().__init__(api_kwargs=api_kwargs)
         # Required
-        self.longitude = float(longitude)
-        self.latitude = float(latitude)
+        self.longitude: float = longitude
+        self.latitude: float = latitude
 
         # Optionals
-        self.horizontal_accuracy = float(horizontal_accuracy) if horizontal_accuracy else None
-        self.live_period = int(live_period) if live_period else None
-        self.heading = int(heading) if heading else None
-        self.proximity_alert_radius = (
+        self.horizontal_accuracy: Optional[float] = horizontal_accuracy
+        self.live_period: Optional[int] = live_period
+        self.heading: Optional[int] = heading
+        self.proximity_alert_radius: Optional[int] = (
             int(proximity_alert_radius) if proximity_alert_radius else None
         )
 
         self._id_attrs = (self.longitude, self.latitude)
+
+        self._freeze()
+
+    HORIZONTAL_ACCURACY: Final[int] = constants.LocationLimit.HORIZONTAL_ACCURACY
+    """:const:`telegram.constants.LocationLimit.HORIZONTAL_ACCURACY`
+
+    .. versionadded:: 20.0
+    """
+    MIN_HEADING: Final[int] = constants.LocationLimit.MIN_HEADING
+    """:const:`telegram.constants.LocationLimit.MIN_HEADING`
+
+    .. versionadded:: 20.0
+    """
+    MAX_HEADING: Final[int] = constants.LocationLimit.MAX_HEADING
+    """:const:`telegram.constants.LocationLimit.MAX_HEADING`
+
+    .. versionadded:: 20.0
+    """

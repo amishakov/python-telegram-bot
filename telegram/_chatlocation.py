@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # A library that provides a Python interface to the Telegram Bot API
-# Copyright (C) 2015-2022
+# Copyright (C) 2015-2025
 # Leandro Toledo de Souza <devs@python-telegram-bot.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -18,10 +18,12 @@
 # along with this program.  If not, see [http://www.gnu.org/licenses/].
 """This module contains an object that represents a location to which a chat is connected."""
 
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Final, Optional
 
+from telegram import constants
 from telegram._files.location import Location
 from telegram._telegramobject import TelegramObject
+from telegram._utils.argumentparsing import de_json_optional
 from telegram._utils.types import JSONDict
 
 if TYPE_CHECKING:
@@ -37,36 +39,51 @@ class ChatLocation(TelegramObject):
     Args:
         location (:class:`telegram.Location`): The location to which the supergroup is connected.
             Can't be a live location.
-        address (:obj:`str`): Location address; 1-64 characters, as defined by the chat owner
-        **kwargs (:obj:`dict`): Arbitrary keyword arguments.
-
+        address (:obj:`str`): Location address;
+            :tg-const:`telegram.ChatLocation.MIN_ADDRESS`-
+            :tg-const:`telegram.ChatLocation.MAX_ADDRESS` characters, as defined by the chat owner.
     Attributes:
         location (:class:`telegram.Location`): The location to which the supergroup is connected.
-        address (:obj:`str`): Location address, as defined by the chat owner
+            Can't be a live location.
+        address (:obj:`str`): Location address;
+            :tg-const:`telegram.ChatLocation.MIN_ADDRESS`-
+            :tg-const:`telegram.ChatLocation.MAX_ADDRESS` characters, as defined by the chat owner.
 
     """
 
-    __slots__ = ("location", "address")
+    __slots__ = ("address", "location")
 
     def __init__(
         self,
         location: Location,
         address: str,
-        **_kwargs: Any,
+        *,
+        api_kwargs: Optional[JSONDict] = None,
     ):
-        self.location = location
-        self.address = address
+        super().__init__(api_kwargs=api_kwargs)
+        self.location: Location = location
+        self.address: str = address
 
         self._id_attrs = (self.location,)
 
+        self._freeze()
+
     @classmethod
-    def de_json(cls, data: Optional[JSONDict], bot: "Bot") -> Optional["ChatLocation"]:
+    def de_json(cls, data: JSONDict, bot: Optional["Bot"] = None) -> "ChatLocation":
         """See :meth:`telegram.TelegramObject.de_json`."""
         data = cls._parse_data(data)
 
-        if not data:
-            return None
+        data["location"] = de_json_optional(data.get("location"), Location, bot)
 
-        data["location"] = Location.de_json(data.get("location"), bot)
+        return super().de_json(data=data, bot=bot)
 
-        return cls(bot=bot, **data)
+    MIN_ADDRESS: Final[int] = constants.LocationLimit.MIN_CHAT_LOCATION_ADDRESS
+    """:const:`telegram.constants.LocationLimit.MIN_CHAT_LOCATION_ADDRESS`
+
+    .. versionadded:: 20.0
+    """
+    MAX_ADDRESS: Final[int] = constants.LocationLimit.MAX_CHAT_LOCATION_ADDRESS
+    """:const:`telegram.constants.LocationLimit.MAX_CHAT_LOCATION_ADDRESS`
+
+    .. versionadded:: 20.0
+    """
